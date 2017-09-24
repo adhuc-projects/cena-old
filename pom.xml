@@ -21,8 +21,19 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+    <!-- Dependencies versions -->
+    <serenity.version>1.5.11</serenity.version>
+    <serenity.cucumber.version>1.5.7</serenity.cucumber.version>
     <!-- Build execution -->
     <docker.build.skip>true</docker.build.skip>
+    <test.unit.skip>false</test.unit.skip>
+    <test.acceptance.functional.skip>true</test.acceptance.functional.skip>
+    <test.acceptance.dockerEnv.skip>true</test.acceptance.dockerEnv.skip>
+    <test.acceptance.dockerEnv.directory>${project.basedir}/docker</test.acceptance.dockerEnv.directory>
+    <test.acceptance.dockerEnv.pre.script>./pre.sh</test.acceptance.dockerEnv.pre.script>
+    <test.acceptance.dockerEnv.pre.maxWaitTime>30</test.acceptance.dockerEnv.pre.maxWaitTime>
+    <test.acceptance.dockerEnv.post.script>./post.sh</test.acceptance.dockerEnv.post.script>
+    <test.acceptance.dockerEnv.cena.port>8080</test.acceptance.dockerEnv.cena.port>
   </properties>
 
   <profiles>
@@ -31,6 +42,27 @@
       <id>docker</id>
       <properties>
         <docker.build.skip>false</docker.build.skip>
+      </properties>
+    </profile>
+    <!-- Configuration for acceptance tests -->
+    <profile>
+      <id>functional-acceptance</id>
+      <properties>
+        <test.unit.skip>true</test.unit.skip>
+        <test.acceptance.dockerEnv.skip>false</test.acceptance.dockerEnv.skip>
+        <test.acceptance.functional.skip>false</test.acceptance.functional.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>functional-acceptance-windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <test.acceptance.dockerEnv.pre.script>pre.bat</test.acceptance.dockerEnv.pre.script>
+        <test.acceptance.dockerEnv.post.script>post.bat</test.acceptance.dockerEnv.post.script>
       </properties>
     </profile>
   </profiles>
@@ -74,6 +106,89 @@
           <contextDirectory>${project.build.directory}</contextDirectory>
         </configuration>
       </plugin>
+      <!-- Unit tests execution -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>${test.unit.skip}</skipTests>
+          <runOrder>hourly</runOrder>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Documentation.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/*AcceptanceTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <!-- Acceptance tests execution -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>start-containers</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <skip>${test.acceptance.dockerEnv.skip}</skip>
+              <workingDirectory>${test.acceptance.dockerEnv.directory}</workingDirectory>
+              <executable>${test.acceptance.dockerEnv.pre.script}</executable>
+              <commandlineArgs>${test.acceptance.dockerEnv.pre.maxWaitTime} ${test.acceptance.dockerEnv.cena.port}</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-containers</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <skip>${test.acceptance.dockerEnv.skip}</skip>
+              <workingDirectory>${test.acceptance.dockerEnv.directory}</workingDirectory>
+              <executable>${test.acceptance.dockerEnv.post.script}</executable>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <skipTests>${test.acceptance.functional.skip}</skipTests>
+          <includes>
+            <include>**/*AcceptanceTest.java</include>
+          </includes>
+          <argLine>-Dacceptance.rest.port=${test.acceptance.dockerEnv.cena.port}</argLine>
+        </configuration>
+        <executions>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Aggregate serenity acceptance tests reports -->
+      <plugin>
+        <groupId>net.serenity-bdd.maven.plugins</groupId>
+        <artifactId>serenity-maven-plugin</artifactId>
+        <version>${serenity.version}</version>
+        <executions>
+          <execution>
+            <id>serenity-reports</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -110,5 +225,43 @@
       <artifactId>spring-restdocs-mockmvc</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Acceptance testing dependencies -->
+    <dependency>
+      <groupId>net.serenity-bdd</groupId>
+      <artifactId>serenity-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.serenity-bdd</groupId>
+      <artifactId>serenity-rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.serenity-bdd</groupId>
+      <artifactId>serenity-cucumber</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-core</artifactId>
+        <version>${serenity.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-rest-assured</artifactId>
+        <version>${serenity.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-cucumber</artifactId>
+        <version>${serenity.cucumber.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
