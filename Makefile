@@ -23,3 +23,7 @@ up: ## Start the dockerized local env using docker/docker-compose.yml
 
 down: ## Stop the dockerized local env using docker/docker-compose.yml
 	cd $(DOCKER_COMPOSE_ROOT) && $(DOCKER_COMPOSE_ENV) docker-compose down
+
+help: ## This help dialog.
+	@echo "Usage: make [target]. Find the available targets below:"
+	@echo "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##\s*/:/' | column -c2 -t -s :)"
