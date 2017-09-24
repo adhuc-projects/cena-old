@@ -1,0 +1,18 @@
+language: java
+sudo: required
+dist: trusty
+
+cache:
+  directories:
+  - $HOME/.m2
+
+jobs:
+  include:
+    - stage: commit stage
+      script:
+      - ./mvnw clean package
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
