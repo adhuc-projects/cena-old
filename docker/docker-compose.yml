@@ -1,0 +1,9 @@
+version: '2.1'
+services:
+  menu-generation:
+    container_name: menu-generation
+    image: menu-generation:latest
+    command: >
+      java -jar menu-generation.jar
+    ports:
+    - ${PORT:-8080}:8080
