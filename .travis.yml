@@ -11,6 +11,9 @@ jobs:
     - stage: commit stage
       script:
       - make build
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+      - docker tag menu-generation:latest $DOCKER_USERNAME/menu-generation:latest
+      - docker push $DOCKER_USERNAME/menu-generation:latest
 
 notifications:
   email:
