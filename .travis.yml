@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: commit stage
       script:
-      - ./mvnw clean package
+      - make build
 
 notifications:
   email:
