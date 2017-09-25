@@ -1,4 +1,5 @@
 FROM openjdk:8-alpine
+LABEL maintainer="acarbenay@adhuc.fr"
 
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
