@@ -5,15 +5,13 @@ DOCKER_COMPOSE_ROOT=docker
 DOCKER_COMPOSE_ENV=COMPOSE_PROJECT_NAME=cena PORT=$(PORT)
 
 maven = ./mvnw
-build_cmd = $(maven) clean package -Pdocker
 
 ifeq ($(OS),Windows_NT)
-	maven = ./mvnw.cmd
-	build_cmd = $(maven) clean package && docker build -t menu-generation:latest target
+	maven = mvnw.cmd
 endif
 
 build: ## Build the application as a docker image
-	$(build_cmd)
+	$(maven) clean package -Pdocker
 
 test: ## Run acceptance testing with mvn verify
 	$(maven) verify -Pfunctional-acceptance -Dtest.acceptance.dockerEnv.cena.port=$(PORT)
