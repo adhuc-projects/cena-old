@@ -36,7 +36,7 @@ public class ActuatorServiceClientSteps extends ScenarioSteps {
 
     @Step("Call health check service")
     public void callHealthCheckService() {
-        rest().get("/health").andReturn();
+        rest().get("/management/health").andReturn();
     }
 
     @Step("Assert rest-service response is OK")
