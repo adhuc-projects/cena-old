@@ -27,7 +27,8 @@
     <!-- Build execution -->
     <docker.build.skip>true</docker.build.skip>
     <test.unit.skip>false</test.unit.skip>
-    <test.unit.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</test.unit.jacoco.reportPath>
+    <test.unit.jacoco.reportPath>${project.build.directory}/coverage-reports</test.unit.jacoco.reportPath>
+    <test.unit.jacoco.reportFile>${test.unit.jacoco.reportPath}/jacoco.exec</test.unit.jacoco.reportFile>
     <test.acceptance.functional.skip>true</test.acceptance.functional.skip>
     <test.acceptance.dockerEnv.skip>true</test.acceptance.dockerEnv.skip>
     <test.acceptance.dockerEnv.directory>${project.basedir}/docker</test.acceptance.dockerEnv.directory>
@@ -135,7 +136,7 @@
             </goals>
             <phase>process-test-classes</phase>
             <configuration>
-              <destFile>${test.unit.jacoco.reportPath}</destFile>
+              <destFile>${test.unit.jacoco.reportFile}</destFile>
               <skip>${test.unit.skip}</skip>
             </configuration>
           </execution>
@@ -146,7 +147,8 @@
             </goals>
             <phase>test</phase>
             <configuration>
-              <dataFile>${test.unit.jacoco.reportPath}</dataFile>
+              <dataFile>${test.unit.jacoco.reportFile}</dataFile>
+              <outputDirectory>${test.unit.jacoco.reportPath}</outputDirectory>
               <skip>${test.unit.skip}</skip>
             </configuration>
           </execution>
