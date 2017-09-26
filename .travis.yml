@@ -7,10 +7,12 @@ cache:
   - $HOME/.m2
 
 jobs:
-  include:
+  include: 
     - stage: commit stage
       script:
       - make build
+      - wget -O codacy-coverage-reporter-assembly.jar https://oss.sonatype.org/service/local/repositories/releases/content/com/codacy/codacy-coverage-reporter/2.0.0/codacy-coverage-reporter-2.0.0-assembly.jar
+      - java -cp codacy-coverage-reporter-assembly.jar com.codacy.CodacyCoverageReporter -l Java -r target/coverage-reports/jacoco.xml
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker tag menu-generation:latest $DOCKER_USERNAME/menu-generation:pending
       - docker push $DOCKER_USERNAME/menu-generation:pending
