@@ -27,6 +27,7 @@
     <!-- Build execution -->
     <docker.build.skip>true</docker.build.skip>
     <test.unit.skip>false</test.unit.skip>
+    <test.unit.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</test.unit.jacoco.reportPath>
     <test.acceptance.functional.skip>true</test.acceptance.functional.skip>
     <test.acceptance.dockerEnv.skip>true</test.acceptance.dockerEnv.skip>
     <test.acceptance.dockerEnv.directory>${project.basedir}/docker</test.acceptance.dockerEnv.directory>
@@ -121,6 +122,35 @@
             <exclude>**/*AcceptanceTest.java</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.9</version>
+        <executions>
+          <execution>
+            <id>jacoco-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <phase>process-test-classes</phase>
+            <configuration>
+              <destFile>${test.unit.jacoco.reportPath}</destFile>
+              <skip>${test.unit.skip}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <dataFile>${test.unit.jacoco.reportPath}</dataFile>
+              <skip>${test.unit.skip}</skip>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <!-- Acceptance tests execution -->
       <plugin>
