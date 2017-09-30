@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.adhuc.cena.menu.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
 /**
  * A REST controller exposing /api/ingredients/{ingredientId} resource.
