@@ -16,8 +16,13 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
 import static net.serenitybdd.rest.SerenityRest.rest;
+import static net.serenitybdd.rest.SerenityRest.then;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assume.assumeFalse;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -63,8 +68,14 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     @Step("Creates the ingredient {0}")
     public void createIngredient(final IngredientValue ingredient) {
         final String ingredientsResourceUrl = getIngredientsResourceUrl();
-        rest().body(new CreateIngredientRequest(ingredient.name())).header("Content-Type", APPLICATION_JSON_VALUE)
+        rest().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .post(ingredientsResourceUrl).andReturn();
+    }
+
+    @Step("Assert ingredient has been successfully created")
+    public void assertIngredientSuccessfullyCreated() {
+        then().statusCode(CREATED.value()).header(LOCATION, containsString("/api/ingredients/"));
+        // TODO get ingredient calling url from location header, and comparing information
     }
 
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {

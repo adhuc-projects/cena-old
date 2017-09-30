@@ -19,6 +19,7 @@ import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientStep
 import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientSteps.IngredientValue;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import net.thucydides.core.annotations.Steps;
@@ -46,6 +47,11 @@ public class IngredientCreationStepDefinitions {
     @When("^he creates the ingredient$")
     public void createIngredient() {
         ingredientServiceClient.createIngredient();
+    }
+
+    @Then("^the ingredient is created$")
+    public void ingredientCreated() {
+        ingredientServiceClient.assertIngredientSuccessfullyCreated();
     }
 
 }
