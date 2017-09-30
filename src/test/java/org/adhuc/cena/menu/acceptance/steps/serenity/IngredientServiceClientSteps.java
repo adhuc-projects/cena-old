@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.acceptance.steps.serenity;
 import static net.serenitybdd.rest.SerenityRest.rest;
 import static net.serenitybdd.rest.SerenityRest.then;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assume.assumeFalse;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -28,10 +29,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.steps.ScenarioSteps;
@@ -72,6 +79,16 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
                 .post(ingredientsResourceUrl).andReturn();
     }
 
+    @Step("Assert ingredient is in ingredients list")
+    public void assertIngredientInIngredientsList() {
+        assertIngredientInIngredientsList(ingredient);
+    }
+
+    @Step("Assert ingredient {0} is in ingredients list")
+    public void assertIngredientInIngredientsList(final IngredientValue ingredient) {
+        assertThat(isIngredientInIngredientsList(ingredient)).isTrue();
+    }
+
     @Step("Assert ingredient has been successfully created")
     public void assertIngredientSuccessfullyCreated() {
         then().statusCode(CREATED.value()).header(LOCATION, containsString("/api/ingredients/"));
@@ -95,9 +112,13 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Accessors(fluent = true)
+    @JsonAutoDetect(fieldVisibility = Visibility.ANY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class IngredientValue {
-        private final String name;
+        private String name;
     }
 
 }

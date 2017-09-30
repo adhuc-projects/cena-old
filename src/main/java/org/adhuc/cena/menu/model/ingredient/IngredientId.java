@@ -17,6 +17,8 @@ package org.adhuc.cena.menu.model.ingredient;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -54,6 +56,7 @@ public class IngredientId {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return id.toString();
     }
