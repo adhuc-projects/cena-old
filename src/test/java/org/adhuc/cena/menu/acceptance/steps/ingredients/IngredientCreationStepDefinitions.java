@@ -16,9 +16,10 @@
 package org.adhuc.cena.menu.acceptance.steps.ingredients;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientSteps;
-import org.adhuc.cena.menu.model.Ingredient;
+import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientSteps.IngredientValue;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import net.thucydides.core.annotations.Steps;
 
@@ -38,8 +39,13 @@ public class IngredientCreationStepDefinitions {
 
     @Given("^a non-existent \"(.*)\" ingredient$")
     public void nonExistentIngredient(final String ingredientName) {
-        final Ingredient ingredient = ingredientServiceClient.withIngredient(ingredientName);
+        final IngredientValue ingredient = ingredientServiceClient.withIngredient(ingredientName);
         ingredientServiceClient.assumeIngredientNotInIngredientsList(ingredient);
+    }
+
+    @When("^he creates the ingredient$")
+    public void createIngredient() {
+        ingredientServiceClient.createIngredient();
     }
 
 }

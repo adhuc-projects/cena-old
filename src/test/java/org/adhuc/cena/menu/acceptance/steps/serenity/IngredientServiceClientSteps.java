@@ -19,12 +19,15 @@ import static net.serenitybdd.rest.SerenityRest.rest;
 
 import static org.junit.Assume.assumeFalse;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Optional;
 
-import org.adhuc.cena.menu.model.Ingredient;
+import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.steps.ScenarioSteps;
 
@@ -39,30 +42,51 @@ import net.thucydides.core.steps.ScenarioSteps;
 @SuppressWarnings("serial")
 public class IngredientServiceClientSteps extends ScenarioSteps {
 
+    private IngredientValue ingredient;
+
     @Step("Given an ingredient named \"{0}\"")
-    public Ingredient withIngredient(final String ingredientName) {
-        return new Ingredient(ingredientName);
+    public IngredientValue withIngredient(final String ingredientName) {
+        ingredient = new IngredientValue(ingredientName);
+        return ingredient;
     }
 
     @Step("Assume ingredient {0} is not in ingredients list")
-    public void assumeIngredientNotInIngredientsList(final Ingredient ingredient) {
+    public void assumeIngredientNotInIngredientsList(final IngredientValue ingredient) {
         assumeFalse("Ingredient " + ingredient.name() + " should not exist", isIngredientInIngredientsList(ingredient));
     }
 
-    private boolean isIngredientInIngredientsList(final Ingredient ingredient) {
+    @Step("Creates the ingredient")
+    public void createIngredient() {
+        createIngredient(ingredient);
+    }
+
+    @Step("Creates the ingredient {0}")
+    public void createIngredient(final IngredientValue ingredient) {
+        final String ingredientsResourceUrl = getIngredientsResourceUrl();
+        rest().body(new CreateIngredientRequest(ingredient.name())).header("Content-Type", APPLICATION_JSON_VALUE)
+                .post(ingredientsResourceUrl).andReturn();
+    }
+
+    private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {
         return getIngredientFromIngredientsList(ingredient).isPresent();
     }
 
-    private Optional<Ingredient> getIngredientFromIngredientsList(final Ingredient ingredient) {
+    private Optional<IngredientValue> getIngredientFromIngredientsList(final IngredientValue ingredient) {
         final String ingredientsResourceUrl = getIngredientsResourceUrl();
         final String ingredientName = ingredient.name();
         final JsonPath jsonPath = rest().get(ingredientsResourceUrl).then().statusCode(OK.value()).extract().jsonPath();
         return Optional.ofNullable(jsonPath.param("name", ingredientName)
-                .getObject("data.find { ingredient->ingredient.name == name }", Ingredient.class));
+                .getObject("data.find { ingredient->ingredient.name == name }", IngredientValue.class));
     }
 
     private String getIngredientsResourceUrl() {
         return "/api/ingredients";
+    }
+
+    @Data
+    @Accessors(fluent = true)
+    public static class IngredientValue {
+        private final String name;
     }
 
 }
