@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -52,6 +54,13 @@ public class ApiDocumentation extends ControllerTestSupport {
     private MockMvc                        mvc;
     @Autowired
     private RestDocumentationResultHandler documentationHandler;
+
+    @Test
+    public void headersExample() throws Exception {
+        mvc.perform(get(API_URL)).andExpect(status().isOk())
+                .andDo(documentationHandler.document(responseHeaders(headerWithName("Content-Type")
+                        .description("The Content-Type of the payload, e.g. `application/hal+json`"))));
+    }
 
     @Test
     public void indexExample() throws Exception {
