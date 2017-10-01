@@ -22,6 +22,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <!-- Dependencies versions -->
+    <spring-restdocs.version>1.2.2.RELEASE</spring-restdocs.version>
     <serenity.version>1.5.11</serenity.version>
     <serenity.cucumber.version>1.5.7</serenity.cucumber.version>
     <!-- Build execution -->
@@ -36,6 +37,7 @@
     <test.acceptance.dockerEnv.pre.maxWaitTime>30</test.acceptance.dockerEnv.pre.maxWaitTime>
     <test.acceptance.dockerEnv.post.script>./post.sh</test.acceptance.dockerEnv.post.script>
     <test.acceptance.dockerEnv.cena.port>8080</test.acceptance.dockerEnv.cena.port>
+    <documentation.snippets.directory>${project.build.directory}/generated-snippets</documentation.snippets.directory>
   </properties>
 
   <profiles>
@@ -150,6 +152,52 @@
               <dataFile>${test.unit.jacoco.reportFile}</dataFile>
               <outputDirectory>${test.unit.jacoco.reportPath}</outputDirectory>
               <skip>${test.unit.skip}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Documentation execution -->
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <version>1.5.2</version>
+        <executions>
+          <execution>
+            <id>generate-docs</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <backend>html</backend>
+              <doctype>book</doctype>
+              <sourceDirectory>${basedir}/src/docs</sourceDirectory>
+              <attributes>
+                <snippets>${documentation.snippets.directory}</snippets>
+              </attributes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/static/docs/asciidoc</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/generated-docs</directory>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>

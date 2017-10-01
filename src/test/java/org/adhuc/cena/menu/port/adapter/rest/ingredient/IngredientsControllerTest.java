@@ -52,12 +52,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 
 /**
  * The {@link IngredientsController} test class.
@@ -70,13 +69,12 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = IngredientsController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
-public class IngredientsControllerTest {
+public class IngredientsControllerTest extends ControllerTestSupport {
 
     private static final String  INGREDIENTS_API_URL = "/api/ingredients";
 
     @Autowired
     private MockMvc              mvc;
-    private ObjectMapper         mapper              = new ObjectMapper();
 
     @MockBean
     private IngredientAppService ingredientAppServiceMock;
@@ -87,14 +85,14 @@ public class IngredientsControllerTest {
     }
 
     @Test
-    public void testGetIngredientsEmptyListStatusOK() throws Exception {
+    public void getIngredientsEmptyListStatusOK() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Collections.emptyList());
 
         mvc.perform(get(INGREDIENTS_API_URL)).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetIngredientsEmptyListNoData() throws Exception {
+    public void getIngredientsEmptyListNoData() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Collections.emptyList());
 
         mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
@@ -102,14 +100,14 @@ public class IngredientsControllerTest {
     }
 
     @Test
-    public void testGetIngredientsStatusOK() throws Exception {
+    public void getIngredientsStatusOK() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
         mvc.perform(get(INGREDIENTS_API_URL)).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetIngredientsContainsData() throws Exception {
+    public void getIngredientsContainsData() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
         final ResultActions resultActions = mvc.perform(get(INGREDIENTS_API_URL))
@@ -120,14 +118,14 @@ public class IngredientsControllerTest {
     }
 
     @Test
-    public void testGetIngredientsHasSelfLink() throws Exception {
+    public void getIngredientsHasSelfLink() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
         mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$._links.self.href", endsWith(INGREDIENTS_API_URL)));
     }
 
     @Test
-    public void testCreateIngredientInvalidRequest() throws Exception {
+    public void createIngredientInvalidRequest() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content("{}"))
                 .andExpect(status().isBadRequest());
     }
@@ -143,13 +141,13 @@ public class IngredientsControllerTest {
     }
 
     @Test
-    public void testCreateIngredientReturnsCreatedStatus() throws Exception {
+    public void createIngredientReturnsCreatedStatus() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    public void testCreateIngredientReturnsLocationHeader() throws Exception {
+    public void createIngredientReturnsLocationHeader() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
         doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());
 
@@ -160,14 +158,6 @@ public class IngredientsControllerTest {
 
     private String createTomatoRequest() {
         return asJson(CreateIngredientRequest.builder().name(TOMATO_NAME).build());
-    }
-
-    private String asJson(Object object) {
-        try {
-            return mapper.writeValueAsString(object);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,

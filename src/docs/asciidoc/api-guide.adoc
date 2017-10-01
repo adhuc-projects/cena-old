@@ -1,0 +1,143 @@
+= RESTful Cena API Guide
+Alexandre Carbenay;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+Cena RESTful API tries to adhere as closely as possible to standard HTTP and REST conventions in its use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PUT`
+| Used to update an existing resource
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+Cena RESTful API tries to adhere as closely as possible to standard HTTP and REST conventions in its use of HTTP status
+codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's `Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[overview-hypermedia]]
+== Hypermedia
+
+Cena RESTful API uses hypermedia and resources include links to other resources in their responses. Responses are in
+http://stateless.co/hal_specification.html[Hypertext Application from resource to resource. Language (HAL)] format. 
+Links can be found beneath the `_links` key. Users of the API should not create URIs themselves, instead they should 
+use the above-described links to navigate.
+
+[[resources]]
+= Resources
+
+[[resources-ingredients]]
+== Ingredients
+
+The Ingredients resources is used to create and list ingredients.
+
+[[resources-ingredients-list]]
+=== Listing ingredients
+
+A `GET` request will list all of the ingredients.
+
+==== Response structure
+
+include::{snippets}/ingredients-list-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/ingredients-list-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/ingredients-list-example/http-response.adoc[]
+
+[[resources-ingredients-links]]
+==== Links
+
+include::{snippets}/ingredients-list-example/links.adoc[]
+
+[[resources-ingredients-create]]
+=== Creating an ingredient
+
+A `POST` request is used to create an ingredient.
+
+==== Request structure
+
+include::{snippets}/ingredients-create-example/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/ingredients-create-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/ingredients-create-example/http-response.adoc[]
+
+[[resources-ingredient]]
+== Ingredient
+
+The Ingredient resource is used to retrieve, update, and delete individual ingredients
+
+[[resources-ingredient-links]]
+=== Links
+
+include::{snippets}/ingredient-get-example/links.adoc[]
+
+[[resources-ingredient-retrieve]]
+=== Retrieve an ingredient
+
+A `GET` request will retrieve the details of an ingredient.
+
+==== Path Parameters
+
+include::{snippets}/ingredient-get-example/path-parameters.adoc[]
+
+==== Response structure
+
+include::{snippets}/ingredient-get-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/ingredient-get-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/ingredient-get-example/http-response.adoc[]
