@@ -45,6 +45,8 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -55,6 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
 /**
  * The {@link IngredientsController} test class.
@@ -65,10 +68,11 @@ import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
  * @since 0.1.0
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = IngredientsController.class)
+@WebMvcTest(controllers = IngredientsController.class,
+        includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 public class IngredientsControllerTest {
 
-    private static final String  INGREDIENTS_API_URL = "/api/ingredients/";
+    private static final String  INGREDIENTS_API_URL = "/api/ingredients";
 
     @Autowired
     private MockMvc              mvc;
@@ -93,8 +97,8 @@ public class IngredientsControllerTest {
     public void testGetIngredientsEmptyListNoData() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Collections.emptyList());
 
-        mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data").isEmpty());
+        mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
+                .andExpect(jsonPath("$._embedded.data").isEmpty());
     }
 
     @Test
@@ -108,11 +112,18 @@ public class IngredientsControllerTest {
     public void testGetIngredientsContainsData() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
-        final ResultActions resultActions =
-                mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$.data").isArray())
-                        .andExpect(jsonPath("$.data").isNotEmpty()).andExpect(jsonPath("$.data", hasSize(2)));
-        assertJsonContainsIngredient(resultActions, "$.data[0]", tomato());
-        assertJsonContainsIngredient(resultActions, "$.data[1]", cucumber());
+        final ResultActions resultActions = mvc.perform(get(INGREDIENTS_API_URL))
+                .andExpect(jsonPath("$._embedded.data").isArray()).andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                .andExpect(jsonPath("$._embedded.data", hasSize(2)));
+        assertJsonContainsIngredient(resultActions, "$._embedded.data[0]", tomato());
+        assertJsonContainsIngredient(resultActions, "$._embedded.data[1]", cucumber());
+    }
+
+    @Test
+    public void testGetIngredientsHasSelfLink() throws Exception {
+        when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
+
+        mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$._links.self.href", endsWith(INGREDIENTS_API_URL)));
     }
 
     @Test
@@ -144,7 +155,7 @@ public class IngredientsControllerTest {
 
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(header().string(HttpHeaders.LOCATION,
-                        endsWith(INGREDIENTS_API_URL + commandCaptor.getValue().ingredientId().toString())));
+                        endsWith(buildIngredientSelfLink(commandCaptor.getValue().ingredientId()))));
     }
 
     private String createTomatoRequest() {
@@ -164,7 +175,13 @@ public class IngredientsControllerTest {
         resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
                 .andExpect(jsonPath(jsonPath + ".id", equalTo(ingredient.id().toString())))
                 .andExpect(jsonPath(jsonPath + ".name").exists())
-                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())));
+                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())))
+                .andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
+                        jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
+    }
+
+    private String buildIngredientSelfLink(IngredientId ingredientId) {
+        return INGREDIENTS_API_URL + "/" + ingredientId.id().toString();
     }
 
 }

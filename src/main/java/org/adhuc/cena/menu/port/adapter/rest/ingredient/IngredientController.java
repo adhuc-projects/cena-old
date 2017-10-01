@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
  * @since 0.1.0
  */
 @RestController
+@ExposesResourceFor(Ingredient.class)
 @RequestMapping(path = "/api/ingredients/{ingredientId}", produces = APPLICATION_JSON_VALUE)
 public class IngredientController {
 

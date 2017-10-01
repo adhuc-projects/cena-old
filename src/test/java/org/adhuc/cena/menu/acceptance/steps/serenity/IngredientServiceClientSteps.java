@@ -104,7 +104,7 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
         final String ingredientName = ingredient.name();
         final JsonPath jsonPath = rest().get(ingredientsResourceUrl).then().statusCode(OK.value()).extract().jsonPath();
         return Optional.ofNullable(jsonPath.param("name", ingredientName)
-                .getObject("data.find { ingredient->ingredient.name == name }", IngredientValue.class));
+                .getObject("_embedded.data.find { ingredient->ingredient.name == name }", IngredientValue.class));
     }
 
     private String getIngredientsResourceUrl() {

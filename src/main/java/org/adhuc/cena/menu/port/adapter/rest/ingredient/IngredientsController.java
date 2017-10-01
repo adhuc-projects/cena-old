@@ -15,11 +15,14 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
+import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.Collection;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-
-import lombok.Data;
+import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
 /**
  * A REST controller exposing /api/ingredients resource.
@@ -47,14 +49,27 @@ import lombok.Data;
  * @since 0.1.0
  */
 @RestController
-@RequestMapping(path = "/api/ingredients", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/ingredients", produces = HAL_JSON_VALUE)
 public class IngredientsController {
 
-    private IngredientAppService ingredientAppService;
+    private IngredientAppService        ingredientAppService;
+    private IngredientResourceAssembler resourceAssembler;
+
+    private Method                      listMethod;
 
     @Autowired
-    public IngredientsController(IngredientAppService ingredientAppService) {
+    public IngredientsController(IngredientAppService ingredientAppService,
+            IngredientResourceAssembler resourceAssembler) {
         this.ingredientAppService = ingredientAppService;
+        this.resourceAssembler = resourceAssembler;
+    }
+
+    /**
+     * Initializes the methods to get links for resources.
+     */
+    @PostConstruct
+    public void initMethodsForLinks() throws Exception {
+        listMethod = IngredientsController.class.getMethod("getIngredients");
     }
 
     /**
@@ -64,11 +79,12 @@ public class IngredientsController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public IngredientList getIngredients() {
-        return new IngredientList(ingredientAppService.getIngredients());
+    public ListResource<IngredientResource> getIngredients() {
+        final Collection<Ingredient> ingredients = ingredientAppService.getIngredients();
+        return new ListResource<>(resourceAssembler.toResources(ingredients)).withSelfRef(listMethod);
     }
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public HttpHeaders createIngredient(@RequestBody @Valid final CreateIngredientRequest request) {
         final IngredientId identity = IngredientId.generate();
@@ -77,11 +93,6 @@ public class IngredientsController {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(IngredientController.class, identity.toString()).toUri());
         return httpHeaders;
-    }
-
-    @Data
-    private static class IngredientList {
-        private final List<Ingredient> data;
     }
 
 }
