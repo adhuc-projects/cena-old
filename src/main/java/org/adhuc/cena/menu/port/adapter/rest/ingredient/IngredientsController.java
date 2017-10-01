@@ -18,11 +18,11 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
@@ -49,7 +50,12 @@ import lombok.Data;
 @RequestMapping(path = "/api/ingredients", produces = APPLICATION_JSON_VALUE)
 public class IngredientsController {
 
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private IngredientAppService ingredientAppService;
+
+    @Autowired
+    public IngredientsController(IngredientAppService ingredientAppService) {
+        this.ingredientAppService = ingredientAppService;
+    }
 
     /**
      * Gets the ingredient information for all ingredients.
@@ -59,14 +65,14 @@ public class IngredientsController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public IngredientList getIngredients() {
-        return new IngredientList(ingredients);
+        return new IngredientList(ingredientAppService.getIngredients());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HttpHeaders createIngredient(@RequestBody @Valid final CreateIngredientRequest request) {
         final IngredientId identity = IngredientId.generate();
-        ingredients.add(new Ingredient(identity, request.getName()));
+        ingredientAppService.createIngredient(request.toCommand(identity));
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(IngredientController.class, identity.toString()).toUri());

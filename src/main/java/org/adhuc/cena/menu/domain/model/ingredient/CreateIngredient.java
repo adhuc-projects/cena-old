@@ -13,19 +13,16 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.ingredient;
+package org.adhuc.cena.menu.domain.model.ingredient;
 
-import org.hibernate.validator.constraints.NotBlank;
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 
-import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
-import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
- * A request to create an ingredient.
+ * An ingredient creation command.
  *
  * @author Alexandre Carbenay
  *
@@ -33,23 +30,26 @@ import lombok.Data;
  * @since 0.1.0
  */
 @Data
-@AllArgsConstructor
-@Builder
-public class CreateIngredientRequest {
+@Accessors(fluent = true)
+public class CreateIngredient {
 
-    @NotBlank
-    private String name;
+    private final IngredientId ingredientId;
+    private final String       ingredientName;
 
     /**
-     * Converts this request to a {@code CreateIngredient} command, with specified identity.
+     * Creates an ingredient creation command.
      *
-     * @param identity
+     * @param ingredientId
      *            the ingredient identity.
      *
-     * @return the ingredient creation command.
+     * @param ingredientName
+     *            the ingredient name.
      */
-    public CreateIngredient toCommand(IngredientId identity) {
-        return new CreateIngredient(identity, name);
+    public CreateIngredient(final IngredientId ingredientId, final String ingredientName) {
+        notNull(ingredientId, "Cannot create ingredient creation command with invalid ingredient identity");
+        hasText(ingredientName, "Cannot create ingredient creation command with invalid ingredient name");
+        this.ingredientId = ingredientId;
+        this.ingredientName = ingredientName;
     }
 
 }

@@ -13,43 +13,36 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.ingredient;
+package org.adhuc.cena.menu.application;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.List;
 
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
-import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
 /**
- * A request to create an ingredient.
+ * An application service for ingredients.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@AllArgsConstructor
-@Builder
-public class CreateIngredientRequest {
-
-    @NotBlank
-    private String name;
+public interface IngredientAppService {
 
     /**
-     * Converts this request to a {@code CreateIngredient} command, with specified identity.
+     * Gets the ingredients.
      *
-     * @param identity
-     *            the ingredient identity.
-     *
-     * @return the ingredient creation command.
+     * @return the ingredients.
      */
-    public CreateIngredient toCommand(IngredientId identity) {
-        return new CreateIngredient(identity, name);
-    }
+    List<Ingredient> getIngredients();
+
+    /**
+     * Creates an ingredient.
+     *
+     * @param command
+     *            the ingredient creation command.
+     */
+    void createIngredient(CreateIngredient command);
 
 }
