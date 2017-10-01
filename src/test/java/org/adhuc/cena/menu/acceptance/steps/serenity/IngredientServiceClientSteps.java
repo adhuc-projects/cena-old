@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.adhuc.cena.menu.acceptance.support.ApiClientResource;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
@@ -54,7 +55,9 @@ import net.thucydides.core.steps.ScenarioSteps;
 @SuppressWarnings("serial")
 public class IngredientServiceClientSteps extends ScenarioSteps {
 
-    private IngredientValue ingredient;
+    private static final String API_URL = "/api";
+
+    private IngredientValue     ingredient;
 
     @Step("Given an ingredient named \"{0}\"")
     public IngredientValue withIngredient(final String ingredientName) {
@@ -108,7 +111,11 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     }
 
     private String getIngredientsResourceUrl() {
-        return "/api/ingredients";
+        return getApiClientResource().getIngredients().getHref();
+    }
+
+    private ApiClientResource getApiClientResource() {
+        return rest().get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
     }
 
     @Data

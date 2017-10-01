@@ -13,22 +13,20 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.ingredient;
+package org.adhuc.cena.menu.port.adapter.rest;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientsController;
 
 /**
- * A REST controller exposing /api/ingredients/{ingredientId} resource.
+ * A REST controller providing links to all general resources.
  *
  * @author Alexandre Carbenay
  *
@@ -36,22 +34,14 @@ import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
  * @since 0.1.0
  */
 @RestController
-@ExposesResourceFor(Ingredient.class)
-@RequestMapping(path = "/api/ingredients/{ingredientId}", produces = HAL_JSON_VALUE)
-public class IngredientController {
+@RequestMapping(value = "/api", produces = HAL_JSON_VALUE)
+public class IndexController {
 
-    /**
-     * Gets the ingredient information for the ingredient corresponding to the specified identity.
-     *
-     * @param ingredientId
-     *            the ingredient identity.
-     *
-     * @return the ingredient information.
-     */
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Ingredient getIngredient(@PathVariable String ingredientId) {
-        throw new UnsupportedOperationException("Cannot get ingredient " + ingredientId + " information");
+    public ResourceSupport index() {
+        final ResourceSupport index = new ResourceSupport();
+        index.add(linkTo(IngredientsController.class).withRel("ingredients"));
+        return index;
     }
 
 }
