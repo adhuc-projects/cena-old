@@ -17,6 +17,9 @@ package org.adhuc.cena.menu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 
 /**
  * The menu generation application launcher.
@@ -27,6 +30,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 0.1.0
  */
 @SpringBootApplication
+@EnableConfigurationProperties(MenuGenerationProperties.class)
 public class MenuGenerationApplication {
 
     /**

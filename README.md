@@ -84,3 +84,9 @@ The docker environment can be stopped using `make down` or `cd docker && docker-
 From `cena` project folder, execute either `make test` or `mvn verify -Pfunctional-acceptance` command. The latter command will be used in all cases to run the build. The default profile will skip the acceptance tests execution.
 
 The acceptance tests are run against a docker-compose environment. The acceptance tests results are available through `cena/target/site/serenity/index.html` page.
+
+## Restful API documentation
+
+The API documentation is generated using [Spring-RestDocs](http://projects.spring.io/spring-restdocs/).
+
+Once the application is started, the Rest API documentation will be available at [`http://localhost:8080/api/docs/api-guide.html`](http://localhost:8080/api/docs/api-guide.html).
