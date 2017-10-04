@@ -160,7 +160,7 @@
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>1.5.2</version>
+        <version>1.5.6</version>
         <executions>
           <execution>
             <id>generate-docs</id>
@@ -169,6 +169,7 @@
               <goal>process-asciidoc</goal>
             </goals>
             <configuration>
+              <skip>${test.unit.skip}</skip>
               <backend>html</backend>
               <doctype>book</doctype>
               <sourceDirectory>${basedir}/src/docs</sourceDirectory>
@@ -183,6 +184,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <skip>${test.unit.skip}</skip>
         </configuration>
         <executions>
           <execution>
