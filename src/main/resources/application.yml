@@ -1,2 +1,12 @@
 management:
   context-path: /management
+
+security:
+  user:
+    name: management
+    password: management
+    role:
+    - ACTUATOR
+  ignored:
+  - /api/**
+  - /docs/**
