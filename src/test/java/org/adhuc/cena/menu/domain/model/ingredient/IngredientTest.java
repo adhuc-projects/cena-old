@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
@@ -53,6 +54,23 @@ public class IngredientTest {
         Ingredient ingredient = tomato();
         assertThat(ingredient.id()).isEqualTo(TOMATO_ID);
         assertThat(ingredient.name()).isEqualTo(TOMATO_NAME);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void changeNameWithNullValue() {
+        tomato().name(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void changeNameWithEmptyValue() {
+        tomato().name("");
+    }
+
+    @Test
+    public void changeNameWithValidValue() {
+        Ingredient ingredient = tomato();
+        ingredient.name(CUCUMBER_NAME);
+        assertThat(ingredient.name()).isEqualTo(CUCUMBER_NAME);
     }
 
 }

@@ -40,7 +40,7 @@ public class Ingredient {
 
     @JsonUnwrapped
     private final IngredientId id;
-    private final String       name;
+    private String             name;
 
     /**
      * Creates an ingredient.
@@ -55,6 +55,17 @@ public class Ingredient {
         notNull(id, "Cannot create ingredient with invalid identity");
         hasText(name, "Cannot create ingredient with invalid name");
         this.id = id;
+        this.name = name;
+    }
+
+    /**
+     * Sets the ingredient name.
+     *
+     * @param name
+     *            the new ingredient name.
+     */
+    public void name(String name) {
+        hasText(name, "Cannot change name with invalid value");
         this.name = name;
     }
 
