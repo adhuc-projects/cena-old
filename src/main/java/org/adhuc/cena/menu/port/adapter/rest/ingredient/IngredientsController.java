@@ -84,6 +84,14 @@ public class IngredientsController {
         return new ListResource<>(resourceAssembler.toResources(ingredients)).withSelfRef(listMethod);
     }
 
+    /**
+     * Creates an ingredient based on the specified request.
+     *
+     * @param request
+     *            the request to create an ingredient.
+     *
+     * @return the response headers containing the ingredient resource location.
+     */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public HttpHeaders createIngredient(@RequestBody @Valid final CreateIngredientRequest request) {
