@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
@@ -49,6 +50,11 @@ public class InMemoryIngredientRepository implements IngredientRepository {
     @Override
     public List<Ingredient> findAll() {
         return new ArrayList<>(ingredients.values());
+    }
+
+    @Override
+    public Optional<Ingredient> findOneByName(String ingredientName) {
+        return ingredients.values().stream().filter(i -> i.name().equals(ingredientName)).findFirst();
     }
 
     @Override

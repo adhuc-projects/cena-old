@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.application.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createCucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
@@ -25,6 +26,9 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomat
 import org.junit.Before;
 import org.junit.Test;
 
+import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryIngredientRepository;
 
 /**
@@ -60,6 +64,12 @@ public class IngredientAppServiceImplTest {
         service.createIngredient(createTomato());
         service.createIngredient(createCucumber());
         assertThat(service.getIngredients()).isNotEmpty().containsExactlyInAnyOrder(tomato(), cucumber());
+    }
+
+    @Test(expected = IngredientNameAlreadyUsedException.class)
+    public void createIngredientWithAlreadyUsedName() {
+        service.createIngredient(new CreateIngredient(IngredientId.generate(), TOMATO_NAME));
+        service.createIngredient(new CreateIngredient(IngredientId.generate(), TOMATO_NAME));
     }
 
 }

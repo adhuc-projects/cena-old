@@ -44,6 +44,12 @@ public class IngredientCreationStepDefinitions {
         ingredientServiceClient.assumeIngredientNotInIngredientsList(ingredient);
     }
 
+    @Given("^an existing \"(.*)\" ingredient$")
+    public void existingIngredient(final String ingredientName) {
+        final IngredientValue ingredient = ingredientServiceClient.withIngredient(ingredientName);
+        ingredientServiceClient.assumeIngredientInIngredientsList(ingredient);
+    }
+
     @When("^he creates the ingredient$")
     public void createIngredient() {
         ingredientServiceClient.createIngredient();
@@ -52,6 +58,11 @@ public class IngredientCreationStepDefinitions {
     @Then("^the ingredient is created$")
     public void ingredientCreated() {
         ingredientServiceClient.assertIngredientSuccessfullyCreated();
+    }
+
+    @Then("^an error notifies that ingredient already exists$")
+    public void errorOnIngredientCreationNameAlreadyUsed() {
+        ingredientServiceClient.assertNameAlreadyUsed();
     }
 
     @Then("^the ingredient can be found in the list$")

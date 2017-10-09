@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,15 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     @Override
     public void createIngredient(CreateIngredient command) {
         log.info("Create ingredient from command {}", command);
+        ensureIngredientNameNotUsed(command.ingredientName());
         ingredientRepository.save(new Ingredient(command.ingredientId(), command.ingredientName()));
+    }
+
+    private void ensureIngredientNameNotUsed(final String ingredientName) {
+        if (ingredientRepository.findOneByName(ingredientName).isPresent()) {
+            log.debug("Cannot create ingredient with already used name {}", ingredientName);
+            throw new IngredientNameAlreadyUsedException(ingredientName);
+        }
     }
 
 }

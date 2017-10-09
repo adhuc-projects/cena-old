@@ -21,8 +21,10 @@ import static net.serenitybdd.rest.SerenityRest.then;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -70,6 +72,14 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
         assumeFalse("Ingredient " + ingredient.name() + " should not exist", isIngredientInIngredientsList(ingredient));
     }
 
+    @Step("Assume ingredient {0} is in ingredients list")
+    public void assumeIngredientInIngredientsList(final IngredientValue ingredient) {
+        if (!isIngredientInIngredientsList(ingredient)) {
+            createIngredient(ingredient);
+        }
+        assumeTrue(isIngredientInIngredientsList(ingredient));
+    }
+
     @Step("Creates the ingredient")
     public void createIngredient() {
         createIngredient(ingredient);
@@ -96,6 +106,12 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     public void assertIngredientSuccessfullyCreated() {
         then().statusCode(CREATED.value()).header(LOCATION, containsString("/api/ingredients/"));
         // TODO get ingredient calling url from location header, and comparing information
+    }
+
+    @Step("Assert ingredient creation results in already used name error")
+    public void assertNameAlreadyUsed() {
+        then().statusCode(BAD_REQUEST.value());
+        // TODO assert error is "already used name"
     }
 
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {

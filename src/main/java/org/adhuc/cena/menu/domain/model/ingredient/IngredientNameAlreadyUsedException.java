@@ -15,44 +15,30 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
-import java.util.List;
-import java.util.Optional;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * An {@link Ingredient} repository.
+ * An exception occurring while trying to create an ingredient with already used name.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface IngredientRepository {
+@SuppressWarnings("serial")
+@ResponseStatus(BAD_REQUEST)
+public class IngredientNameAlreadyUsedException extends RuntimeException {
 
     /**
-     * Finds all the ingredients.
+     * Creates a {@code IngredientNameAlreadyUsedException} with message initialized from specified parameters.
      *
-     * @return all the ingredients.
+     * @param alreadyUsedName
+     *            the name of the ingredient.
      */
-    List<Ingredient> findAll();
-
-    /**
-     * Finds the ingredient corresponding to the specified name.
-     *
-     * @param ingredientName
-     *            the ingredient name.
-     *
-     * @return the ingredient if existing, empty otherwise.
-     */
-    Optional<Ingredient> findOneByName(String ingredientName);
-
-    /**
-     * Saves the specified ingredient.
-     *
-     * @param ingredient
-     *            the ingredient to save.
-     *
-     * @return the saved ingredient.
-     */
-    <I extends Ingredient> I save(I ingredient);
+    public IngredientNameAlreadyUsedException(final String alreadyUsedName) {
+        super("Ingredient name '" + alreadyUsedName + "' is already used");
+    }
 
 }

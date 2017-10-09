@@ -62,6 +62,19 @@ public class InMemoryIngredientRepositoryTest {
         assertThat(repository.findAll()).containsExactlyInAnyOrder(tomato(), cucumber());
     }
 
+    @Test
+    public void findOneByNameNotExisting() {
+        repository.save(cucumber());
+        assertThat(repository.findOneByName(TOMATO_NAME)).isNotPresent();
+    }
+
+    @Test
+    public void findOneByNameExisting() {
+        Ingredient tomato = tomato();
+        repository.save(tomato);
+        assertThat(repository.findOneByName(TOMATO_NAME)).isPresent().contains(tomato);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void saveNullIngredient() {
         repository.save(null);
