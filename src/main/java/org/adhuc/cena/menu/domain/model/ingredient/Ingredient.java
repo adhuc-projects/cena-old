@@ -15,6 +15,9 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -38,5 +41,21 @@ public class Ingredient {
     @JsonUnwrapped
     private final IngredientId id;
     private final String       name;
+
+    /**
+     * Creates an ingredient.
+     *
+     * @param id
+     *            the ingredient identity.
+     *
+     * @param name
+     *            the ingredient name.
+     */
+    public Ingredient(final IngredientId id, final String name) {
+        notNull(id, "Cannot create ingredient with invalid identity");
+        hasText(name, "Cannot create ingredient with invalid name");
+        this.id = id;
+        this.name = name;
+    }
 
 }
