@@ -75,7 +75,7 @@ public class InMemoryIngredientRepositoryTest {
         repository.save(ingredient);
         ingredient.name(TOMATO_NAME);
         repository.save(ingredient);
-        assertThat(repository.findAll()).containsExactly(tomato(), new Ingredient(CUCUMBER_ID, TOMATO_NAME));
+        assertThat(repository.findAll()).containsExactlyInAnyOrder(tomato(), new Ingredient(CUCUMBER_ID, TOMATO_NAME));
     }
 
 }
