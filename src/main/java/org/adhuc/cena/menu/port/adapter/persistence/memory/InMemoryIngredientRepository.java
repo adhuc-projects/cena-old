@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
@@ -40,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Repository
+@Profile("in-memory")
 public class InMemoryIngredientRepository implements IngredientRepository {
 
     private Map<IngredientId, Ingredient> ingredients = new HashMap<>();
