@@ -25,6 +25,8 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomat
 import org.junit.Before;
 import org.junit.Test;
 
+import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryIngredientRepository;
+
 /**
  * The {@link IngredientAppServiceImpl} test class.
  *
@@ -39,7 +41,7 @@ public class IngredientAppServiceImplTest {
 
     @Before
     public void setUp() {
-        service = new IngredientAppServiceImpl();
+        service = new IngredientAppServiceImpl(new InMemoryIngredientRepository());
     }
 
     @Test

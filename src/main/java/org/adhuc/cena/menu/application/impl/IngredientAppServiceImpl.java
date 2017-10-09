@@ -15,15 +15,15 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,17 +39,22 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class IngredientAppServiceImpl implements IngredientAppService {
 
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    public IngredientAppServiceImpl(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
 
     @Override
     public List<Ingredient> getIngredients() {
-        return Collections.unmodifiableList(ingredients);
+        return ingredientRepository.findAll();
     }
 
     @Override
     public void createIngredient(CreateIngredient command) {
         log.info("Create ingredient from command {}", command);
-        ingredients.add(new Ingredient(command.ingredientId(), command.ingredientName()));
+        ingredientRepository.save(new Ingredient(command.ingredientId(), command.ingredientName()));
     }
 
 }
