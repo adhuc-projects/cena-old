@@ -19,6 +19,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import org.adhuc.cena.menu.exception.CenaException;
+import org.adhuc.cena.menu.exception.ExceptionCode;
+
 /**
  * An exception occurring while trying to create an ingredient with already used name.
  *
@@ -29,7 +32,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @SuppressWarnings("serial")
 @ResponseStatus(BAD_REQUEST)
-public class IngredientNameAlreadyUsedException extends RuntimeException {
+public class IngredientNameAlreadyUsedException extends CenaException {
+
+    private static final ExceptionCode EXCEPTION_CODE = ExceptionCode.INGREDIENT_NAME_ALREADY_USED;
 
     /**
      * Creates a {@code IngredientNameAlreadyUsedException} with message initialized from specified parameters.
@@ -38,7 +43,7 @@ public class IngredientNameAlreadyUsedException extends RuntimeException {
      *            the name of the ingredient.
      */
     public IngredientNameAlreadyUsedException(final String alreadyUsedName) {
-        super("Ingredient name '" + alreadyUsedName + "' is already used");
+        super("Ingredient name '" + alreadyUsedName + "' is already used", EXCEPTION_CODE);
     }
 
 }
