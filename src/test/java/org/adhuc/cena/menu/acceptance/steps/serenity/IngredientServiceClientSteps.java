@@ -20,6 +20,7 @@ import static net.serenitybdd.rest.SerenityRest.then;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -31,11 +32,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.adhuc.cena.menu.acceptance.support.ApiClientResource;
+import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
@@ -110,8 +114,7 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
 
     @Step("Assert ingredient creation results in already used name error")
     public void assertNameAlreadyUsed() {
-        then().statusCode(BAD_REQUEST.value());
-        // TODO assert error is "already used name"
+        assertException(BAD_REQUEST, ExceptionCode.INGREDIENT_NAME_ALREADY_USED);
     }
 
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {
@@ -132,6 +135,10 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
 
     private ApiClientResource getApiClientResource() {
         return rest().get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
+    }
+
+    private void assertException(final HttpStatus status, final ExceptionCode exceptionCode) {
+        then().statusCode(status.value()).body("code", equalTo(exceptionCode.code()));
     }
 
     @Data
