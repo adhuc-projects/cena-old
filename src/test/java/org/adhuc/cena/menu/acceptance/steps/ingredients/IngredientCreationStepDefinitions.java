@@ -55,9 +55,19 @@ public class IngredientCreationStepDefinitions {
         ingredientServiceClient.createIngredient();
     }
 
+    @When("^he creates an ingredient without name$")
+    public void createIngredientWithoutName() {
+        ingredientServiceClient.createIngredientWithoutName();
+    }
+
     @Then("^the ingredient is created$")
     public void ingredientCreated() {
         ingredientServiceClient.assertIngredientSuccessfullyCreated();
+    }
+
+    @Then("^an error notifies that ingredient must have a name$")
+    public void errorOnIngredientCreationWithoutName() {
+        ingredientServiceClient.assertInvalidRequestError();
     }
 
     @Then("^an error notifies that ingredient already exists$")
@@ -68,6 +78,11 @@ public class IngredientCreationStepDefinitions {
     @Then("^the ingredient can be found in the list$")
     public void ingredientFoundInList() {
         ingredientServiceClient.assertIngredientInIngredientsList();
+    }
+
+    @Then("^the ingredient cannot be found in the list$")
+    public void ingredientNotFoundInList() {
+        ingredientServiceClient.assertIngredientNotInIngredientsList();
     }
 
 }

@@ -41,6 +41,7 @@ public enum ExceptionCode {
 
     // General errors
     INTERNAL_ERROR(100000, "Internal error occurred"),
+    INVALID_REQUEST(101000, "Invalid request"),
 
     INGREDIENT_NAME_ALREADY_USED(900100, "Ingredient name already used");
 

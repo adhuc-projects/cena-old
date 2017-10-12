@@ -89,6 +89,12 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
         createIngredient(ingredient);
     }
 
+    @Step("Creates an ingredient without name")
+    public void createIngredientWithoutName() {
+        ingredient = new IngredientValue();
+        createIngredient(ingredient);
+    }
+
     @Step("Creates the ingredient {0}")
     public void createIngredient(final IngredientValue ingredient) {
         final String ingredientsResourceUrl = getIngredientsResourceUrl();
@@ -101,15 +107,30 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
         assertIngredientInIngredientsList(ingredient);
     }
 
+    @Step("Assert ingredient is not in ingredients list")
+    public void assertIngredientNotInIngredientsList() {
+        assertIngredientNotInIngredientsList(ingredient);
+    }
+
     @Step("Assert ingredient {0} is in ingredients list")
     public void assertIngredientInIngredientsList(final IngredientValue ingredient) {
         assertThat(isIngredientInIngredientsList(ingredient)).isTrue();
+    }
+
+    @Step("Assert ingredient {0} is not in ingredients list")
+    public void assertIngredientNotInIngredientsList(final IngredientValue ingredient) {
+        assertThat(isIngredientInIngredientsList(ingredient)).isFalse();
     }
 
     @Step("Assert ingredient has been successfully created")
     public void assertIngredientSuccessfullyCreated() {
         then().statusCode(CREATED.value()).header(LOCATION, containsString("/api/ingredients/"));
         // TODO get ingredient calling url from location header, and comparing information
+    }
+
+    @Step("Assert ingredient creation results in invalid request error")
+    public void assertInvalidRequestError() {
+        assertException(BAD_REQUEST, ExceptionCode.INVALID_REQUEST);
     }
 
     @Step("Assert ingredient creation results in already used name error")

@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.port.adapter.rest.InvalidRestRequestException;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A REST controller exposing /api/ingredients resource.
@@ -48,6 +52,7 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/ingredients", produces = HAL_JSON_VALUE)
 public class IngredientsController {
@@ -94,13 +99,22 @@ public class IngredientsController {
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public HttpHeaders createIngredient(@RequestBody @Valid final CreateIngredientRequest request) {
+    public HttpHeaders createIngredient(@RequestBody @Valid final CreateIngredientRequest request,
+            BindingResult bindingResult) {
+        validateRequest(bindingResult);
         final IngredientId identity = IngredientId.generate();
         ingredientAppService.createIngredient(request.toCommand(identity));
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(IngredientController.class, identity.toString()).toUri());
         return httpHeaders;
+    }
+
+    private void validateRequest(final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.debug("Request validation raises errors : {}", bindingResult);
+            throw new InvalidRestRequestException(bindingResult);
+        }
     }
 
 }
