@@ -43,16 +43,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
+import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
@@ -69,6 +74,8 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = IngredientsController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
+@EnableConfigurationProperties(MenuGenerationProperties.class)
+@Import(WebSecurityConfiguration.class)
 public class IngredientsControllerTest extends ControllerTestSupport {
 
     private static final String  INGREDIENTS_API_URL = "/api/ingredients";
@@ -125,12 +132,14 @@ public class IngredientsControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void createIngredientInvalidRequest() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void createIngredientCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
 
@@ -141,12 +150,14 @@ public class IngredientsControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void createIngredientReturnsCreatedStatus() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(status().isCreated());
     }
 
     @Test
+    @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void createIngredientReturnsLocationHeader() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
         doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());

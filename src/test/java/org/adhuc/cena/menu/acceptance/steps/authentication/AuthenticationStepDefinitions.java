@@ -15,7 +15,14 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.authentication;
 
+import static org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.authenticatedUser;
+import static org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.ingredientManager;
+
+import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientSteps;
+
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import net.thucydides.core.annotations.Steps;
 
 /**
  * The authentication steps definitions for rest-services acceptance tests.
@@ -27,9 +34,32 @@ import cucumber.api.java.en.Given;
  */
 public class AuthenticationStepDefinitions {
 
+    @Steps
+    IngredientServiceClientSteps ingredientServiceClient;
+
     @Given("^an authenticated ingredient manager$")
     public void authenticatedIngredientManager() {
-        // TODO manage authentication
+        ingredientServiceClient.withIngredientManager(ingredientManager());
+    }
+
+    @Given("^an anonymous user$")
+    public void anonymousUser() {
+        ingredientServiceClient.withAnonymousUser();
+    }
+
+    @Given("^an authenticated user that is not ingredient manager$")
+    public void authenticatedNotIngredientManager() {
+        ingredientServiceClient.withIngredientManager(authenticatedUser());
+    }
+
+    @Then("^an error notifies that user is not authenticated$")
+    public void errorUserNotAuthenticated() {
+        ingredientServiceClient.assertUserNotAuthenticated();
+    }
+
+    @Then("^an error notifies that user does not have sufficient rights$")
+    public void errorUserWithInsufficientRights() {
+        ingredientServiceClient.assertUserWithInsufficientRights();
     }
 
 }

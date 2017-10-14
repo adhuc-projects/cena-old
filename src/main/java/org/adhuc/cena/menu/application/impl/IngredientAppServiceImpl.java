@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.application.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
@@ -53,6 +54,7 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('INGREDIENT_MANAGER')")
     public void createIngredient(CreateIngredient command) {
         log.info("Create ingredient from command {}", command);
         ensureIngredientNameNotUsed(command.ingredientName());

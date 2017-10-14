@@ -12,9 +12,16 @@ security:
     password: management
     role:
     - ACTUATOR
-  ignored:
-  - /api/**
-  - /docs/**
+
+cena:
+  menu-generation:
+    authentication:
+      ingredient-manager:
+        username: ingredient-manager
+        password: ingredient-manager
+      user:
+        username: authenticated-user
+        password: authenticated-user
 
 ### Logging configuration
 logging:
@@ -22,3 +29,4 @@ logging:
     console: '[%-5p] %d | %c{1}:%L | %m%n'
   level:
     org.adhuc.cena.menu: TRACE
+    org.springframework.security: DEBUG

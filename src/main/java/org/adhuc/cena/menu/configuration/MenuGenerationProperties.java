@@ -31,7 +31,8 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "cena.menu-generation")
 public class MenuGenerationProperties {
 
-    private Documentation documentation = new Documentation();
+    private Documentation  documentation  = new Documentation();
+    private Authentication authentication = new Authentication();
 
     @Data
     public static class Documentation {
@@ -39,6 +40,22 @@ public class MenuGenerationProperties {
         private boolean enabled = true;
         /** Path to documentation resources. Default is '/api/docs'. */
         private String  path    = "/api/docs";
+    }
+
+    @Data
+    public static class Authentication {
+
+        private UsernamePassword ingredientManager;
+        private UsernamePassword user;
+
+    }
+
+    @Data
+    public static class UsernamePassword {
+        /** The username. */
+        private String username;
+        /** The password. */
+        private String password;
     }
 
 }

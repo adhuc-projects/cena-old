@@ -38,11 +38,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.AcceptanceAuthentication;
 import org.adhuc.cena.menu.acceptance.support.ApiClientResource;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
+import io.restassured.specification.RequestSpecification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,9 +63,20 @@ import net.thucydides.core.steps.ScenarioSteps;
 @SuppressWarnings("serial")
 public class IngredientServiceClientSteps extends ScenarioSteps {
 
-    private static final String API_URL = "/api";
+    private static final String      API_URL = "/api";
 
-    private IngredientValue     ingredient;
+    private AcceptanceAuthentication authentication;
+    private IngredientValue          ingredient;
+
+    @Step("Given an anonymous user")
+    public void withAnonymousUser() {
+        withAuthentication(null);
+    }
+
+    @Step("Given an ingredient manager {0}")
+    public void withIngredientManager(final AcceptanceAuthentication authentication) {
+        withAuthentication(authentication);
+    }
 
     @Step("Given an ingredient named \"{0}\"")
     public IngredientValue withIngredient(final String ingredientName) {
@@ -98,7 +111,7 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     @Step("Creates the ingredient {0}")
     public void createIngredient(final IngredientValue ingredient) {
         final String ingredientsResourceUrl = getIngredientsResourceUrl();
-        rest().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        restWithAuth().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .post(ingredientsResourceUrl).andReturn();
     }
 
@@ -138,6 +151,24 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
         assertException(BAD_REQUEST, ExceptionCode.INGREDIENT_NAME_ALREADY_USED);
     }
 
+    @Step("Assert user is not authenticated")
+    public void assertUserNotAuthenticated() {
+        assertException(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Step("Assert user does not have sufficient rights")
+    public void assertUserWithInsufficientRights() {
+        assertException(HttpStatus.FORBIDDEN);
+    }
+
+    private void withAuthentication(final AcceptanceAuthentication authentication) {
+        this.authentication = authentication;
+    }
+
+    private RequestSpecification restWithAuth() {
+        return authentication != null ? authentication.restWithAuth() : rest();
+    }
+
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {
         return getIngredientFromIngredientsList(ingredient).isPresent();
     }
@@ -156,6 +187,10 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
 
     private ApiClientResource getApiClientResource() {
         return rest().get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
+    }
+
+    private void assertException(final HttpStatus status) {
+        then().statusCode(status.value());
     }
 
     private void assertException(final HttpStatus status, final ExceptionCode exceptionCode) {

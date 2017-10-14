@@ -26,6 +26,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
@@ -39,17 +40,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
+import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
@@ -67,6 +73,8 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
 @WebMvcTest(controllers = IngredientsController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
+@EnableConfigurationProperties(MenuGenerationProperties.class)
+@Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 public class IngredientsDocumentation extends ControllerTestSupport {
 
@@ -100,12 +108,13 @@ public class IngredientsDocumentation extends ControllerTestSupport {
     }
 
     @Test
+    @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void ingredientsCreateExample() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
         doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());
 
         ConstrainedFields fields = new ConstrainedFields(CreateIngredientRequest.class);
-        mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
+        mvc.perform(post(INGREDIENTS_API_URL).with(csrf()).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(status().isCreated()).andDo(documentationHandler
                         .document(requestFields(fields.withPath("name").description("The name of the ingredient"))));
     }

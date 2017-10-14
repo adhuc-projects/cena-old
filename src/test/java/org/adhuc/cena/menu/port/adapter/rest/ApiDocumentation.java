@@ -27,12 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
+import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 
 /**
  * The general API documentation.
@@ -45,6 +50,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = IndexController.class)
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
+@EnableConfigurationProperties(MenuGenerationProperties.class)
+@Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 public class ApiDocumentation extends ControllerTestSupport {
 
