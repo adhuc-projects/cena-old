@@ -15,10 +15,12 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
+import org.springframework.http.HttpStatus;
+
 import net.thucydides.core.annotations.Step;
 
 /**
- * The actuator rest-service client steps definition.
+ * The authentication rest-service client steps definition.
  *
  * @author Alexandre Carbenay
  *
@@ -26,16 +28,31 @@ import net.thucydides.core.annotations.Step;
  * @since 0.1.0
  */
 @SuppressWarnings("serial")
-public class ActuatorServiceClientSteps extends AbstractServiceClientSteps {
+public class AuthenticationServiceClientSteps extends AbstractServiceClientSteps {
 
-    @Step("Call health check service")
-    public void callHealthCheckService() {
-        rest().get("/management/health").andReturn();
+    @Step("Given an anonymous user")
+    public void withAnonymousUser() {
+        restAuthenticationProvider.withAnonymousUser();
     }
 
-    @Step("Assert rest-service response is OK")
-    public void assertResponseIsOk() {
-        assertOk();
+    @Step("Given an authenticated user")
+    public void withAuthenticatedUser() {
+        restAuthenticationProvider.withAuthenticatedUser();
+    }
+
+    @Step("Given an ingredient manager")
+    public void withIngredientManager() {
+        restAuthenticationProvider.withIngredientManager();
+    }
+
+    @Step("Assert user is not authenticated")
+    public void assertUserNotAuthenticated() {
+        assertException(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Step("Assert user does not have sufficient rights")
+    public void assertUserWithInsufficientRights() {
+        assertException(HttpStatus.FORBIDDEN);
     }
 
 }

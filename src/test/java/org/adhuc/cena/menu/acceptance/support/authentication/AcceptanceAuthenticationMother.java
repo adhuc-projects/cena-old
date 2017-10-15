@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity;
+package org.adhuc.cena.menu.acceptance.support.authentication;
 
 import static net.serenitybdd.rest.SerenityRest.rest;
 
@@ -27,21 +27,21 @@ import io.restassured.specification.RequestSpecification;
  * @version 0.1.0
  * @since 0.1.0
  */
-public class AcceptanceAuthenticationMother {
+public final class AcceptanceAuthenticationMother {
 
-    public static AcceptanceAuthentication ingredientManager() {
+    protected static AcceptanceAuthentication ingredientManager() {
         return new BasicAuthentication("ingredient-manager", "ingredient-manager");
     }
 
-    public static AcceptanceAuthentication authenticatedUser() {
+    protected static AcceptanceAuthentication authenticatedUser() {
         return new BasicAuthentication("authenticated-user", "authenticated-user");
     }
 
-    public static interface AcceptanceAuthentication {
+    protected static interface AcceptanceAuthentication {
         RequestSpecification restWithAuth();
     }
 
-    public static class BasicAuthentication implements AcceptanceAuthentication {
+    protected static class BasicAuthentication implements AcceptanceAuthentication {
         private final String username;
         private final String password;
 

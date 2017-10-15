@@ -13,12 +13,9 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.authentication;
+package org.adhuc.cena.menu.acceptance.steps;
 
-import static org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.authenticatedUser;
-import static org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.ingredientManager;
-
-import org.adhuc.cena.menu.acceptance.steps.serenity.IngredientServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.AuthenticationServiceClientSteps;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -35,31 +32,31 @@ import net.thucydides.core.annotations.Steps;
 public class AuthenticationStepDefinitions {
 
     @Steps
-    IngredientServiceClientSteps ingredientServiceClient;
+    AuthenticationServiceClientSteps authenticationServiceClient;
 
     @Given("^an authenticated ingredient manager$")
     public void authenticatedIngredientManager() {
-        ingredientServiceClient.withIngredientManager(ingredientManager());
+        authenticationServiceClient.withIngredientManager();
     }
 
     @Given("^an anonymous user$")
     public void anonymousUser() {
-        ingredientServiceClient.withAnonymousUser();
+        authenticationServiceClient.withAnonymousUser();
     }
 
     @Given("^an authenticated user that is not ingredient manager$")
     public void authenticatedNotIngredientManager() {
-        ingredientServiceClient.withIngredientManager(authenticatedUser());
+        authenticationServiceClient.withAuthenticatedUser();
     }
 
     @Then("^an error notifies that user is not authenticated$")
     public void errorUserNotAuthenticated() {
-        ingredientServiceClient.assertUserNotAuthenticated();
+        authenticationServiceClient.assertUserNotAuthenticated();
     }
 
     @Then("^an error notifies that user does not have sufficient rights$")
     public void errorUserWithInsufficientRights() {
-        ingredientServiceClient.assertUserWithInsufficientRights();
+        authenticationServiceClient.assertUserWithInsufficientRights();
     }
 
 }

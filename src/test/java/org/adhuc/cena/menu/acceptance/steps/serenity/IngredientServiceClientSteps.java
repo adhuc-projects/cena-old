@@ -15,42 +15,31 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
-import static net.serenitybdd.rest.SerenityRest.rest;
-import static net.serenitybdd.rest.SerenityRest.then;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.AcceptanceAuthenticationMother.AcceptanceAuthentication;
-import org.adhuc.cena.menu.acceptance.support.ApiClientResource;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
-import io.restassured.specification.RequestSpecification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import net.thucydides.core.annotations.Step;
-import net.thucydides.core.steps.ScenarioSteps;
 
 /**
  * The ingredient rest-service client steps definition.
@@ -61,22 +50,9 @@ import net.thucydides.core.steps.ScenarioSteps;
  * @since 0.1.0
  */
 @SuppressWarnings("serial")
-public class IngredientServiceClientSteps extends ScenarioSteps {
+public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
-    private static final String      API_URL = "/api";
-
-    private AcceptanceAuthentication authentication;
-    private IngredientValue          ingredient;
-
-    @Step("Given an anonymous user")
-    public void withAnonymousUser() {
-        withAuthentication(null);
-    }
-
-    @Step("Given an ingredient manager {0}")
-    public void withIngredientManager(final AcceptanceAuthentication authentication) {
-        withAuthentication(authentication);
-    }
+    private IngredientValue ingredient;
 
     @Step("Given an ingredient named \"{0}\"")
     public IngredientValue withIngredient(final String ingredientName) {
@@ -111,7 +87,7 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     @Step("Creates the ingredient {0}")
     public void createIngredient(final IngredientValue ingredient) {
         final String ingredientsResourceUrl = getIngredientsResourceUrl();
-        restWithAuth().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        rest().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .post(ingredientsResourceUrl).andReturn();
     }
 
@@ -137,7 +113,7 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
 
     @Step("Assert ingredient has been successfully created")
     public void assertIngredientSuccessfullyCreated() {
-        then().statusCode(CREATED.value()).header(LOCATION, containsString("/api/ingredients/"));
+        assertCreated().header(LOCATION, containsString("/api/ingredients/"));
         // TODO get ingredient calling url from location header, and comparing information
     }
 
@@ -149,24 +125,6 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
     @Step("Assert ingredient creation results in already used name error")
     public void assertNameAlreadyUsed() {
         assertException(BAD_REQUEST, ExceptionCode.INGREDIENT_NAME_ALREADY_USED);
-    }
-
-    @Step("Assert user is not authenticated")
-    public void assertUserNotAuthenticated() {
-        assertException(HttpStatus.UNAUTHORIZED);
-    }
-
-    @Step("Assert user does not have sufficient rights")
-    public void assertUserWithInsufficientRights() {
-        assertException(HttpStatus.FORBIDDEN);
-    }
-
-    private void withAuthentication(final AcceptanceAuthentication authentication) {
-        this.authentication = authentication;
-    }
-
-    private RequestSpecification restWithAuth() {
-        return authentication != null ? authentication.restWithAuth() : rest();
     }
 
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {
@@ -183,18 +141,6 @@ public class IngredientServiceClientSteps extends ScenarioSteps {
 
     private String getIngredientsResourceUrl() {
         return getApiClientResource().getIngredients().getHref();
-    }
-
-    private ApiClientResource getApiClientResource() {
-        return rest().get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
-    }
-
-    private void assertException(final HttpStatus status) {
-        then().statusCode(status.value());
-    }
-
-    private void assertException(final HttpStatus status, final ExceptionCode exceptionCode) {
-        then().statusCode(status.value()).body("code", equalTo(exceptionCode.code()));
     }
 
     @Data

@@ -1,5 +1,7 @@
 package org.adhuc.cena.menu.acceptance.steps;
 
+import org.adhuc.cena.menu.acceptance.support.authentication.RestAuthenticationProvider;
+
 import cucumber.api.java.Before;
 import cucumber.runtime.java.StepDefAnnotation;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,8 @@ public class InitializationStepDefinitions {
         int port = getPort();
         log.info("Run tests with port {}", port);
         SerenityRest.setDefaultPort(port);
+
+        RestAuthenticationProvider.instance().clean();
     }
 
     private int getPort() {

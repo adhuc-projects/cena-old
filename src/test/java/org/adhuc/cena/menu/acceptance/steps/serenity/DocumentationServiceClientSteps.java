@@ -15,13 +15,7 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
-import static net.serenitybdd.rest.SerenityRest.rest;
-import static net.serenitybdd.rest.SerenityRest.then;
-
-import static org.springframework.http.HttpStatus.OK;
-
 import net.thucydides.core.annotations.Step;
-import net.thucydides.core.steps.ScenarioSteps;
 
 /**
  * The documentation rest-service client steps definition.
@@ -32,7 +26,7 @@ import net.thucydides.core.steps.ScenarioSteps;
  * @since 0.1.0
  */
 @SuppressWarnings("serial")
-public class DocumentationServiceClientSteps extends ScenarioSteps {
+public class DocumentationServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Get documentation")
     public void getDocumentation() {
@@ -41,7 +35,7 @@ public class DocumentationServiceClientSteps extends ScenarioSteps {
 
     @Step("Assert documentation is available")
     public void assertDocumentationIsAvailable() {
-        then().statusCode(OK.value());
+        assertOk();
     }
 
 }
