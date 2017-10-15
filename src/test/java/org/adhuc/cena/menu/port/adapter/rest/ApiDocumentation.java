@@ -74,7 +74,7 @@ public class ApiDocumentation extends ControllerTestSupport {
         mvc.perform(get(API_URL)).andExpect(status().isOk()).andDo(documentationHandler.document(links(
                 linkWithRel("documentation").description("This documentation"),
                 linkWithRel("management").description(
-                        "The <a href=\"https://docs.spring.io/spring-boot/docs/1.5.7.RELEASE/reference/htmlsingle/#production-ready-endpoints\">spring boot actuator</a> endpoints"),
+                        "The https://docs.spring.io/spring-boot/docs/1.5.7.RELEASE/reference/htmlsingle/#production-ready-endpoints[Spring Boot Actuator] endpoints"),
                 linkWithRel("ingredients").description("The <<resources-ingredients,Ingredients resource>>")),
                 responseFields(subsectionWithPath("_links")
                         .description("<<resources-index-links,Links>> to other resources"))));
