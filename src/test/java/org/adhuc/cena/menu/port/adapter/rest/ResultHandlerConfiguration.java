@@ -15,6 +15,10 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest;
 
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -33,7 +37,8 @@ public class ResultHandlerConfiguration {
 
     @Bean
     public RestDocumentationResultHandler restDocumentation() {
-        return MockMvcRestDocumentation.document("{method-name}");
+        return MockMvcRestDocumentation.document("{method-name}", preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()));
     }
 
 }
