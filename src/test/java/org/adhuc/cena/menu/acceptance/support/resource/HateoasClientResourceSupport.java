@@ -15,28 +15,39 @@
  */
 package org.adhuc.cena.menu.acceptance.support.resource;
 
+import java.util.List;
+
 import org.springframework.hateoas.Link;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
- * A REST resource encapsulating API information on the client side.
+ * An abstract REST resource providing HATEOAS support on the client side.
+ * <p>
+ * Do <b>NOT</b> extend with class directly, but prefer using {@link HateoasHalClientResourceSupport} or
+ * {@link HateoasJsonClientResourceSupport}, respectively for application/hal+json or application/json content-types.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public abstract class HateoasClientResourceSupport {
 
-    public Link getManagement() {
-        return getLink("management");
+    @JsonIgnore
+    public Link getId() {
+        return getLink(Link.REL_SELF);
     }
 
-    public Link getDocumentation() {
-        return getLink("documentation");
+    public Link getLink(final String rel) {
+        for (final Link link : links()) {
+            if (link.getRel().equals(rel)) {
+                return link;
+            }
+        }
+        return null;
     }
 
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
+    protected abstract List<Link> links();
 
 }

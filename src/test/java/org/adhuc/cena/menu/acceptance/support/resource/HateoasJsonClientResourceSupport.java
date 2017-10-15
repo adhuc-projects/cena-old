@@ -18,41 +18,28 @@ package org.adhuc.cena.menu.acceptance.support.resource;
 import java.util.List;
 
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.hal.Jackson2HalModule.HalLinkListDeserializer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /**
- * An abstract REST resource on the client side.
+ * An abstract REST resource providing HATEOAS support with application/json content-type on the client side.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
+@Getter
+@Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public abstract class AbstractClientResource {
+public abstract class HateoasJsonClientResourceSupport extends HateoasClientResourceSupport {
 
-    @JsonProperty("_links")
-    @JsonDeserialize(using = HalLinkListDeserializer.class)
+    @JsonProperty("links")
     private List<Link> links;
-
-    @JsonIgnore
-    public Link getId() {
-        return getLink(Link.REL_SELF);
-    }
-
-    public Link getLink(final String rel) {
-        for (final Link link : links) {
-            if (link.getRel().equals(rel)) {
-                return link;
-            }
-        }
-        return null;
-    }
 
 }

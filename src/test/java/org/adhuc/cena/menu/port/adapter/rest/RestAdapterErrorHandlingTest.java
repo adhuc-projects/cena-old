@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.exception.CenaException;
 import org.adhuc.cena.menu.exception.ExceptionCode;
@@ -56,6 +58,7 @@ import org.adhuc.cena.menu.exception.ExceptionCode;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@EnableConfigurationProperties(MenuGenerationProperties.class)
 @AutoConfigureMockMvc
 public class RestAdapterErrorHandlingTest {
 

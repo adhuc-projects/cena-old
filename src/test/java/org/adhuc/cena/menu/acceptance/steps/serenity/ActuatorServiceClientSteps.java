@@ -15,6 +15,10 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
+import static org.springframework.http.HttpStatus.OK;
+
+import org.adhuc.cena.menu.acceptance.support.resource.ManagementClientResource;
+
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -30,12 +34,25 @@ public class ActuatorServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Call health check service")
     public void callHealthCheckService() {
-        rest().get("/management/health").andReturn();
+        rest().get(getHealthResourceUrl()).andReturn();
     }
 
     @Step("Assert rest-service response is OK")
     public void assertResponseIsOk() {
         assertOk();
+    }
+
+    private String getManagementResourceUrl() {
+        return getApiClientResource().getManagement().getHref();
+    }
+
+    private String getHealthResourceUrl() {
+        return getManagementClientResource().getHealth().getHref();
+    }
+
+    private ManagementClientResource getManagementClientResource() {
+        return rest().get(getManagementResourceUrl()).then().statusCode(OK.value()).extract()
+                .as(ManagementClientResource.class);
     }
 
 }

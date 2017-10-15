@@ -11,7 +11,7 @@ echo Wait until service is available
 :loop
 if /i %count% geq %MAX_WAIT_TIME% goto :timeout
 
-curl -sI --url http://localhost:%PORT%/management/health
+curl -sI --url http://localhost:%PORT%/api/management/health
 
 if /i %ERRORLEVEL% NEQ 0 goto :retry
 goto :up

@@ -9,7 +9,7 @@ cd .. && make up
 
 # Wait for application to startup
 count=0
-until $(curl --output /dev/null --silent --head --fail http://localhost:$PORT/management/health) || ((count == MAX_WAIT_TIME)); do
+until $(curl --output /dev/null --silent --head --fail http://localhost:$PORT/api/management/health) || ((count == MAX_WAIT_TIME)); do
    printf '.'
    ((count++))
    sleep 1

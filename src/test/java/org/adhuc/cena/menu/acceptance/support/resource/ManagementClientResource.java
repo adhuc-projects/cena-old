@@ -13,33 +13,22 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity;
+package org.adhuc.cena.menu.acceptance.support.resource;
 
-import net.thucydides.core.annotations.Step;
+import org.springframework.hateoas.Link;
 
 /**
- * The documentation rest-service client steps definition.
+ * A REST resource encapsulating management information on the client side.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@SuppressWarnings("serial")
-public class DocumentationServiceClientSteps extends AbstractServiceClientSteps {
+public class ManagementClientResource extends HateoasJsonClientResourceSupport {
 
-    @Step("Get documentation")
-    public void getDocumentation() {
-        rest().get(getDocumentationResourceUrl()).andReturn();
-    }
-
-    @Step("Assert documentation is available")
-    public void assertDocumentationIsAvailable() {
-        assertOk();
-    }
-
-    private String getDocumentationResourceUrl() {
-        return getApiClientResource().getDocumentation().getHref();
+    public Link getHealth() {
+        return getLink("health");
     }
 
 }
