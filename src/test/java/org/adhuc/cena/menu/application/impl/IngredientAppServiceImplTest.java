@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.application.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createCucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
@@ -53,6 +54,12 @@ public class IngredientAppServiceImplTest {
         assertThat(service.getIngredients()).isEmpty();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void getIngredientsIsNotModifiable() {
+        service.createIngredient(createTomato());
+        service.getIngredients().add(tomato());
+    }
+
     @Test
     public void getIngredientsContainsCreatedIngredient() {
         service.createIngredient(createTomato());
@@ -64,6 +71,27 @@ public class IngredientAppServiceImplTest {
         service.createIngredient(createTomato());
         service.createIngredient(createCucumber());
         assertThat(service.getIngredients()).isNotEmpty().containsExactlyInAnyOrder(tomato(), cucumber());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getIngredientNullId() {
+        service.getIngredient(null);
+    }
+
+    @Test
+    public void getUnknownIngredient() {
+        assertThat(service.getIngredient(TOMATO_ID)).isEmpty();
+    }
+
+    @Test
+    public void getCreatedIngredient() {
+        service.createIngredient(createTomato());
+        assertThat(service.getIngredient(TOMATO_ID)).isNotEmpty().contains(tomato());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createIngredientNullCommand() {
+        service.createIngredient(null);
     }
 
     @Test(expected = IngredientNameAlreadyUsedException.class)

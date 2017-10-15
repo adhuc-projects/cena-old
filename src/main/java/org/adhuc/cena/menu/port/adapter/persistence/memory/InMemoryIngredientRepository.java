@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,12 @@ public class InMemoryIngredientRepository implements IngredientRepository {
 
     @Override
     public List<Ingredient> findAll() {
-        return new ArrayList<>(ingredients.values());
+        return Collections.unmodifiableList(new ArrayList<>(ingredients.values()));
+    }
+
+    @Override
+    public Optional<Ingredient> findOne(IngredientId ingredientId) {
+        return Optional.ofNullable(ingredients.get(ingredientId));
     }
 
     @Override

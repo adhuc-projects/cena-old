@@ -16,7 +16,6 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -113,8 +112,19 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Assert ingredient has been successfully created")
     public void assertIngredientSuccessfullyCreated() {
-        assertCreated().header(LOCATION, containsString("/api/ingredients/"));
-        // TODO get ingredient calling url from location header, and comparing information
+        String ingredientLocation = assertCreated().extract().header(LOCATION);
+        IngredientValue ingredient = getIngredientFromUrl(ingredientLocation);
+        assertIngredientInfoIsEqualToExpected(this.ingredient, ingredient);
+    }
+
+    @Step("Get ingredient from {0}")
+    public IngredientValue getIngredientFromUrl(String ingredientDetailUrl) {
+        return rest().get(ingredientDetailUrl).then().extract().as(IngredientValue.class);
+    }
+
+    @Step("Assert ingredient {1} corresponds to expected {0}")
+    public void assertIngredientInfoIsEqualToExpected(IngredientValue expected, IngredientValue actual) {
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "id");
     }
 
     @Step("Assert ingredient creation results in invalid request error")

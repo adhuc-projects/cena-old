@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
@@ -60,6 +61,19 @@ public class InMemoryIngredientRepositoryTest {
         repository.save(tomato());
         repository.save(cucumber());
         assertThat(repository.findAll()).containsExactlyInAnyOrder(tomato(), cucumber());
+    }
+
+    @Test
+    public void findOneNotExisting() {
+        repository.save(cucumber());
+        assertThat(repository.findOne(TOMATO_ID)).isNotPresent();
+    }
+
+    @Test
+    public void findOneExisting() {
+        Ingredient tomato = tomato();
+        repository.save(tomato);
+        assertThat(repository.findOne(TOMATO_ID)).isPresent().contains(tomato);
     }
 
     @Test

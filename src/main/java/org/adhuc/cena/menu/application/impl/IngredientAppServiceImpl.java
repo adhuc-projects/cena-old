@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
+import static org.springframework.util.Assert.notNull;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -57,13 +59,14 @@ public class IngredientAppServiceImpl implements IngredientAppService {
 
     @Override
     public Optional<Ingredient> getIngredient(IngredientId ingredientId) {
-        // TODO implement
-        return Optional.empty();
+        notNull(ingredientId, "Cannot get ingredient from invalid identity");
+        return ingredientRepository.findOne(ingredientId);
     }
 
     @Override
     @PreAuthorize("hasRole('INGREDIENT_MANAGER')")
     public void createIngredient(CreateIngredient command) {
+        notNull(command, "Cannot create ingredient from invalid command");
         log.info("Create ingredient from command {}", command);
         ensureIngredientNameNotUsed(command.ingredientName());
         ingredientRepository.save(new Ingredient(command.ingredientId(), command.ingredientName()));

@@ -35,7 +35,7 @@ public interface IngredientAppService {
     /**
      * Gets the ingredients.
      *
-     * @return the ingredients.
+     * @return the ingredients (not modifiable).
      */
     List<Ingredient> getIngredients();
 

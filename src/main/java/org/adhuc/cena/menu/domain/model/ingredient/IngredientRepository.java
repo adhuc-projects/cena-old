@@ -36,6 +36,16 @@ public interface IngredientRepository {
     List<Ingredient> findAll();
 
     /**
+     * Finds the ingredient corresponding to the specified identity.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     *
+     * @return the ingredient if existing, empty otherwise.
+     */
+    Optional<Ingredient> findOne(IngredientId ingredientId);
+
+    /**
      * Finds the ingredient corresponding to the specified name.
      *
      * @param ingredientName
