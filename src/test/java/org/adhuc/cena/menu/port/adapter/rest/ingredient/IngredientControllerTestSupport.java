@@ -13,42 +13,32 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest;
+package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 
 /**
- * An abstract supporting class to be extended by controllers tests classes.
+ * An abstract supporting class to be extended by ingredients controllers tests classes.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public abstract class ControllerTestSupport {
+public abstract class IngredientControllerTestSupport extends ControllerTestSupport {
 
-    private ObjectMapper mapper = new ObjectMapper();
-
-    protected final String asJson(Object object) {
-        try {
-            return mapper.writeValueAsString(object);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected final void assertSelfLinkEqualToRequestUrl(ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$._links.self.href").exists())
-                .andExpect(jsonPath("$._links.self.href", equalTo(getRequestUrl(resultActions))));
-    }
-
-    private String getRequestUrl(ResultActions resultActions) {
-        return resultActions.andReturn().getRequest().getRequestURL().toString();
+    protected void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
+            final Ingredient ingredient) throws Exception {
+        resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
+                .andExpect(jsonPath(jsonPath + ".id", equalTo(ingredient.id().toString())))
+                .andExpect(jsonPath(jsonPath + ".name").exists())
+                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())));
     }
 
 }

@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.application.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 
@@ -51,6 +53,12 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     @Override
     public List<Ingredient> getIngredients() {
         return ingredientRepository.findAll();
+    }
+
+    @Override
+    public Optional<Ingredient> getIngredient(IngredientId ingredientId) {
+        // TODO implement
+        return Optional.empty();
     }
 
     @Override

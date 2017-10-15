@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
+import static java.util.Objects.nonNull;
+
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -42,6 +44,16 @@ public class IngredientId {
      * @param id
      *            the identity value.
      */
+    public IngredientId(final String id) {
+        this(UUID.fromString(id));
+    }
+
+    /**
+     * Creates an ingredient identity with the specified value.
+     *
+     * @param id
+     *            the identity value.
+     */
     private IngredientId(UUID id) {
         this.id = id;
     }
@@ -53,6 +65,22 @@ public class IngredientId {
      */
     public static IngredientId generate() {
         return new IngredientId(UUID.randomUUID());
+    }
+
+    /**
+     * Indicates whether the specified value is a well formed ingredient identity.
+     *
+     * @param value
+     *            the identity value.
+     *
+     * @return {@code true} if the value is well formed ingredient identity, {@code false otherwise}.
+     */
+    public static boolean isWellFormed(final String value) {
+        try {
+            return nonNull(value) && nonNull(new IngredientId(value));
+        } catch (final IllegalArgumentException e) {
+            return false;
+        }
     }
 
     @Override

@@ -15,30 +15,26 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
-import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
-import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -48,7 +44,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,13 +51,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
-import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
-import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
 
 /**
- * The ingredients related rest-services documentation.
+ * The ingredient related rest-services documentation.
  *
  * @author Alexandre Carbenay
  *
@@ -70,15 +62,15 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
  * @since 0.1.0
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = IngredientsController.class,
+@WebMvcTest(controllers = IngredientController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
-public class IngredientsDocumentation extends ControllerTestSupport {
+public class IngredientDocumentation {
 
-    private static final String            INGREDIENTS_API_URL = "/api/ingredients";
+    private static final String            INGREDIENT_API_URL = "/api/ingredients/{id}";
 
     @Autowired
     private MockMvc                        mvc;
@@ -94,33 +86,16 @@ public class IngredientsDocumentation extends ControllerTestSupport {
     }
 
     @Test
-    public void ingredientsListExample() throws Exception {
-        when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
+    public void ingredientDetailExample() throws Exception {
+        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
 
-        mvc.perform(get(INGREDIENTS_API_URL)).andExpect(status().isOk())
+        mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isOk())
                 .andDo(documentationHandler.document(
-                        links(linkWithRel("self").description("This <<resources-ingredients,ingredients list>>")),
-                        responseFields(
-                                subsectionWithPath("_embedded.data")
-                                        .description("An array of <<resources-ingredient, Ingredient resources>>"),
-                                subsectionWithPath("_links")
-                                        .description("<<resources-ingredients-links,Links>> to other resources"))));
-    }
-
-    @Test
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
-    public void ingredientsCreateExample() throws Exception {
-        final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
-        doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());
-
-        ConstrainedFields fields = new ConstrainedFields(CreateIngredientRequest.class);
-        mvc.perform(post(INGREDIENTS_API_URL).with(csrf()).contentType(APPLICATION_JSON).content(createTomatoRequest()))
-                .andExpect(status().isCreated()).andDo(documentationHandler
-                        .document(requestFields(fields.withPath("name").description("The name of the ingredient"))));
-    }
-
-    private String createTomatoRequest() {
-        return asJson(CreateIngredientRequest.builder().name(TOMATO_NAME).build());
+                        pathParameters(parameterWithName("id").description("The ingredient identity")),
+                        links(linkWithRel("self").description("This <<resources-ingredient,ingredient>>")),
+                        responseFields(fieldWithPath("id").description("The ingredient identity"),
+                                fieldWithPath("name").description("The ingredient name"), subsectionWithPath("_links")
+                                        .description("<<resources-ingredient-links,Links>> to other resources"))));
     }
 
 }

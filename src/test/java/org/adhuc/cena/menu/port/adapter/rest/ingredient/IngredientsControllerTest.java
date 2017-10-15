@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
@@ -61,7 +60,6 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 
 /**
  * The {@link IngredientsController} test class.
@@ -76,7 +74,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
-public class IngredientsControllerTest extends ControllerTestSupport {
+public class IngredientsControllerTest extends IngredientControllerTestSupport {
 
     private static final String  INGREDIENTS_API_URL = "/api/ingredients";
 
@@ -128,7 +126,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
     public void getIngredientsHasSelfLink() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
-        mvc.perform(get(INGREDIENTS_API_URL)).andExpect(jsonPath("$._links.self.href", endsWith(INGREDIENTS_API_URL)));
+        assertSelfLinkEqualToRequestUrl(mvc.perform(get(INGREDIENTS_API_URL)));
     }
 
     @Test
@@ -171,14 +169,12 @@ public class IngredientsControllerTest extends ControllerTestSupport {
         return asJson(CreateIngredientRequest.builder().name(TOMATO_NAME).build());
     }
 
-    private void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
+    @Override
+    protected void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
             final Ingredient ingredient) throws Exception {
-        resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
-                .andExpect(jsonPath(jsonPath + ".id", equalTo(ingredient.id().toString())))
-                .andExpect(jsonPath(jsonPath + ".name").exists())
-                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())))
-                .andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
-                        jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
+        super.assertJsonContainsIngredient(resultActions, jsonPath, ingredient);
+        resultActions.andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
+                jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
     }
 
     private String buildIngredientSelfLink(IngredientId ingredientId) {

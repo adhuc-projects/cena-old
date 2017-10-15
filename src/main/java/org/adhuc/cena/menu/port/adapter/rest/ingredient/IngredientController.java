@@ -17,6 +17,9 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.port.adapter.rest.ResourceNotFoundException;
 
 /**
  * A REST controller exposing /api/ingredients/{ingredientId} resource.
@@ -40,6 +46,16 @@ import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 @RequestMapping(path = "/api/ingredients/{ingredientId}", produces = HAL_JSON_VALUE)
 public class IngredientController {
 
+    private IngredientAppService        ingredientAppService;
+    private IngredientResourceAssembler resourceAssembler;
+
+    @Autowired
+    public IngredientController(IngredientAppService ingredientAppService,
+            IngredientResourceAssembler resourceAssembler) {
+        this.ingredientAppService = ingredientAppService;
+        this.resourceAssembler = resourceAssembler;
+    }
+
     /**
      * Gets the ingredient information for the ingredient corresponding to the specified identity.
      *
@@ -50,8 +66,41 @@ public class IngredientController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Ingredient getIngredient(@PathVariable String ingredientId) {
-        throw new UnsupportedOperationException("Cannot get ingredient " + ingredientId + " information");
+    public IngredientResource getIngredient(@PathVariable String ingredientId) {
+        final Optional<Ingredient> ingredient =
+                ingredientAppService.getIngredient(buildWellFormedIngredientId(ingredientId));
+        if (!ingredient.isPresent()) {
+            ingredientNotFound(ingredientId);
+        }
+        return resourceAssembler.toResource(ingredient.get());
+    }
+
+    /**
+     * Builds a well formed ingredient identity from the specified value.
+     *
+     * @param ingredientId
+     *            the ingredient identity value.
+     *
+     * @return a well formed ingredient identity.
+     *
+     * @throws ResourceNotFoundException
+     *             if the ingredient identity value is not well formed.
+     */
+    private IngredientId buildWellFormedIngredientId(final String ingredientId) {
+        return IngredientId.isWellFormed(ingredientId) ? new IngredientId(ingredientId)
+                : ingredientNotFound(ingredientId);
+    }
+
+    /**
+     * Throws a {@link ResourceNotFoundException} based on the specified ingredient identity value.
+     *
+     * @param ingredientId
+     *            the ingredient identity value.
+     *
+     * @return never return.
+     */
+    private IngredientId ingredientNotFound(final String ingredientId) {
+        throw new ResourceNotFoundException("Unable to find resource /api/ingredients/" + ingredientId);
     }
 
 }

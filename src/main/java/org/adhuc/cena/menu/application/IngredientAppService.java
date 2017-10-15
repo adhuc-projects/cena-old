@@ -16,9 +16,11 @@
 package org.adhuc.cena.menu.application;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
 /**
  * An application service for ingredients.
@@ -36,6 +38,16 @@ public interface IngredientAppService {
      * @return the ingredients.
      */
     List<Ingredient> getIngredients();
+
+    /**
+     * Gets the ingredient corresponding to the specified identity, if any.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     *
+     * @return the ingredient, or empty.
+     */
+    Optional<Ingredient> getIngredient(IngredientId ingredientId);
 
     /**
      * Creates an ingredient.

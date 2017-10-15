@@ -149,7 +149,7 @@ The Ingredient resource is used to retrieve, update, and delete individual ingre
 [[resources-ingredient-links]]
 === Links
 
-include::{snippets}/ingredient-get-example/links.adoc[]
+include::{snippets}/ingredient-detail-example/links.adoc[]
 
 [[resources-ingredient-retrieve]]
 === Retrieve an ingredient
@@ -158,16 +158,16 @@ A `GET` request will retrieve the details of an ingredient.
 
 ==== Path Parameters
 
-include::{snippets}/ingredient-get-example/path-parameters.adoc[]
+include::{snippets}/ingredient-detail-example/path-parameters.adoc[]
 
 ==== Response structure
 
-include::{snippets}/ingredient-get-example/response-fields.adoc[]
+include::{snippets}/ingredient-detail-example/response-fields.adoc[]
 
 ==== Example request
 
-include::{snippets}/ingredient-get-example/curl-request.adoc[]
+include::{snippets}/ingredient-detail-example/curl-request.adoc[]
 
 ==== Example response
 
-include::{snippets}/ingredient-get-example/http-response.adoc[]
+include::{snippets}/ingredient-detail-example/http-response.adoc[]
