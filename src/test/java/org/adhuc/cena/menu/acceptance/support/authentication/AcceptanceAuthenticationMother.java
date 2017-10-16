@@ -37,6 +37,10 @@ public final class AcceptanceAuthenticationMother {
         return new BasicAuthentication("authenticated-user", "authenticated-user");
     }
 
+    protected static AcceptanceAuthentication actuatorManager() {
+        return new BasicAuthentication("management", "management");
+    }
+
     protected static interface AcceptanceAuthentication {
         RequestSpecification restWithAuth();
     }

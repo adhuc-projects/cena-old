@@ -24,8 +24,8 @@
     <!-- Dependencies versions -->
     <spring-restdocs.version>1.2.2.RELEASE</spring-restdocs.version>
     <assertj.version>3.8.0</assertj.version>
-    <serenity.version>1.5.11</serenity.version>
-    <serenity.cucumber.version>1.5.7</serenity.cucumber.version>
+    <serenity.version>1.6.3</serenity.version>
+    <serenity.cucumber.version>1.5.13</serenity.cucumber.version>
     <!-- Build execution -->
     <docker.build.skip>true</docker.build.skip>
     <test.unit.skip>false</test.unit.skip>

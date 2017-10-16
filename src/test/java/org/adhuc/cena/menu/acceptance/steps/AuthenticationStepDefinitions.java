@@ -49,6 +49,11 @@ public class AuthenticationStepDefinitions {
         authenticationServiceClient.withAuthenticatedUser();
     }
 
+    @Given("^an authenticated actuator manager$")
+    public void authenticatedActuatorManager() {
+        authenticationServiceClient.withActuatorManager();
+    }
+
     @Then("^an error notifies that user is not authenticated$")
     public void errorUserNotAuthenticated() {
         authenticationServiceClient.assertUserNotAuthenticated();

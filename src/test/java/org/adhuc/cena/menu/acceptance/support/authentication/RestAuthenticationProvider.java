@@ -76,6 +76,13 @@ public class RestAuthenticationProvider {
         withAuthentication(AcceptanceAuthenticationMother.ingredientManager());
     }
 
+    /**
+     * Defines an actuator manager.
+     */
+    public void withActuatorManager() {
+        withAuthentication(AcceptanceAuthenticationMother.actuatorManager());
+    }
+
     private void withAuthentication(final AcceptanceAuthentication authentication) {
         this.authentication = authentication;
     }

@@ -55,19 +55,31 @@ public abstract class AbstractServiceClientSteps extends ScenarioSteps {
     }
 
     protected final ValidatableResponse assertOk() {
-        return then().statusCode(OK.value());
+        return assertOk(then());
+    }
+
+    protected final ValidatableResponse assertOk(ValidatableResponse response) {
+        return assertStatus(response, OK);
     }
 
     protected final ValidatableResponse assertCreated() {
-        return then().statusCode(CREATED.value());
+        return assertCreated(then());
+    }
+
+    protected final ValidatableResponse assertCreated(ValidatableResponse response) {
+        return assertStatus(response, CREATED);
+    }
+
+    protected final ValidatableResponse assertStatus(ValidatableResponse response, HttpStatus status) {
+        return response.statusCode(status.value());
     }
 
     protected final ValidatableResponse assertException(final HttpStatus status) {
-        return then().statusCode(status.value());
+        return assertStatus(then(), status);
     }
 
     protected final ValidatableResponse assertException(final HttpStatus status, final ExceptionCode exceptionCode) {
-        return then().statusCode(status.value()).body("code", equalTo(exceptionCode.code()));
+        return assertException(status).and().body("code", equalTo(exceptionCode.code()));
     }
 
 }

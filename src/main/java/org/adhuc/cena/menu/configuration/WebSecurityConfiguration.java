@@ -18,22 +18,20 @@ package org.adhuc.cena.menu.configuration;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -54,14 +52,17 @@ import org.adhuc.cena.menu.configuration.MenuGenerationProperties.Authentication
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private Authentication authentication;
+    private SecurityProperties securityProperties;
+    private Authentication     authentication;
 
     @Autowired
-    public WebSecurityConfiguration(MenuGenerationProperties menuGenerationProperties) {
+    public WebSecurityConfiguration(SecurityProperties securityProperties,
+            MenuGenerationProperties menuGenerationProperties) {
+        notNull(securityProperties, "Cannot initialize web security configuration with null properties");
         notNull(menuGenerationProperties, "Cannot initialize web security configuration with null properties");
+        this.securityProperties = securityProperties;
         authentication = menuGenerationProperties.getAuthentication();
     }
 
@@ -94,13 +95,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     public UserDetailsService userDetailsService() {
-        final UserDetails ingredientManager = new User(authentication.getIngredientManager().getUsername(),
-                authentication.getIngredientManager().getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_INGREDIENT_MANAGER")));
-        final UserDetails user = new User(authentication.getUser().getUsername(),
+        return new InMemoryUserDetailsManager(Arrays.asList(ingredientManager(), user(), actuatorManager()));
+    }
 
-                authentication.getUser().getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
-        return new InMemoryUserDetailsManager(Arrays.asList(ingredientManager, user));
+    private UserDetails ingredientManager() {
+        return User.withUsername(authentication.getIngredientManager().getUsername())
+                .password(authentication.getIngredientManager().getPassword()).roles("INGREDIENT_MANAGER").build();
+    }
+
+    private UserDetails user() {
+        return User.withUsername(authentication.getUser().getUsername())
+                .password(authentication.getUser().getPassword()).roles("USER").build();
+    }
+
+    private UserDetails actuatorManager() {
+        return User.withUsername(securityProperties.getUser().getName())
+                .password(securityProperties.getUser().getPassword())
+                .roles(securityProperties.getUser().getRole().toArray(new String[0])).build();
     }
 
     @Bean

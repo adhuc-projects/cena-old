@@ -15,10 +15,14 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.http.HttpStatus.OK;
+
+import org.springframework.boot.actuate.health.Status;
 
 import org.adhuc.cena.menu.acceptance.support.resource.ManagementClientResource;
 
+import io.restassured.response.ValidatableResponse;
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -32,14 +36,21 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public class ActuatorServiceClientSteps extends AbstractServiceClientSteps {
 
+    private ValidatableResponse healtCheckResponse;
+
     @Step("Call health check service")
     public void callHealthCheckService() {
-        rest().get(getHealthResourceUrl()).andReturn();
+        healtCheckResponse = rest().get(getHealthResourceUrl()).then();
     }
 
     @Step("Assert rest-service response is OK")
     public void assertResponseIsOk() {
-        assertOk();
+        assertOk(healtCheckResponse);
+    }
+
+    @Step("Assert disk usage detail is available")
+    public void assertDiskUsageIsAvailable() {
+        healtCheckResponse.assertThat().body("diskSpace.status", equalTo(Status.UP.getCode()));
     }
 
     private String getManagementResourceUrl() {

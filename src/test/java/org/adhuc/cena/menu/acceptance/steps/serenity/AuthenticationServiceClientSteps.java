@@ -45,6 +45,11 @@ public class AuthenticationServiceClientSteps extends AbstractServiceClientSteps
         restAuthenticationProvider.withIngredientManager();
     }
 
+    @Step("Given an actuator manager")
+    public void withActuatorManager() {
+        restAuthenticationProvider.withActuatorManager();
+    }
+
     @Step("Assert user is not authenticated")
     public void assertUserNotAuthenticated() {
         assertException(HttpStatus.UNAUTHORIZED);

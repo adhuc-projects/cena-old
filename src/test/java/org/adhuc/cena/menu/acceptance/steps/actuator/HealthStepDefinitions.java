@@ -52,4 +52,9 @@ public class HealthStepDefinitions {
         actuatorServiceClient.assertResponseIsOk();
     }
 
+    @Then("^the health detail is available$")
+    public void healthDetailIsAvailable() {
+        actuatorServiceClient.assertDiskUsageIsAvailable();
+    }
+
 }

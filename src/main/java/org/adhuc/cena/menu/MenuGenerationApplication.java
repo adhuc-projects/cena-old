@@ -18,6 +18,7 @@ package org.adhuc.cena.menu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 
@@ -30,6 +31,7 @@ import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
  * @since 0.1.0
  */
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 public class MenuGenerationApplication {
 
