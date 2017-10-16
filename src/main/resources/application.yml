@@ -29,5 +29,5 @@ logging:
     console: '[%-5p] %d | %c{1}:%L | %m%n'
   level:
     org.adhuc.cena.menu: TRACE
-    org.springframework.security: DEBUG
+    org.springframework.security: ERROR
     org.springframework.boot.autoconfigure: ERROR
