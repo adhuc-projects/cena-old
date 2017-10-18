@@ -16,13 +16,16 @@
 package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.springframework.util.Assert.hasText;
-import static org.springframework.util.Assert.notNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import org.adhuc.cena.menu.domain.model.BasicEntity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -34,13 +37,14 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = "name")
+@ToString(callSuper = true)
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class Ingredient {
+public class Ingredient extends BasicEntity<IngredientId> {
 
-    @JsonUnwrapped
-    private final IngredientId id;
-    private String             name;
+    @NonNull
+    private String name;
 
     /**
      * Creates an ingredient.
@@ -52,9 +56,8 @@ public class Ingredient {
      *            the ingredient name.
      */
     public Ingredient(final IngredientId id, final String name) {
-        notNull(id, "Cannot create ingredient with invalid identity");
+        super(id);
         hasText(name, "Cannot create ingredient with invalid name");
-        this.id = id;
         this.name = name;
     }
 
