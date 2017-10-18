@@ -19,10 +19,10 @@ import static java.util.Objects.nonNull;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.adhuc.cena.menu.domain.model.Identity;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.EqualsAndHashCode;
 
 /**
  * An ingredient identity.
@@ -33,10 +33,8 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@Accessors(fluent = true)
-public class IngredientId {
-
-    private final UUID id;
+@EqualsAndHashCode(callSuper = true)
+public class IngredientId extends Identity {
 
     /**
      * Creates an ingredient identity with the specified value.
@@ -48,14 +46,8 @@ public class IngredientId {
         this(UUID.fromString(id));
     }
 
-    /**
-     * Creates an ingredient identity with the specified value.
-     *
-     * @param id
-     *            the identity value.
-     */
-    private IngredientId(UUID id) {
-        this.id = id;
+    private IngredientId(final UUID id) {
+        super(id);
     }
 
     /**
@@ -84,9 +76,8 @@ public class IngredientId {
     }
 
     @Override
-    @JsonValue
     public String toString() {
-        return id.toString();
+        return super.toString();
     }
 
 }

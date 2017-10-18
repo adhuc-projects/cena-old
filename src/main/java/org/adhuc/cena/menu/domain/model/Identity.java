@@ -15,17 +15,18 @@
  */
 package org.adhuc.cena.menu.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 /**
- * An abstract entity definition, containing the entity identity.
- *
- * @param <ID>
- *            the identity type.
+ * An aggregate identity base definition.
  *
  * @author Alexandre Carbenay
  *
@@ -33,11 +34,17 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public abstract class BasicEntity<ID> implements Entity<ID> {
+public abstract class Identity {
 
     @NonNull
-    @JsonUnwrapped
-    private final ID id;
+    private final UUID id;
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return id.toString();
+    }
 
 }
