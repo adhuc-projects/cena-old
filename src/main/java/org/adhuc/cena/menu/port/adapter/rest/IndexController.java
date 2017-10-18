@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties.Documentation;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientsController;
+import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
 
 /**
  * A REST controller providing links to all general resources.
@@ -57,6 +58,7 @@ public class IndexController {
         }
         index.add(linkTo(IndexController.class).slash("management").withRel("management"));
         index.add(linkTo(IngredientsController.class).withRel("ingredients"));
+        index.add(linkTo(RecipesController.class).withRel("recipes"));
         return index;
     }
 

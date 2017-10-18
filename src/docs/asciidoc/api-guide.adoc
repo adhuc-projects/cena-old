@@ -171,3 +171,48 @@ include::{snippets}/ingredient-detail-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/ingredient-detail-example/http-response.adoc[]
+
+
+[[resources-recipes]]
+== Recipes
+
+The Recipes resources is used to create and list recipes.
+
+[[resources-recipes-list]]
+=== Listing recipes
+
+A `GET` request will list all of the recipes.
+
+==== Response structure
+
+include::{snippets}/recipes-list-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/recipes-list-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/recipes-list-example/http-response.adoc[]
+
+[[resources-recipes-links]]
+==== Links
+
+include::{snippets}/recipes-list-example/links.adoc[]
+
+[[resources-recipes-create]]
+=== Creating a recipe
+
+A `POST` request is used to create a recipe.
+
+==== Request structure
+
+include::{snippets}/recipes-create-example/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/recipes-create-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/recipes-create-example/http-response.adoc[]
