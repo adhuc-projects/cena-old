@@ -44,6 +44,11 @@ public class AuthenticationStepDefinitions {
         authenticationServiceClient.withAnonymousUser();
     }
 
+    @Given("^an authenticated user$")
+    public void authenticatedUser() {
+        authenticationServiceClient.withAuthenticatedUser();
+    }
+
     @Given("^an authenticated user that is not ingredient manager$")
     public void authenticatedNotIngredientManager() {
         authenticationServiceClient.withAuthenticatedUser();

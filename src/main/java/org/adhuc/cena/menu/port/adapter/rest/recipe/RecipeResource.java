@@ -13,34 +13,40 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
+
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import org.adhuc.cena.menu.domain.model.recipe.Recipe;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * A REST resource encapsulating recipe information.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class RecipeResource extends ResourceSupport {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
+    @JsonUnwrapped
+    private final Recipe recipe;
 
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
+    /**
+     * Creates a recipe resource encapsulating the recipe information.
+     *
+     * @param recipe
+     *            the recipe information.
+     */
+    public RecipeResource(final Recipe recipe) {
+        this.recipe = recipe;
     }
 
 }

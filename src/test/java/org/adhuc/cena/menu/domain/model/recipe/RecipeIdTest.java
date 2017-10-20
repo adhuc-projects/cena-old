@@ -13,34 +13,38 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.domain.model.recipe;
 
-import org.springframework.hateoas.Link;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+
+import org.junit.Test;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * The {@link RecipeId} test class.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public class RecipeIdTest {
 
-    public Link getManagement() {
-        return getLink("management");
+    @Test(expected = NullPointerException.class)
+    public void createRecipeIdFromNullString() {
+        new RecipeId(null);
     }
 
-    public Link getDocumentation() {
-        return getLink("documentation");
+    @Test(expected = IllegalArgumentException.class)
+    public void createRecipeIdFromInvalidString() {
+        new RecipeId("invalid");
     }
 
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
+    @Test
+    public void createRecipeIdFromString() {
+        final RecipeId createdId = new RecipeId(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
+        assertThat(createdId).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
     }
 
 }

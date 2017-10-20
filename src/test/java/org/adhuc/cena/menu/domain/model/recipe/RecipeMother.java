@@ -13,34 +13,29 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.domain.model.recipe;
 
-import org.springframework.hateoas.Link;
+import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * An object mother to create testing domain elements related to {@link Ingredient}s.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
+ *
+ * @see https://www.martinfowler.com/bliki/ObjectMother.html
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public class RecipeMother {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
+    public static final RecipeId TOMATO_CUCUMBER_MOZZA_SALAD_ID      = RecipeId.generate();
+    public static final String   TOMATO_CUCUMBER_MOZZA_SALAD_NAME    = "Tomato, cucumber and mozzarella salad";
+    public static final String   TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT = "Cut everything into dices, mix it, dress it";
 
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
+    public static Recipe tomatoCucumberMozzaSalad() {
+        return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
     }
 
 }

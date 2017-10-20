@@ -13,34 +13,53 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.domain.model.recipe;
 
-import org.springframework.hateoas.Link;
+import java.util.UUID;
+
+import org.adhuc.cena.menu.domain.model.Identity;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * A recipe identity.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class RecipeId extends Identity {
 
-    public Link getManagement() {
-        return getLink("management");
+    /**
+     * Creates a recipe identity with the specified value.
+     *
+     * @param id
+     *            the identity value.
+     */
+    public RecipeId(final String id) {
+        this(UUID.fromString(id));
     }
 
-    public Link getDocumentation() {
-        return getLink("documentation");
+    private RecipeId(final UUID id) {
+        super(id);
     }
 
-    public Link getIngredients() {
-        return getLink("ingredients");
+    /**
+     * Generates a new recipe identity.
+     *
+     * @return a new recipe identity.
+     */
+    public static RecipeId generate() {
+        return new RecipeId(UUID.randomUUID());
     }
 
-    public Link getRecipes() {
-        return getLink("recipes");
+    @Override
+    public String toString() {
+        return super.toString();
     }
 
 }
