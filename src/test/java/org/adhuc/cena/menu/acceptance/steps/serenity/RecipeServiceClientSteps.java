@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.acceptance.steps.serenity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 
 import io.restassured.path.json.JsonPath;
@@ -73,15 +75,30 @@ public class RecipeServiceClientSteps extends AbstractServiceClientSteps {
         assertRecipeInRecipesList(recipe);
     }
 
+    @Step("Assert recipe is not in recipes list")
+    public void assertRecipeNotInRecipesList() {
+        assertRecipeNotInRecipesList(recipe);
+    }
+
     @Step("Assert recipe {0} is in recipes list")
     public void assertRecipeInRecipesList(final RecipeValue recipe) {
         assertThat(isRecipeInRecipesList(recipe)).isTrue();
+    }
+
+    @Step("Assert recipe {0} is not in recipes list")
+    public void assertRecipeNotInRecipesList(final RecipeValue recipe) {
+        assertThat(isRecipeInRecipesList(recipe)).isFalse();
     }
 
     @Step("Assert recipe has been successfully created")
     public void assertRecipeSuccessfullyCreated() {
         String recipeLocation = assertCreated().extract().header(LOCATION);
         // TODO compare created recipe with creation info, getting recipe detail from location
+    }
+
+    @Step("Assert recipe creation results in invalid request error")
+    public void assertInvalidRequestError() {
+        assertException(BAD_REQUEST, ExceptionCode.INVALID_REQUEST);
     }
 
     @Step("Get recipe from {0}")

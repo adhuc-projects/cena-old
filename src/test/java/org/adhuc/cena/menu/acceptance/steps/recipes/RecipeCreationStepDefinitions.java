@@ -39,10 +39,24 @@ public class RecipeCreationStepDefinitions {
     @Steps
     RecipeServiceClientSteps recipeServiceClient;
 
-    @When("^he creates the \"(.*)\" recipe")
+    @When("^he creates the \"(.*)\" recipe$")
     public void createRecipe(String recipeName) {
         // TODO get recipe from recipeName through cucumber transformer
         RecipeValue recipe = new RecipeValue(recipeName, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+        recipeServiceClient.withRecipe(recipe);
+        recipeServiceClient.createRecipe();
+    }
+
+    @When("^he creates a recipe without name$")
+    public void createRecipeWithoutName() {
+        RecipeValue recipe = new RecipeValue(null, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+        recipeServiceClient.withRecipe(recipe);
+        recipeServiceClient.createRecipe();
+    }
+
+    @When("^he creates the \"(.*)\" recipe without content$")
+    public void createRecipeWithoutContent(String recipeName) {
+        RecipeValue recipe = new RecipeValue(recipeName, null);
         recipeServiceClient.withRecipe(recipe);
         recipeServiceClient.createRecipe();
     }
@@ -52,9 +66,24 @@ public class RecipeCreationStepDefinitions {
         recipeServiceClient.assertRecipeSuccessfullyCreated();
     }
 
+    @Then("^an error notifies that recipe must have a name$")
+    public void errorOnRecipeCreationWithoutName() {
+        recipeServiceClient.assertInvalidRequestError();
+    }
+
+    @Then("^an error notifies that recipe must have a content$")
+    public void errorOnRecipeCreationWithoutContent() {
+        recipeServiceClient.assertInvalidRequestError();
+    }
+
     @Then("^the recipe can be found in the list$")
     public void recipeFoundInList() {
         recipeServiceClient.assertRecipeInRecipesList();
+    }
+
+    @Then("^the recipe cannot be found in the list$")
+    public void recipeNotFoundInList() {
+        recipeServiceClient.assertRecipeNotInRecipesList();
     }
 
 }

@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
 /**
@@ -50,7 +52,7 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
  */
 @RestController
 @RequestMapping(path = "/api/recipes", produces = HAL_JSON_VALUE)
-public class RecipesController {
+public class RecipesController extends AbstractRequestValidationController {
 
     private RecipeResourceAssembler resourceAssembler;
 
@@ -92,7 +94,8 @@ public class RecipesController {
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public HttpHeaders createRecipe(@RequestBody @Valid final CreateRecipeRequest request) {
+    public HttpHeaders createRecipe(@RequestBody @Valid final CreateRecipeRequest request, Errors errors) {
+        validateRequest(errors);
         final RecipeId identity = RecipeId.generate();
         recipes.add(new Recipe(identity, request.getName(), request.getContent()));
 

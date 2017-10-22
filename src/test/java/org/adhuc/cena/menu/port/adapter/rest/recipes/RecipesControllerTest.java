@@ -111,6 +111,38 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @WithMockUser(authorities = "USER")
+    public void createRecipeInvalidRequestNoName() throws Exception {
+        mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
+                .content(asJson(CreateRecipeRequest.builder().content(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT).build())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void createRecipeInvalidRequestBlankName() throws Exception {
+        mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
+                asJson(CreateRecipeRequest.builder().name("").content(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT).build())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void createRecipeInvalidRequestNoContent() throws Exception {
+        mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
+                .content(asJson(CreateRecipeRequest.builder().name(TOMATO_CUCUMBER_MOZZA_SALAD_NAME).build())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void createRecipeInvalidRequestBlankContent() throws Exception {
+        mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
+                asJson(CreateRecipeRequest.builder().name(TOMATO_CUCUMBER_MOZZA_SALAD_NAME).content("").build())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DirtiesContext
     @WithMockUser(authorities = "USER")
     public void createRecipeReturnsCreatedStatus() throws Exception {

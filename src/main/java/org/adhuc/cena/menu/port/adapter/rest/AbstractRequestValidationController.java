@@ -13,30 +13,28 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.recipe;
+package org.adhuc.cena.menu.port.adapter.rest;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.validation.Errors;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * A request to create a recipe
+ * An abstract controller implementation providing convenient methods to validate requests.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@AllArgsConstructor
-@Builder
-public class CreateRecipeRequest {
+@Slf4j
+public abstract class AbstractRequestValidationController {
 
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String content;
+    protected void validateRequest(final Errors errors) {
+        if (errors.hasErrors()) {
+            log.debug("Request validation raises errors : {}", errors);
+            throw new InvalidRestRequestException(errors);
+        }
+    }
 
 }

@@ -13,6 +13,12 @@ Scenario: Create a recipe without name
   Then an error notifies that recipe must have a name
     And the recipe cannot be found in the list
 
+Scenario: Create a recipe without content
+  Given an authenticated user
+  When he creates the "Tomato, cucumber, olive and feta salad" recipe without content
+  Then an error notifies that recipe must have a content
+    And the recipe cannot be found in the list
+
 Scenario: Create a recipe as anonymous user
   Given an anonymous user
   When he creates the "Tomato, cucumber, olive and feta salad" recipe
