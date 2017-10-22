@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
+import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.exception.CenaException;
@@ -67,10 +68,12 @@ public class RestAdapterErrorHandlingTest {
 
     @MockBean
     private IngredientAppService ingredientAppServiceMock;
+    @MockBean
+    private RecipeAppService     recipeAppServiceMock;
 
     @Before
     public void setUp() {
-        reset(ingredientAppServiceMock);
+        reset(ingredientAppServiceMock, recipeAppServiceMock);
     }
 
     @Test

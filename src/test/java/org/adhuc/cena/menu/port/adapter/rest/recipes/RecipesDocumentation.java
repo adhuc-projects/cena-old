@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -27,13 +29,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_NAME;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
 
+import java.util.Arrays;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
@@ -44,6 +52,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
@@ -77,13 +86,19 @@ public class RecipesDocumentation extends ControllerTestSupport {
     @Autowired
     private RestDocumentationResultHandler documentationHandler;
 
+    @MockBean
+    private RecipeAppService               recipeAppServiceMock;
+
+    @Before
+    public void setUp() {
+        reset(recipeAppServiceMock);
+    }
+
     @Test
-    @DirtiesContext
     @WithMockUser(authorities = "USER")
     public void recipesListExample() throws Exception {
-        mvc.perform(
-                post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(createTomatoCucumberMozzaSaladRequest()))
-                .andExpect(status().isCreated());
+        when(recipeAppServiceMock.getRecipes())
+                .thenReturn(Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad()));
 
         mvc.perform(get(RECIPES_API_URL)).andExpect(status().isOk())
                 .andDo(documentationHandler.document(

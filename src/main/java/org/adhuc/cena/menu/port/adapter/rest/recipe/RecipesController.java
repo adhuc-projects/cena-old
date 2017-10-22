@@ -20,8 +20,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
@@ -37,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.adhuc.cena.menu.domain.model.recipe.Recipe;
+import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
@@ -54,14 +52,14 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 @RequestMapping(path = "/api/recipes", produces = HAL_JSON_VALUE)
 public class RecipesController extends AbstractRequestValidationController {
 
+    private RecipeAppService        recipeAppService;
     private RecipeResourceAssembler resourceAssembler;
 
     private Method                  listMethod;
 
-    private List<Recipe>            recipes = new ArrayList<>();
-
     @Autowired
-    public RecipesController(RecipeResourceAssembler resourceAssembler) {
+    public RecipesController(RecipeAppService recipeAppService, RecipeResourceAssembler resourceAssembler) {
+        this.recipeAppService = recipeAppService;
         this.resourceAssembler = resourceAssembler;
     }
 
@@ -81,7 +79,7 @@ public class RecipesController extends AbstractRequestValidationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ListResource<RecipeResource> getRecipes() {
-        return new ListResource<>(resourceAssembler.toResources(recipes)).withSelfRef(listMethod);
+        return new ListResource<>(resourceAssembler.toResources(recipeAppService.getRecipes())).withSelfRef(listMethod);
     }
 
     /**
@@ -97,7 +95,7 @@ public class RecipesController extends AbstractRequestValidationController {
     public HttpHeaders createRecipe(@RequestBody @Valid final CreateRecipeRequest request, Errors errors) {
         validateRequest(errors);
         final RecipeId identity = RecipeId.generate();
-        recipes.add(new Recipe(identity, request.getName(), request.getContent()));
+        recipeAppService.createRecipe(request.toCommand(identity));
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(RecipeController.class, identity.toString()).toUri());

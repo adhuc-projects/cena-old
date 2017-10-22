@@ -13,45 +13,36 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.recipe;
+package org.adhuc.cena.menu.application;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.List;
 
 import org.adhuc.cena.menu.domain.model.recipe.CreateRecipe;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 
 /**
- * A request to create a recipe
+ * An application service for recipes.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@AllArgsConstructor
-@Builder
-public class CreateRecipeRequest {
-
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String content;
+public interface RecipeAppService {
 
     /**
-     * Converts this request to a {@code CreateRecipe} command, with specified identity.
+     * Gets the recipes.
      *
-     * @param identity
-     *            the recipe identity.
-     *
-     * @return the recipe creation command.
+     * @return the recipes (not modifiable).
      */
-    public CreateRecipe toCommand(RecipeId identity) {
-        return new CreateRecipe(identity, name, content);
-    }
+    List<Recipe> getRecipes();
+
+    /**
+     * Creates a recipe.
+     *
+     * @param command
+     *            the recipe creation command.
+     */
+    void createRecipe(CreateRecipe command);
 
 }
