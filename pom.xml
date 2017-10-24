@@ -22,6 +22,9 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <!-- Dependencies versions -->
+    <junit.jupiter.version>5.0.1</junit.jupiter.version>
+    <junit.vintage.version>4.12.1</junit.vintage.version>
+    <junit.platform.version>1.0.1</junit.platform.version>
     <spring-restdocs.version>1.2.2.RELEASE</spring-restdocs.version>
     <assertj.version>3.8.0</assertj.version>
     <archunit.version>0.4.0</archunit.version>
@@ -116,6 +119,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version><!--$NO-MVN-MAN-VER$-->
         <configuration>
           <skipTests>${test.unit.skip}</skipTests>
           <runOrder>hourly</runOrder>
@@ -127,6 +131,13 @@
             <exclude>**/*AcceptanceTest.java</exclude>
           </excludes>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${junit.platform.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -277,6 +288,7 @@
   </build>
 
   <dependencies>
+    <!-- Spring boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -313,6 +325,28 @@
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
+
+    <!-- Unit testings dependencies -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apiguardian</groupId>
+      <artifactId>apiguardian-api</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -333,6 +367,7 @@
       <artifactId>archunit-junit</artifactId>
       <scope>test</scope>
     </dependency>
+
     <!-- Acceptance testing dependencies -->
     <dependency>
       <groupId>net.serenity-bdd</groupId>
@@ -352,11 +387,32 @@
   </dependencies>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
     <dependency>
-      <groupId>com.tngtech.archunit</groupId>
-      <artifactId>archunit-junit</artifactId>
-      <version>${archunit.version}</version>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${junit.vintage.version}</version>
     </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-launcher</artifactId>
+        <version>${junit.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apiguardian</groupId>
+        <artifactId>apiguardian-api</artifactId>
+        <version>1.0.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit</artifactId>
+        <version>${archunit.version}</version>
+      </dependency>
       <dependency>
         <groupId>net.serenity-bdd</groupId>
         <artifactId>serenity-core</artifactId>

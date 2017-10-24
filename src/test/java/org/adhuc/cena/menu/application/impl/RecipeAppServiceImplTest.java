@@ -16,14 +16,18 @@
 package org.adhuc.cena.menu.application.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberOliveFetaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
@@ -35,43 +39,77 @@ import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeReposit
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("appService")
+@DisplayName("Recipe service")
 public class RecipeAppServiceImplTest {
 
     private RecipeAppServiceImpl service;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         service = new RecipeAppServiceImpl(new InMemoryRecipeRepository());
     }
 
     @Test
-    public void getRecipesEmpty() {
-        assertThat(service.getRecipes()).isEmpty();
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
+    @DisplayName("returns unmodifiable list of recipes")
     public void getRecipesIsNotModifiable() {
-        service.createRecipe(createTomatoCucumberMozzaSalad());
-        service.getRecipes().add(tomatoCucumberOliveFetaSalad());
+        assertThrows(UnsupportedOperationException.class, () -> {
+            service.getRecipes().add(tomatoCucumberMozzaSalad());
+        });
     }
 
     @Test
-    public void getRecipesContainsCreatedRecipe() {
-        service.createRecipe(createTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipes()).isNotEmpty().containsExactly(tomatoCucumberMozzaSalad());
+    @DisplayName("throws IllegalArgumentException when creating recipe from null command")
+    public void createIngredientNullCommand() {
+        assertThrows(IllegalArgumentException.class, () -> service.createRecipe(null));
     }
 
-    @Test
-    public void getRecipesContainsAllCreatedRecipes() {
-        service.createRecipe(createTomatoCucumberMozzaSalad());
-        service.createRecipe(createTomatoCucumberOliveFetaSalad());
-        assertThat(service.getRecipes()).isNotEmpty().containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
-                tomatoCucumberOliveFetaSalad());
+    @Nested
+    @DisplayName("with no recipe")
+    class WithNoRecipe {
+
+        @Test
+        @DisplayName("returns empty list")
+        public void getRecipesEmpty() {
+            assertThat(service.getRecipes()).isEmpty();
+        }
+
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createRecipeNullCommand() {
-        service.createRecipe(null);
+    @Nested
+    @DisplayName("with tomato, cucumber and mozzarella salad")
+    class WithTomatoCucumberMozzaSalad {
+
+        @BeforeEach
+        public void setUp() {
+            service.createRecipe(createTomatoCucumberMozzaSalad());
+        }
+
+        @Test
+        @DisplayName("returns list containing recipe")
+        public void getRecipesContainsCreatedRecipe() {
+            assertThat(service.getRecipes()).isNotEmpty().containsExactly(tomatoCucumberMozzaSalad());
+        }
+
+        @Nested
+        @DisplayName("and tomato, cucumber, olive and feta salad")
+        class AndCucumber {
+
+            @BeforeEach
+            public void setUp() {
+                service.createRecipe(createTomatoCucumberOliveFetaSalad());
+            }
+
+            @Test
+            @DisplayName("returns list containing all recipes")
+            public void getRecipesContainsAllCreatedRecipes() {
+                assertThat(service.getRecipes()).isNotEmpty().containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
+                        tomatoCucumberOliveFetaSalad());
+            }
+
+        }
+
     }
 
 }

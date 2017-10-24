@@ -16,7 +16,9 @@
 package org.adhuc.cena.menu.application.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createCucumber;
@@ -24,8 +26,11 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.creat
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
@@ -40,64 +45,102 @@ import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryIngredientRep
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("appService")
+@DisplayName("Ingredient service")
 public class IngredientAppServiceImplTest {
 
     private IngredientAppServiceImpl service;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         service = new IngredientAppServiceImpl(new InMemoryIngredientRepository());
     }
 
     @Test
-    public void getIngredientsEmpty() {
-        assertThat(service.getIngredients()).isEmpty();
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
+    @DisplayName("returns unmodifiable list of ingredients")
     public void getIngredientsIsNotModifiable() {
-        service.createIngredient(createTomato());
-        service.getIngredients().add(tomato());
+        assertThrows(UnsupportedOperationException.class, () -> {
+            service.getIngredients().add(tomato());
+        });
     }
 
     @Test
-    public void getIngredientsContainsCreatedIngredient() {
-        service.createIngredient(createTomato());
-        assertThat(service.getIngredients()).isNotEmpty().containsExactly(tomato());
-    }
-
-    @Test
-    public void getIngredientsContainsAllCreatedIngredients() {
-        service.createIngredient(createTomato());
-        service.createIngredient(createCucumber());
-        assertThat(service.getIngredients()).isNotEmpty().containsExactlyInAnyOrder(tomato(), cucumber());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
+    @DisplayName("throws IllegalArgumentException when getting ingredient from null identity")
     public void getIngredientNullId() {
-        service.getIngredient(null);
+        assertThrows(IllegalArgumentException.class, () -> service.getIngredient(null));
     }
 
     @Test
-    public void getUnknownIngredient() {
-        assertThat(service.getIngredient(TOMATO_ID)).isEmpty();
-    }
-
-    @Test
-    public void getCreatedIngredient() {
-        service.createIngredient(createTomato());
-        assertThat(service.getIngredient(TOMATO_ID)).isNotEmpty().contains(tomato());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
+    @DisplayName("throws IllegalArgumentException when creating ingredient from null command")
     public void createIngredientNullCommand() {
-        service.createIngredient(null);
+        assertThrows(IllegalArgumentException.class, () -> service.createIngredient(null));
     }
 
-    @Test(expected = IngredientNameAlreadyUsedException.class)
-    public void createIngredientWithAlreadyUsedName() {
-        service.createIngredient(new CreateIngredient(IngredientId.generate(), TOMATO_NAME));
-        service.createIngredient(new CreateIngredient(IngredientId.generate(), TOMATO_NAME));
+    @Nested
+    @DisplayName("with no ingredient")
+    class WithNoIngredient {
+
+        @Test
+        @DisplayName("returns empty list")
+        public void getIngredientsEmpty() {
+            assertThat(service.getIngredients()).isEmpty();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("with tomato")
+    class WithTomato {
+
+        @BeforeEach
+        public void setUp() {
+            service.createIngredient(createTomato());
+        }
+
+        @Test
+        @DisplayName("returns list containing ingredient")
+        public void getIngredientsContainsCreatedIngredient() {
+            assertThat(service.getIngredients()).isNotEmpty().containsExactly(tomato());
+        }
+
+        @Test
+        @DisplayName("cannot provide ingredient for unknown cucumber identity")
+        public void getUnknownIngredient() {
+            assertThat(service.getIngredient(CUCUMBER_ID)).isEmpty();
+        }
+
+        @Test
+        @DisplayName("returns ingredient from known tomato identity")
+        public void getCreatedIngredient() {
+            assertThat(service.getIngredient(TOMATO_ID)).isNotEmpty().contains(tomato());
+        }
+
+        @Test
+        @DisplayName("throws IngredientNameAlreadyUsedException when creating new ingredient with already known name")
+        public void createIngredientWithAlreadyUsedName() {
+            assertThrows(IngredientNameAlreadyUsedException.class, () -> {
+                service.createIngredient(new CreateIngredient(IngredientId.generate(), TOMATO_NAME));
+            });
+        }
+
+        @Nested
+        @DisplayName("and cucumber")
+        class AndCucumber {
+
+            @BeforeEach
+            public void setUp() {
+                service.createIngredient(createCucumber());
+            }
+
+            @Test
+            @DisplayName("returns list containing all ingredients")
+            public void getIngredientsContainsAllCreatedIngredients() {
+                assertThat(service.getIngredients()).isNotEmpty().containsExactlyInAnyOrder(tomato(), cucumber());
+            }
+
+        }
+
     }
 
 }
