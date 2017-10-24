@@ -25,6 +25,8 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumbe
 import org.junit.Before;
 import org.junit.Test;
 
+import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
+
 /**
  * The {@link RecipeAppServiceImpl} test class.
  *
@@ -39,7 +41,7 @@ public class RecipeAppServiceImplTest {
 
     @Before
     public void setUp() {
-        service = new RecipeAppServiceImpl();
+        service = new RecipeAppServiceImpl(new InMemoryRecipeRepository());
     }
 
     @Test
