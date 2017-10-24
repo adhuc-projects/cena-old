@@ -16,13 +16,16 @@
 package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /**
  * The {@link Ingredient} test class.
@@ -32,45 +35,60 @@ import org.junit.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@DisplayName("Ingredient")
 public class IngredientTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
+    @DisplayName("cannot be created without id")
     public void ingredientWithoutId() {
-        new Ingredient(null, TOMATO_NAME);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void ingredientWithoutName() {
-        new Ingredient(TOMATO_ID, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void ingredientWithEmptyName() {
-        new Ingredient(TOMATO_ID, "");
+        assertThrows(IllegalArgumentException.class, () -> new Ingredient(null, TOMATO_NAME));
     }
 
     @Test
+    @DisplayName("cannot be created without name")
+    public void ingredientWithoutName() {
+        assertThrows(IllegalArgumentException.class, () -> new Ingredient(TOMATO_ID, null));
+    }
+
+    @Test
+    @DisplayName("cannot be created with empty name")
+    public void ingredientWithEmptyName() {
+        assertThrows(IllegalArgumentException.class, () -> new Ingredient(TOMATO_ID, ""));
+    }
+
+    @Test
+    @DisplayName("contains id and name used during creation")
     public void ingredientWithValidValues() {
         Ingredient ingredient = tomato();
         assertThat(ingredient.id()).isEqualTo(TOMATO_ID);
         assertThat(ingredient.name()).isEqualTo(TOMATO_NAME);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void changeNameWithNullValue() {
-        tomato().name(null);
-    }
+    @Nested
+    @DisplayName("tomato")
+    class Tomato {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void changeNameWithEmptyValue() {
-        tomato().name("");
-    }
+        private Ingredient ingredient = tomato();
 
-    @Test
-    public void changeNameWithValidValue() {
-        Ingredient ingredient = tomato();
-        ingredient.name(CUCUMBER_NAME);
-        assertThat(ingredient.name()).isEqualTo(CUCUMBER_NAME);
+        @Test
+        @DisplayName("cannot have its name changed with null value")
+        public void changeNameWithNullValue() {
+            assertThrows(IllegalArgumentException.class, () -> ingredient.name(null));
+        }
+
+        @Test
+        @DisplayName("cannot have its name changed with empty value")
+        public void changeNameWithEmptyValue() {
+            assertThrows(IllegalArgumentException.class, () -> ingredient.name(""));
+        }
+
+        @Test
+        @DisplayName("has a new name after changing it")
+        public void changeNameWithValidValue() {
+            ingredient.name(CUCUMBER_NAME);
+            assertThat(ingredient.name()).isEqualTo(CUCUMBER_NAME);
+        }
+
     }
 
 }

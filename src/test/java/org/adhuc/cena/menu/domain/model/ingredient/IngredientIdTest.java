@@ -16,12 +16,14 @@
 package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * The {@link IngredientId} test class.
@@ -31,40 +33,48 @@ import org.junit.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@DisplayName("Ingredient identity")
 public class IngredientIdTest {
 
-    @Test(expected = NullPointerException.class)
+    @Test
+    @DisplayName("cannot be created from null value")
     public void createIngredientIdFromNullString() {
-        new IngredientId(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createIngredientIdFromInvalidString() {
-        new IngredientId("invalid");
+        assertThrows(NullPointerException.class, () -> new IngredientId(null));
     }
 
     @Test
+    @DisplayName("cannot be created from invalid value")
+    public void createIngredientIdFromInvalidString() {
+        assertThrows(IllegalArgumentException.class, () -> new IngredientId("invalid"));
+    }
+
+    @Test
+    @DisplayName("contains identity value used during construction")
     public void createIngredientIdFromString() {
         final IngredientId createdId = new IngredientId(TOMATO_ID.toString());
         assertThat(createdId).isEqualTo(TOMATO_ID);
     }
 
     @Test
+    @DisplayName("is not well formed with null value")
     public void isWellFormedNullIsFalse() {
         assertThat(IngredientId.isWellFormed(null)).isEqualTo(false);
     }
 
     @Test
+    @DisplayName("is not well formed with empty value")
     public void isWellFormedEmptyIsFalse() {
         assertThat(IngredientId.isWellFormed("")).isEqualTo(false);
     }
 
     @Test
+    @DisplayName("is not well formed with invalid value")
     public void isWellFormedInvalidIsFalse() {
         assertThat(IngredientId.isWellFormed("invalid")).isEqualTo(false);
     }
 
     @Test
+    @DisplayName("is well formed with UUID value")
     public void isWellFormedUuidIsTrue() {
         assertThat(IngredientId.isWellFormed(UUID.randomUUID().toString())).isEqualTo(true);
     }

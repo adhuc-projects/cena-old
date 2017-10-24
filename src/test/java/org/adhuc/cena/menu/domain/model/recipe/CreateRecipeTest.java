@@ -21,64 +21,64 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_NAME;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * The {@link Recipe} test class.
+ * The {@link CreateRecipe} test class.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@DisplayName("Recipe")
-public class RecipeTest {
+@DisplayName("Create recipe command")
+public class CreateRecipeTest {
 
     @Test
     @DisplayName("cannot be created without id")
-    public void recipeWithoutId() {
+    public void createRecipeWithoutId() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(null, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+                () -> new CreateRecipe(null, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
     }
 
     @Test
     @DisplayName("cannot be created without name")
-    public void recipeWithoutName() {
+    public void createRecipeWithoutName() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+                () -> new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
     }
 
     @Test
     @DisplayName("cannot be created with empty name")
-    public void recipeWithEmptyName() {
+    public void createRecipeWithEmptyName() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, "", TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+                () -> new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, "", TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
     }
 
     @Test
     @DisplayName("cannot be created without content")
-    public void recipeWithoutContent() {
+    public void createRecipeWithoutContent() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, null));
+                () -> new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, null));
     }
 
     @Test
     @DisplayName("cannot be created with empty content")
-    public void recipeWithEmptyContent() {
+    public void createRecipeWithEmptyContent() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, ""));
+                () -> new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, ""));
     }
 
     @Test
-    @DisplayName("contains id, name and content used during creation")
-    public void recipeWithValidValues() {
-        Recipe recipe = tomatoCucumberMozzaSalad();
-        assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
-        assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
-        assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+    @DisplayName("is composed of the id, name and content used during construction")
+    public void createRecipeWithValidValues() {
+        CreateRecipe command = createTomatoCucumberMozzaSalad();
+        assertThat(command.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+        assertThat(command.recipeName()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
+        assertThat(command.recipeContent()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
     }
 
 }

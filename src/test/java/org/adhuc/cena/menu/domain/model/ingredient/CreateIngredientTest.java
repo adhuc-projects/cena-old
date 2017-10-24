@@ -16,12 +16,14 @@
 package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * The {@link CreateIngredient} test class.
@@ -31,24 +33,29 @@ import org.junit.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@DisplayName("Create ingredient command")
 public class CreateIngredientTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
+    @DisplayName("cannot be created without id")
     public void createIngredientWithoutId() {
-        new CreateIngredient(null, TOMATO_NAME);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createIngredientWithoutName() {
-        new CreateIngredient(TOMATO_ID, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createIngredientWithEmptyName() {
-        new CreateIngredient(TOMATO_ID, "");
+        assertThrows(IllegalArgumentException.class, () -> new CreateIngredient(null, TOMATO_NAME));
     }
 
     @Test
+    @DisplayName("cannot be created without name")
+    public void createIngredientWithoutName() {
+        assertThrows(IllegalArgumentException.class, () -> new CreateIngredient(TOMATO_ID, null));
+    }
+
+    @Test
+    @DisplayName("cannot be created with empty name")
+    public void createIngredientWithEmptyName() {
+        assertThrows(IllegalArgumentException.class, () -> new CreateIngredient(TOMATO_ID, ""));
+    }
+
+    @Test
+    @DisplayName("is composed of the id and name used during construction")
     public void createIngredientWithValidValues() {
         CreateIngredient command = createTomato();
         assertThat(command.ingredientId()).isEqualTo(TOMATO_ID);

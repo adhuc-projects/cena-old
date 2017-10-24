@@ -16,10 +16,12 @@
 package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * The {@link RecipeId} test class.
@@ -29,19 +31,23 @@ import org.junit.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@DisplayName("Recipe identity")
 public class RecipeIdTest {
 
-    @Test(expected = NullPointerException.class)
+    @Test
+    @DisplayName("cannot be created from null value")
     public void createRecipeIdFromNullString() {
-        new RecipeId(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createRecipeIdFromInvalidString() {
-        new RecipeId("invalid");
+        assertThrows(NullPointerException.class, () -> new RecipeId(null));
     }
 
     @Test
+    @DisplayName("cannot be created from invalid value")
+    public void createRecipeIdFromInvalidString() {
+        assertThrows(IllegalArgumentException.class, () -> new RecipeId("invalid"));
+    }
+
+    @Test
+    @DisplayName("contains identity value used during construction")
     public void createRecipeIdFromString() {
         final RecipeId createdId = new RecipeId(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
         assertThat(createdId).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
