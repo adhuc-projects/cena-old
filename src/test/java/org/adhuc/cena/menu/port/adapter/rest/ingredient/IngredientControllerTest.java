@@ -25,9 +25,11 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomat
 
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -35,7 +37,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -51,11 +53,12 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IngredientController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
+@DisplayName("Ingredient controller")
 public class IngredientControllerTest extends IngredientControllerTestSupport {
 
     private static final String  INGREDIENT_API_URL = "/api/ingredients/{id}";
@@ -66,43 +69,53 @@ public class IngredientControllerTest extends IngredientControllerTestSupport {
     @MockBean
     private IngredientAppService ingredientAppServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         reset(ingredientAppServiceMock);
     }
 
     @Test
+    @DisplayName("getting ingredient detail from invalid id returns not found status")
     public void getIngredientWithInvalidIdStatusNotFound() throws Exception {
         mvc.perform(get(INGREDIENT_API_URL, "invalid")).andExpect(status().isNotFound());
     }
 
     @Test
+    @DisplayName("getting ingredient detail from unknown id returns not found status")
     public void getIngredientNotFoundStatusNotFound() throws Exception {
         when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.empty());
 
         mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isNotFound());
     }
 
-    @Test
-    public void getIngredientFoundStatusOK() throws Exception {
-        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+    @Nested
+    @DisplayName("getting tomato detail")
+    class TomatoDetail {
 
-        mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isOk());
-    }
+        @BeforeEach
+        public void setUp() {
+            when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+        }
 
-    @Test
-    public void getIngredientFoundContainsData() throws Exception {
-        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+        @Test
+        @DisplayName("returns OK status")
+        public void getIngredientFoundStatusOK() throws Exception {
+            mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isOk());
+        }
 
-        final ResultActions resultActions = mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString()));
-        assertJsonContainsIngredient(resultActions, "$", tomato());
-    }
+        @Test
+        @DisplayName("contains tomato data")
+        public void getIngredientFoundContainsData() throws Exception {
+            final ResultActions resultActions = mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString()));
+            assertJsonContainsIngredient(resultActions, "$", tomato());
+        }
 
-    @Test
-    public void getIngredientsHasSelfLink() throws Exception {
-        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+        @Test
+        @DisplayName("contains self link to detail")
+        public void getIngredientsHasSelfLink() throws Exception {
+            assertSelfLinkEqualToRequestUrl(mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())));
+        }
 
-        assertSelfLinkEqualToRequestUrl(mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())));
     }
 
 }

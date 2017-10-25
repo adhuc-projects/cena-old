@@ -26,6 +26,7 @@
     <junit.vintage.version>4.12.1</junit.vintage.version>
     <junit.platform.version>1.0.1</junit.platform.version>
     <spring-restdocs.version>1.2.2.RELEASE</spring-restdocs.version>
+    <spring.test.junit5.version>1.0.0</spring.test.junit5.version>
     <assertj.version>3.8.0</assertj.version>
     <archunit.version>0.4.0</archunit.version>
     <serenity.version>1.6.3</serenity.version>
@@ -44,6 +45,13 @@
     <test.acceptance.dockerEnv.cena.port>8080</test.acceptance.dockerEnv.cena.port>
     <documentation.snippets.directory>${project.build.directory}/generated-snippets</documentation.snippets.directory>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 
   <profiles>
     <!-- Docker build profile -->
@@ -119,7 +127,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version><!--$NO-MVN-MAN-VER$-->
+        <version>2.19.1</version><!--$NO-MVN-MAN-VER$ -->
         <configuration>
           <skipTests>${test.unit.skip}</skipTests>
           <runOrder>hourly</runOrder>
@@ -357,6 +365,11 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+        <groupId>com.github.sbrannen</groupId>
+        <artifactId>spring-test-junit5</artifactId>
+        <scope>test</scope>
+      </dependency>
     <dependency>
       <groupId>org.springframework.restdocs</groupId>
       <artifactId>spring-restdocs-mockmvc</artifactId>
@@ -392,11 +405,11 @@
         <artifactId>junit-jupiter-engine</artifactId>
         <version>${junit.jupiter.version}</version>
       </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>${junit.vintage.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit.vintage.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-launcher</artifactId>
@@ -406,7 +419,11 @@
         <groupId>org.apiguardian</groupId>
         <artifactId>apiguardian-api</artifactId>
         <version>1.0.0</version>
-        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.sbrannen</groupId>
+        <artifactId>spring-test-junit5</artifactId>
+        <version>${spring.test.junit5.version}</version>
       </dependency>
       <dependency>
         <groupId>com.tngtech.archunit</groupId>

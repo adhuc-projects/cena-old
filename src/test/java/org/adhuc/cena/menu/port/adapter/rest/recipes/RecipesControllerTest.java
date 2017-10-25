@@ -39,9 +39,11 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumbe
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -52,7 +54,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -75,11 +77,12 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = RecipesController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
+@DisplayName("Recipes controller")
 public class RecipesControllerTest extends ControllerTestSupport {
 
     private static final String RECIPES_API_URL = "/api/recipes";
@@ -90,56 +93,72 @@ public class RecipesControllerTest extends ControllerTestSupport {
     @MockBean
     private RecipeAppService    recipeAppServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         reset(recipeAppServiceMock);
     }
 
-    @Test
-    public void getRecipesEmptyListStatusOK() throws Exception {
-        when(recipeAppServiceMock.getRecipes()).thenReturn(Collections.emptyList());
+    @Nested
+    @DisplayName("with empty list")
+    class WithEmptyList {
 
-        mvc.perform(get(RECIPES_API_URL)).andExpect(status().isOk());
+        @BeforeEach
+        public void setUp() {
+            when(recipeAppServiceMock.getRecipes()).thenReturn(Collections.emptyList());
+        }
+
+        @Test
+        @DisplayName("getting list returns OK status")
+        public void getRecipesEmptyListStatusOK() throws Exception {
+            mvc.perform(get(RECIPES_API_URL)).andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("getting list returns empty list")
+        public void getRecipesEmptyListNoData() throws Exception {
+            mvc.perform(get(RECIPES_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
+                    .andExpect(jsonPath("$._embedded.data").isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("with 2 recipes")
+    class With2Recipes {
+
+        @BeforeEach
+        public void setUp() {
+            when(recipeAppServiceMock.getRecipes())
+                    .thenReturn(Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad()));
+        }
+
+        @Test
+        @DisplayName("getting list returns OK status")
+        public void getRecipesStatusOK() throws Exception {
+            mvc.perform(get(RECIPES_API_URL)).andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("getting list returns all recipes")
+        public void getRecipesContainsData() throws Exception {
+            final ResultActions resultActions =
+                    mvc.perform(get(RECIPES_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
+                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                            .andExpect(jsonPath("$._embedded.data", hasSize(2)));
+            assertJsonContainsRecipe(resultActions, "$._embedded.data[0]", tomatoCucumberMozzaSalad());
+            assertJsonContainsRecipe(resultActions, "$._embedded.data[1]", tomatoCucumberOliveFetaSalad());
+        }
+
+        @Test
+        @DisplayName("getting list contains self link to resource")
+        public void getRecipesHasSelfLink() throws Exception {
+            assertSelfLinkEqualToRequestUrl(mvc.perform(get(RECIPES_API_URL)));
+        }
+
     }
 
     @Test
-    public void getRecipesEmptyListNoData() throws Exception {
-        when(recipeAppServiceMock.getRecipes()).thenReturn(Collections.emptyList());
-
-        mvc.perform(get(RECIPES_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
-                .andExpect(jsonPath("$._embedded.data").isEmpty());
-    }
-
-    @Test
-    @WithMockUser(authorities = "USER")
-    public void getRecipesStatusOK() throws Exception {
-        when(recipeAppServiceMock.getRecipes())
-                .thenReturn(Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad()));
-
-        mvc.perform(get(RECIPES_API_URL)).andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(authorities = "USER")
-    public void getRecipesContainsData() throws Exception {
-        when(recipeAppServiceMock.getRecipes())
-                .thenReturn(Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad()));
-
-        final ResultActions resultActions = mvc.perform(get(RECIPES_API_URL))
-                .andExpect(jsonPath("$._embedded.data").isArray()).andExpect(jsonPath("$._embedded.data").isNotEmpty())
-                .andExpect(jsonPath("$._embedded.data", hasSize(2)));
-        assertJsonContainsRecipe(resultActions, "$._embedded.data[0]", tomatoCucumberMozzaSalad());
-        assertJsonContainsRecipe(resultActions, "$._embedded.data[1]", tomatoCucumberOliveFetaSalad());
-    }
-
-    @Test
-    public void getRecipesHasSelfLink() throws Exception {
-        when(recipeAppServiceMock.getRecipes()).thenReturn(Arrays.asList(tomatoCucumberMozzaSalad()));
-
-        assertSelfLinkEqualToRequestUrl(mvc.perform(get(RECIPES_API_URL)));
-    }
-
-    @Test
+    @DisplayName("creating recipe with no name returns bad request status")
     @WithMockUser(authorities = "USER")
     public void createRecipeInvalidRequestNoName() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
@@ -148,6 +167,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("creating recipe with empty name returns bad request status")
     @WithMockUser(authorities = "USER")
     public void createRecipeInvalidRequestBlankName() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
@@ -156,6 +176,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("creating recipe with no content returns bad request status")
     @WithMockUser(authorities = "USER")
     public void createRecipeInvalidRequestNoContent() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
@@ -164,6 +185,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("creating recipe with empty content returns bad request status")
     @WithMockUser(authorities = "USER")
     public void createRecipeInvalidRequestBlankContent() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
@@ -172,6 +194,16 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("creating valid recipe returns created status")
+    @WithMockUser(authorities = "USER")
+    public void createRecipeReturnsCreatedStatus() throws Exception {
+        mvc.perform(
+                post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(createTomatoCucumberMozzaSaladRequest()))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("creating valid recipe calls the application service with command")
     @WithMockUser(authorities = "USER")
     public void createRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<CreateRecipe> commandCaptor = ArgumentCaptor.forClass(CreateRecipe.class);
@@ -185,16 +217,9 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("creating valid recipe returns location header with link to recipe details")
     @WithMockUser(authorities = "USER")
-    public void createRecipeReturnsCreatedStatus() throws Exception {
-        mvc.perform(
-                post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(createTomatoCucumberMozzaSaladRequest()))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    @WithMockUser(authorities = "USER")
-    public void createIngredientReturnsLocationHeader() throws Exception {
+    public void createRecipeReturnsLocationHeader() throws Exception {
         final ArgumentCaptor<CreateRecipe> commandCaptor = ArgumentCaptor.forClass(CreateRecipe.class);
         doNothing().when(recipeAppServiceMock).createRecipe(commandCaptor.capture());
 

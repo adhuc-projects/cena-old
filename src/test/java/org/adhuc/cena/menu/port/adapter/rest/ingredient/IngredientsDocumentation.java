@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -35,10 +36,10 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomat
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -50,13 +51,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
@@ -69,13 +69,14 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IngredientsController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
+@DisplayName("Ingredients resource documentation")
 public class IngredientsDocumentation extends ControllerTestSupport {
 
     private static final String            INGREDIENTS_API_URL = "/api/ingredients";
@@ -88,12 +89,13 @@ public class IngredientsDocumentation extends ControllerTestSupport {
     @MockBean
     private IngredientAppService           ingredientAppServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         reset(ingredientAppServiceMock);
     }
 
     @Test
+    @DisplayName("generates ingredients list example")
     public void ingredientsListExample() throws Exception {
         when(ingredientAppServiceMock.getIngredients()).thenReturn(Arrays.asList(tomato(), cucumber()));
 
@@ -108,10 +110,10 @@ public class IngredientsDocumentation extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("generates ingredient creation example")
     @WithMockUser(authorities = "INGREDIENT_MANAGER")
     public void ingredientsCreateExample() throws Exception {
-        final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
-        doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());
+        doNothing().when(ingredientAppServiceMock).createIngredient(anyObject());
 
         ConstrainedFields fields = new ConstrainedFields(CreateIngredientRequest.class);
         mvc.perform(post(INGREDIENTS_API_URL).with(csrf()).contentType(APPLICATION_JSON).content(createTomatoRequest()))

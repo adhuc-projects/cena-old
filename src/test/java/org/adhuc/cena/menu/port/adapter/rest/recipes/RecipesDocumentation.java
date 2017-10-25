@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -34,9 +36,10 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumbe
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -47,9 +50,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.adhuc.cena.menu.application.RecipeAppService;
@@ -70,13 +72,14 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = RecipesController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
+@DisplayName("Recipes resource documentation")
 public class RecipesDocumentation extends ControllerTestSupport {
 
     private static final String            RECIPES_API_URL = "/api/recipes";
@@ -89,13 +92,13 @@ public class RecipesDocumentation extends ControllerTestSupport {
     @MockBean
     private RecipeAppService               recipeAppServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         reset(recipeAppServiceMock);
     }
 
     @Test
-    @WithMockUser(authorities = "USER")
+    @DisplayName("generates recipes list example")
     public void recipesListExample() throws Exception {
         when(recipeAppServiceMock.getRecipes())
                 .thenReturn(Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad()));
@@ -111,9 +114,11 @@ public class RecipesDocumentation extends ControllerTestSupport {
     }
 
     @Test
-    @DirtiesContext
+    @DisplayName("generates recipe creation example")
     @WithMockUser(authorities = "USER")
     public void recipesCreateExample() throws Exception {
+        doNothing().when(recipeAppServiceMock).createRecipe(anyObject());
+
         ConstrainedFields fields = new ConstrainedFields(CreateRecipeRequest.class);
         mvc.perform(
                 post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(createTomatoCucumberMozzaSaladRequest()))

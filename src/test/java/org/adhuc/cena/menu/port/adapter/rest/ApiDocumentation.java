@@ -24,8 +24,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -33,7 +34,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
@@ -47,12 +48,13 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IndexController.class)
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
+@DisplayName("API documentation")
 public class ApiDocumentation extends ControllerTestSupport {
 
     private static final String            API_URL = "/api";
@@ -63,6 +65,7 @@ public class ApiDocumentation extends ControllerTestSupport {
     private RestDocumentationResultHandler documentationHandler;
 
     @Test
+    @DisplayName("generates headers example")
     public void headersExample() throws Exception {
         mvc.perform(get(API_URL)).andExpect(status().isOk())
                 .andDo(documentationHandler.document(responseHeaders(headerWithName("Content-Type")
@@ -70,6 +73,7 @@ public class ApiDocumentation extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("generates index example")
     public void indexExample() throws Exception {
         mvc.perform(get(API_URL)).andExpect(status().isOk()).andDo(documentationHandler.document(links(
                 linkWithRel("documentation").description("This documentation"),
