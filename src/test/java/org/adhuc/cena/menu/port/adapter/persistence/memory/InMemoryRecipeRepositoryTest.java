@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
@@ -23,8 +24,10 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 
@@ -36,50 +39,72 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
  * @version 0.1.0
  * @since 0.1.0
  */
+@DisplayName("In-memory recipe repository")
 public class InMemoryRecipeRepositoryTest {
 
     private InMemoryRecipeRepository repository;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         repository = new InMemoryRecipeRepository();
     }
 
     @Test
-    public void findAllEmpty() {
-        assertThat(repository.findAll()).isEmpty();
-    }
-
-    @Test
-    public void findAllAfterSaveContainsSavedRecipe() {
-        repository.save(tomatoCucumberMozzaSalad());
-        assertThat(repository.findAll()).containsExactly(tomatoCucumberMozzaSalad());
-    }
-
-    @Test
-    public void findAllAfterMultipleSaveContainsSavedRecipes() {
-        repository.save(tomatoCucumberMozzaSalad());
-        repository.save(tomatoCucumberOliveFetaSalad());
-        assertThat(repository.findAll()).containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
-                tomatoCucumberOliveFetaSalad());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
+    @DisplayName("throws IllegalArgumentException when saving null recipe")
     public void saveNullRecipe() {
-        repository.save(null);
+        assertThrows(IllegalArgumentException.class, () -> repository.save(null));
     }
 
-    @Test
-    public void saveExistingRecipeOverwritePreviousValue() {
-        repository.save(tomatoCucumberOliveFetaSalad());
+    @Nested
+    @DisplayName("with no recipe")
+    class WithNoIngredient {
 
-        Recipe recipe = tomatoCucumberMozzaSalad();
-        repository.save(recipe);
-        recipe.name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME);
-        repository.save(recipe);
-        assertThat(repository.findAll()).containsExactlyInAnyOrder(tomatoCucumberOliveFetaSalad(),
-                new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
-                        TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+        @Test
+        @DisplayName("returns empty list")
+        public void findAllEmpty() {
+            assertThat(repository.findAll()).isEmpty();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("with tomato, cucumber and mozzarella salad")
+    class WithTomatoCucumberMozzarellaSalad {
+
+        @BeforeEach
+        public void setUp() {
+            repository.save(tomatoCucumberMozzaSalad());
+        }
+
+        @Test
+        public void findAllAfterSaveContainsSavedRecipe() {
+            assertThat(repository.findAll()).containsExactly(tomatoCucumberMozzaSalad());
+        }
+
+        @Test
+        public void saveExistingRecipeOverwritePreviousValue() {
+            repository.save(tomatoCucumberMozzaSalad().name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME));
+            assertThat(repository.findAll()).containsExactly(new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
+                    TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+        }
+
+        @Nested
+        @DisplayName("and tomato, cucumber, olive and feta salad")
+        class AndTomatoCucumberOliveFetaSalad {
+
+            @BeforeEach
+            public void setUp() {
+                repository.save(tomatoCucumberOliveFetaSalad());
+            }
+
+            @Test
+            public void findAllAfterMultipleSaveContainsSavedRecipes() {
+                assertThat(repository.findAll()).containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
+                        tomatoCucumberOliveFetaSalad());
+            }
+
+        }
+
     }
 
 }

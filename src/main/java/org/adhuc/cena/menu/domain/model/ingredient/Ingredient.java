@@ -67,9 +67,10 @@ public class Ingredient extends BasicEntity<IngredientId> {
      * @param name
      *            the new ingredient name.
      */
-    public void name(String name) {
+    public Ingredient name(String name) {
         hasText(name, "Cannot change name with invalid value");
         this.name = name;
+        return this;
     }
 
 }

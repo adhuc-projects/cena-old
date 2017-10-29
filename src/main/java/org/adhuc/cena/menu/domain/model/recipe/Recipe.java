@@ -68,4 +68,28 @@ public class Recipe extends BasicEntity<RecipeId> {
         this.content = content;
     }
 
+    /**
+     * Sets the recipe name.
+     *
+     * @param name
+     *            the new recipe name.
+     */
+    public Recipe name(String name) {
+        hasText(name, "Cannot change name with invalid value");
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Sets the recipe content.
+     *
+     * @param content
+     *            the new recipe content.
+     */
+    public Recipe content(String content) {
+        hasText(content, "Cannot change content with invalid value");
+        this.content = content;
+        return this;
+    }
+
 }
