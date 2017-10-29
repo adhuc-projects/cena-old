@@ -23,6 +23,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -33,6 +34,8 @@ import org.junit.jupiter.api.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("domain")
 @DisplayName("Create ingredient command")
 public class CreateIngredientTest {
 

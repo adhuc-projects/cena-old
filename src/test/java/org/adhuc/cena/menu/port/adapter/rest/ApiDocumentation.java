@@ -25,6 +25,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.subsecti
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("integration")
+@Tag("documentation")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IndexController.class)
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)

@@ -34,6 +34,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,8 @@ import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("integration")
+@Tag("documentation")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IngredientController.class,
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })

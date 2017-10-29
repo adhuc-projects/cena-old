@@ -27,6 +27,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumbe
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
@@ -39,6 +40,8 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("inMemoryRepository")
 @DisplayName("In-memory recipe repository")
 public class InMemoryRecipeRepositoryTest {
 

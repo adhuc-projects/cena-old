@@ -24,6 +24,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,6 +35,8 @@ import org.junit.jupiter.api.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("domain")
 @DisplayName("Create recipe command")
 public class CreateRecipeTest {
 

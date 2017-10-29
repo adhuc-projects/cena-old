@@ -21,9 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_NAME;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,6 +38,8 @@ import org.junit.jupiter.api.Test;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("domain")
 @DisplayName("Recipe")
 public class RecipeTest {
 
@@ -79,6 +85,52 @@ public class RecipeTest {
         assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
         assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
         assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+    }
+
+    @Nested
+    @DisplayName("tomato, cucumber and mozzarella salad")
+    class Tomato {
+
+        private Recipe recipe = tomatoCucumberMozzaSalad();
+
+        @Test
+        @DisplayName("cannot have its name changed with null value")
+        public void changeNameWithNullValue() {
+            assertThrows(IllegalArgumentException.class, () -> recipe.name(null));
+        }
+
+        @Test
+        @DisplayName("cannot have its name changed with empty value")
+        public void changeNameWithEmptyValue() {
+            assertThrows(IllegalArgumentException.class, () -> recipe.name(""));
+        }
+
+        @Test
+        @DisplayName("has a new name after changing it")
+        public void changeNameWithValidValue() {
+            recipe.name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME);
+            assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME);
+        }
+
+        @Test
+        @DisplayName("cannot have its content changed with null value")
+        public void changeContentWithNullValue() {
+            assertThrows(IllegalArgumentException.class, () -> recipe.content(null));
+        }
+
+        @Test
+        @DisplayName("cannot have its content changed with empty value")
+        public void changeContentWithEmptyValue() {
+            assertThrows(IllegalArgumentException.class, () -> recipe.content(""));
+        }
+
+        @Test
+        @DisplayName("has a new content after changing it")
+        public void changeContentWithValidValue() {
+            recipe.name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
+            assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
+        }
+
     }
 
 }
