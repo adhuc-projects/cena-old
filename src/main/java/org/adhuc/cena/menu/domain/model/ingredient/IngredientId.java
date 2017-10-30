@@ -21,8 +21,8 @@ import java.util.UUID;
 
 import org.adhuc.cena.menu.domain.model.Identity;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * An ingredient identity.
@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 public class IngredientId extends Identity {
 

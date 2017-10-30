@@ -18,7 +18,7 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.notNull;
 
-import lombok.Data;
+import lombok.Value;
 import lombok.experimental.Accessors;
 
 /**
@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
+@Value
 @Accessors(fluent = true)
 public class CreateRecipe {
 
@@ -45,7 +45,7 @@ public class CreateRecipe {
      *
      * @param recipeName
      *            the recipe name.
-     * 
+     *
      * @param recipeContent
      *            the recipe content.
      */
