@@ -33,9 +33,10 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class CreateRecipe {
 
-    private final RecipeId recipeId;
-    private final String   recipeName;
-    private final String   recipeContent;
+    private final RecipeId     recipeId;
+    private final String       recipeName;
+    private final String       recipeContent;
+    private final RecipeAuthor recipeAuthor;
 
     /**
      * Creates a recipe creation command.
@@ -48,14 +49,19 @@ public class CreateRecipe {
      *
      * @param recipeContent
      *            the recipe content.
+     *
+     * @param recipeAuthor
+     *            the recipe author.
      */
-    public CreateRecipe(final RecipeId recipeId, final String recipeName, final String recipeContent) {
+    public CreateRecipe(RecipeId recipeId, String recipeName, String recipeContent, RecipeAuthor recipeAuthor) {
         notNull(recipeId, "Cannot create recipe creation command with invalid recipe identity");
         hasText(recipeName, "Cannot create recipe creation command with invalid recipe name");
         hasText(recipeContent, "Cannot create recipe creation command with invalid recipe content");
+        notNull(recipeAuthor, "Cannot create recipe creation command with invalid recipe author");
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.recipeContent = recipeContent;
+        this.recipeAuthor = recipeAuthor;
     }
 
 }

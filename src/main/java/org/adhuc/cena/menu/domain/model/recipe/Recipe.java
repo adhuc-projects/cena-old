@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -44,9 +45,11 @@ import lombok.experimental.Accessors;
 public class Recipe extends BasicEntity<RecipeId> {
 
     @NonNull
-    private String name;
+    private String             name;
     @NonNull
-    private String content;
+    private String             content;
+    @NonNull
+    private final RecipeAuthor author;
 
     /**
      * Creates a recipe.
@@ -60,12 +63,14 @@ public class Recipe extends BasicEntity<RecipeId> {
      * @param content
      *            the recipe content.
      */
-    public Recipe(RecipeId id, String name, String content) {
+    public Recipe(RecipeId id, String name, String content, RecipeAuthor author) {
         super(id);
         hasText(name, "Cannot create recipe with invalid name");
         hasText(content, "Cannot create recipe with invalid content");
+        notNull(author, "Cannot create recipe with invalid author");
         this.name = name;
         this.content = content;
+        this.author = author;
     }
 
     /**

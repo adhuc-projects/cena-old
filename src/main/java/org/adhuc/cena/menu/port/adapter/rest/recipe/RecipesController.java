@@ -27,6 +27,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.RecipeAppService;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeAuthor;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
@@ -92,14 +95,20 @@ public class RecipesController extends AbstractRequestValidationController {
      */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public HttpHeaders createRecipe(@RequestBody @Valid final CreateRecipeRequest request, Errors errors) {
+    public HttpHeaders createRecipe(@RequestBody @Valid CreateRecipeRequest request, Errors errors,
+            @AuthenticationPrincipal UserDetails user) {
         validateRequest(errors);
-        final RecipeId identity = RecipeId.generate();
-        recipeAppService.createRecipe(request.toCommand(identity));
+        RecipeId identity = RecipeId.generate();
+        RecipeAuthor author = convertAuthenticationToRecipeAuthor(user);
+        recipeAppService.createRecipe(request.toCommand(identity, author));
 
-        final HttpHeaders httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(RecipeController.class, identity.toString()).toUri());
         return httpHeaders;
+    }
+
+    private RecipeAuthor convertAuthenticationToRecipeAuthor(UserDetails user) {
+        return new RecipeAuthor(user.getUsername());
     }
 
 }

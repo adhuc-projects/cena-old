@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
@@ -87,8 +88,9 @@ public class InMemoryRecipeRepositoryTest {
         @Test
         public void saveExistingRecipeOverwritePreviousValue() {
             repository.save(tomatoCucumberMozzaSalad().name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME));
-            assertThat(repository.findAll()).containsExactly(new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
-                    TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+            assertThat(repository.findAll())
+                    .containsExactly(new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
+                            TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
         }
 
         @Nested

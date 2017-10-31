@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 import org.hibernate.validator.constraints.NotBlank;
 
 import org.adhuc.cena.menu.domain.model.recipe.CreateRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeAuthor;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 
 import lombok.AllArgsConstructor;
@@ -47,11 +48,14 @@ public class CreateRecipeRequest {
      *
      * @param identity
      *            the recipe identity.
+     * 
+     * @param author
+     *            the recipe author.
      *
      * @return the recipe creation command.
      */
-    public CreateRecipe toCommand(RecipeId identity) {
-        return new CreateRecipe(identity, name, content);
+    public CreateRecipe toCommand(RecipeId identity, RecipeAuthor author) {
+        return new CreateRecipe(identity, name, content, author);
     }
 
 }

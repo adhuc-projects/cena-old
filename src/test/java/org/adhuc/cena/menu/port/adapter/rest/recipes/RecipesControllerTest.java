@@ -207,7 +207,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid recipe calls the application service with command")
-    @WithMockUser(authorities = "USER")
+    @WithMockUser(username = "authenticated-user", authorities = "USER")
     public void createRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<CreateRecipe> commandCaptor = ArgumentCaptor.forClass(CreateRecipe.class);
 

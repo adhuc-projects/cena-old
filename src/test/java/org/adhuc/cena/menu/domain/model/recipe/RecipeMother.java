@@ -29,34 +29,37 @@ import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
  */
 public class RecipeMother {
 
-    public static final RecipeId TOMATO_CUCUMBER_MOZZA_SALAD_ID           = RecipeId.generate();
-    public static final String   TOMATO_CUCUMBER_MOZZA_SALAD_NAME         = "Tomato, cucumber and mozzarella salad";
-    public static final String   TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT      =
+    public static final RecipeId     TOMATO_CUCUMBER_MOZZA_SALAD_ID           = RecipeId.generate();
+    public static final String       TOMATO_CUCUMBER_MOZZA_SALAD_NAME         = "Tomato, cucumber and mozzarella salad";
+    public static final String       TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT      =
             "Cut everything into dices, mix it, dress it";
+    public static final RecipeAuthor TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR       = new RecipeAuthor("authenticated-user");
 
-    public static final RecipeId TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID      = RecipeId.generate();
-    public static final String   TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME    = "Tomato, cucumber, olive and feta salad";
-    public static final String   TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT =
+    public static final RecipeId     TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID      = RecipeId.generate();
+    public static final String       TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME    =
+            "Tomato, cucumber, olive and feta salad";
+    public static final String       TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT =
             "Cut everything into dices, mix it, dress it";
+    public static final RecipeAuthor TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR  = new RecipeAuthor("authenticated-user");
 
     public static CreateRecipe createTomatoCucumberMozzaSalad() {
         return new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
-                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
     }
 
     public static Recipe tomatoCucumberMozzaSalad() {
         return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
-                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
     }
 
     public static CreateRecipe createTomatoCucumberOliveFetaSalad() {
         return new CreateRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
-                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
+                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
     }
 
     public static Recipe tomatoCucumberOliveFetaSalad() {
         return new Recipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
-                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
+                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
     }
 
 }

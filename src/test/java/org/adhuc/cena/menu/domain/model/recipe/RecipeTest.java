@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_NAME;
@@ -46,36 +47,43 @@ public class RecipeTest {
     @Test
     @DisplayName("cannot be created without id")
     public void recipeWithoutId() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(null, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(null, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
     }
 
     @Test
     @DisplayName("cannot be created without name")
     public void recipeWithoutName() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null,
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
     }
 
     @Test
     @DisplayName("cannot be created with empty name")
     public void recipeWithEmptyName() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, "", TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT));
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, "",
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
     }
 
     @Test
     @DisplayName("cannot be created without content")
     public void recipeWithoutContent() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, null));
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
+                TOMATO_CUCUMBER_MOZZA_SALAD_NAME, null, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
     }
 
     @Test
     @DisplayName("cannot be created with empty content")
     public void recipeWithEmptyContent() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME, ""));
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
+                TOMATO_CUCUMBER_MOZZA_SALAD_NAME, "", TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
+    }
+
+    @Test
+    @DisplayName("cannot be created without author")
+    public void recipeWithoutAuthor() {
+        assertThrows(IllegalArgumentException.class, () -> new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
+                TOMATO_CUCUMBER_MOZZA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, null));
     }
 
     @Test

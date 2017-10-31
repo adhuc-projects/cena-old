@@ -59,7 +59,8 @@ public class RecipeAppServiceImpl implements RecipeAppService {
     public void createRecipe(CreateRecipe command) {
         notNull(command, "Cannot create recipe from invalid command");
         log.info("Create recipe from command {}", command);
-        recipeRepository.save(new Recipe(command.recipeId(), command.recipeName(), command.recipeContent()));
+        recipeRepository.save(
+                new Recipe(command.recipeId(), command.recipeName(), command.recipeContent(), command.recipeAuthor()));
     }
 
 }
