@@ -72,7 +72,7 @@ public abstract class AbstractRecipeStorageSteps extends AbstractServiceClientSt
     }
 
     @Data
-    @ToString(exclude = { "content" }, includeFieldNames = false)
+    @ToString(exclude = { "content", "author" }, includeFieldNames = false)
     @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
     @RequiredArgsConstructor
     @Accessors(fluent = true)

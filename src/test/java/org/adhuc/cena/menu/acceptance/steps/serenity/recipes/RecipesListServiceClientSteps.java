@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import io.restassured.path.json.JsonPath;
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.Steps;
 
 /**
  * The recipes list rest-service client steps definition.
@@ -34,6 +35,9 @@ import net.thucydides.core.annotations.Step;
  */
 @SuppressWarnings("serial")
 public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSteps {
+
+    @Steps
+    private RecipeCreationServiceClientSteps recipeCreationServiceClient;
 
     @Step("Assert recipe is in recipes list")
     public RecipeValue assertRecipeInRecipesList() {
@@ -48,6 +52,13 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
     @Step("Assume recipe {0} is in recipes list")
     public RecipeValue assumeRecipeInRecipesList(final RecipeValue recipe) {
         withRecipeIfEmpty(recipe);
+        Optional<RecipeValue> foundRecipe = getRecipeFromRecipesList(recipe);
+        return foundRecipe.orElseGet(() -> createRecipe(recipe));
+    }
+
+    @Step("Assume recipe {0} is in recipes list after creating it")
+    public RecipeValue createRecipe(final RecipeValue recipe) {
+        recipeCreationServiceClient.createRecipe(recipe);
         Optional<RecipeValue> foundRecipe = getRecipeFromRecipesList(recipe);
         assumeTrue("Could not find the recipe in recipes list", foundRecipe.isPresent());
         return foundRecipe.get();
