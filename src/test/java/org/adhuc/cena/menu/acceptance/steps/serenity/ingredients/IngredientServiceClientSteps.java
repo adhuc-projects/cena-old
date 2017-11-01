@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity;
+package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeFalse;
@@ -26,18 +26,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
 import io.restassured.path.json.JsonPath;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -49,15 +41,7 @@ import net.thucydides.core.annotations.Step;
  * @since 0.1.0
  */
 @SuppressWarnings("serial")
-public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
-
-    private IngredientValue ingredient;
-
-    @Step("Given an ingredient named \"{0}\"")
-    public IngredientValue withIngredient(final String ingredientName) {
-        ingredient = new IngredientValue(ingredientName);
-        return ingredient;
-    }
+public class IngredientServiceClientSteps extends AbstractIngredientStorageSteps {
 
     @Step("Assume ingredient {0} is not in ingredients list")
     public void assumeIngredientNotInIngredientsList(final IngredientValue ingredient) {
@@ -74,13 +58,13 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Creates the ingredient")
     public void createIngredient() {
-        createIngredient(ingredient);
+        createIngredient(ingredient());
     }
 
     @Step("Creates an ingredient without name")
     public void createIngredientWithoutName() {
-        ingredient = new IngredientValue();
-        createIngredient(ingredient);
+        storeIngredient(new IngredientValue());
+        createIngredient(ingredient());
     }
 
     @Step("Creates the ingredient {0}")
@@ -92,12 +76,12 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Assert ingredient is in ingredients list")
     public void assertIngredientInIngredientsList() {
-        assertIngredientInIngredientsList(ingredient);
+        assertIngredientInIngredientsList(ingredient());
     }
 
     @Step("Assert ingredient is not in ingredients list")
     public void assertIngredientNotInIngredientsList() {
-        assertIngredientNotInIngredientsList(ingredient);
+        assertIngredientNotInIngredientsList(ingredient());
     }
 
     @Step("Assert ingredient {0} is in ingredients list")
@@ -114,7 +98,7 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
     public void assertIngredientSuccessfullyCreated() {
         String ingredientLocation = assertCreated().extract().header(LOCATION);
         IngredientValue ingredient = getIngredientFromUrl(ingredientLocation);
-        assertIngredientInfoIsEqualToExpected(this.ingredient, ingredient);
+        assertIngredientInfoIsEqualToExpected(ingredient(), ingredient);
     }
 
     @Step("Get ingredient from {0}")
@@ -124,7 +108,7 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
     @Step("Assert ingredient {1} corresponds to expected {0}")
     public void assertIngredientInfoIsEqualToExpected(IngredientValue expected, IngredientValue actual) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Step("Assert ingredient creation results in invalid request error")
@@ -151,16 +135,6 @@ public class IngredientServiceClientSteps extends AbstractServiceClientSteps {
 
     private String getIngredientsResourceUrl() {
         return getApiClientResource().getIngredients().getHref();
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Accessors(fluent = true)
-    @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class IngredientValue {
-        private String name;
     }
 
 }
