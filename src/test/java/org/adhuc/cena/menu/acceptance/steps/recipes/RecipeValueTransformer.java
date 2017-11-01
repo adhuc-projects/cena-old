@@ -15,33 +15,29 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
-import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import cucumber.api.Transform;
-import cucumber.api.java.en.Given;
-import cucumber.runtime.java.StepDefAnnotation;
-import net.thucydides.core.annotations.Steps;
+import java.util.Optional;
+
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
+
+import cucumber.api.Transformer;
 
 /**
- * The recipe ingredient addition steps definitions for rest-services acceptance tests.
+ * A cucumber {@link Transformer} implementation for {@link RecipeValue}s.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@StepDefAnnotation
-public class RecipeIngredientAdditionStepDefinitions {
+public class RecipeValueTransformer extends Transformer<RecipeValue> {
 
-    @Steps
-    private RecipesListServiceClientSteps recipesListServiceClient;
-
-    @Given("^an existing \"(.*)\" recipe created by this user$")
-    public void recipeCreatedByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
-        recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
-        // TODO get authenticated user information from world
-        recipesListServiceClient.assumeRecipeCreatedByAuthenticatedUser(recipe, "authenticated-user");
+    @Override
+    public RecipeValue transform(String value) {
+        Optional<RecipeValue> recipe = RecipeValueMother.getRecipe(value);
+        assertThat(recipe).as("Cannot find recipe corresponding to \"" + value + "\"").isPresent();
+        return recipe.get();
     }
 
 }

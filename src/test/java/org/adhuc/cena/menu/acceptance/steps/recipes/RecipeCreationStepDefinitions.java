@@ -21,6 +21,7 @@ import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeCreationServi
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
@@ -43,9 +44,7 @@ public class RecipeCreationStepDefinitions {
     private RecipesListServiceClientSteps    recipesListServiceClient;
 
     @When("^he creates the \"(.*)\" recipe$")
-    public void createRecipe(String recipeName) {
-        // TODO get recipe from recipeName through cucumber transformer
-        RecipeValue recipe = new RecipeValue(recipeName, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+    public void createRecipe(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipeCreationServiceClient.storeRecipe(recipe);
         recipeCreationServiceClient.createRecipe(recipe);
     }

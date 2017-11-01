@@ -15,10 +15,11 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
-import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * An object mother to create testing domain elements related to {@link Ingredient}s.
+ * An object mother to create testing domain elements related to {@link Recipe}s.
  *
  * @author Alexandre Carbenay
  *
@@ -60,6 +61,10 @@ public class RecipeMother {
     public static Recipe tomatoCucumberOliveFetaSalad() {
         return new Recipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
                 TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
+    }
+
+    public static List<Recipe> allRecipes() {
+        return Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
     }
 
 }
