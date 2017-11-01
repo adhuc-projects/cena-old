@@ -15,8 +15,8 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.ingredients;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.AbstractIngredientStorageSteps.IngredientValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;

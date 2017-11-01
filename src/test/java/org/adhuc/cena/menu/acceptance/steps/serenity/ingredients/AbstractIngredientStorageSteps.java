@@ -19,16 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import net.serenitybdd.core.Serenity;
 
 /**
@@ -66,16 +58,6 @@ public abstract class AbstractIngredientStorageSteps extends AbstractServiceClie
 
     protected final Optional<IngredientValue> optionalIngredient() {
         return Optional.ofNullable(Serenity.sessionVariableCalled(INGREDIENT_SESSION_KEY));
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Accessors(fluent = true)
-    @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class IngredientValue {
-        private String name;
     }
 
 }
