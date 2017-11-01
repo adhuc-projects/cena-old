@@ -15,7 +15,8 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.ingredients;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientCreationServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 
 import cucumber.api.Transform;
@@ -37,53 +38,55 @@ import net.thucydides.core.annotations.Steps;
 public class IngredientCreationStepDefinitions {
 
     @Steps
-    IngredientServiceClientSteps ingredientServiceClient;
+    private IngredientListServiceClientSteps     ingredientListServiceClient;
+    @Steps
+    private IngredientCreationServiceClientSteps ingredientCreationServiceClient;
 
     @Given("^a non-existent \"(.*)\" ingredient$")
     public void nonExistentIngredient(@Transform(IngredientValueTransformer.class) IngredientValue ingredient) {
-        ingredientServiceClient.storeIngredient(ingredient);
-        ingredientServiceClient.assumeIngredientNotInIngredientsList(ingredient);
+        ingredientListServiceClient.storeIngredient(ingredient);
+        ingredientListServiceClient.assumeIngredientNotInIngredientsList(ingredient);
     }
 
     @Given("^an existing \"(.*)\" ingredient$")
     public void existingIngredient(@Transform(IngredientValueTransformer.class) IngredientValue ingredient) {
-        ingredientServiceClient.storeIngredient(ingredient);
-        ingredientServiceClient.assumeIngredientInIngredientsList(ingredient);
+        ingredientListServiceClient.storeIngredient(ingredient);
+        ingredientListServiceClient.assumeIngredientInIngredientsList(ingredient);
     }
 
     @When("^he creates the ingredient$")
     public void createIngredient() {
-        ingredientServiceClient.createIngredient();
+        ingredientCreationServiceClient.createIngredient();
     }
 
     @When("^he creates an ingredient without name$")
     public void createIngredientWithoutName() {
-        ingredientServiceClient.createIngredientWithoutName();
+        ingredientCreationServiceClient.createIngredientWithoutName();
     }
 
     @Then("^the ingredient is created$")
     public void ingredientCreated() {
-        ingredientServiceClient.assertIngredientSuccessfullyCreated();
+        ingredientCreationServiceClient.assertIngredientSuccessfullyCreated();
     }
 
     @Then("^an error notifies that ingredient must have a name$")
     public void errorOnIngredientCreationWithoutName() {
-        ingredientServiceClient.assertInvalidRequestError();
+        ingredientCreationServiceClient.assertInvalidRequestError();
     }
 
     @Then("^an error notifies that ingredient already exists$")
     public void errorOnIngredientCreationNameAlreadyUsed() {
-        ingredientServiceClient.assertNameAlreadyUsed();
+        ingredientCreationServiceClient.assertNameAlreadyUsed();
     }
 
     @Then("^the ingredient can be found in the list$")
     public void ingredientFoundInList() {
-        ingredientServiceClient.assertIngredientInIngredientsList();
+        ingredientListServiceClient.assertIngredientInIngredientsList();
     }
 
     @Then("^the ingredient cannot be found in the list$")
     public void ingredientNotFoundInList() {
-        ingredientServiceClient.assertIngredientNotInIngredientsList();
+        ingredientListServiceClient.assertIngredientNotInIngredientsList();
     }
 
 }
