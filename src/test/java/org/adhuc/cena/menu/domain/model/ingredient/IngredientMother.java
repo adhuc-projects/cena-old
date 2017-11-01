@@ -15,6 +15,9 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * An object mother to create testing domain elements related to {@link Ingredient}s.
  *
@@ -27,11 +30,17 @@ package org.adhuc.cena.menu.domain.model.ingredient;
  */
 public class IngredientMother {
 
-    public static final IngredientId TOMATO_ID     = IngredientId.generate();
-    public static final String       TOMATO_NAME   = "Tomato";
+    public static final IngredientId TOMATO_ID       = IngredientId.generate();
+    public static final String       TOMATO_NAME     = "Tomato";
 
-    public static final IngredientId CUCUMBER_ID   = IngredientId.generate();
-    public static final String       CUCUMBER_NAME = "Cucumber";
+    public static final IngredientId CUCUMBER_ID     = IngredientId.generate();
+    public static final String       CUCUMBER_NAME   = "Cucumber";
+
+    public static final IngredientId POTATO_ID       = IngredientId.generate();
+    public static final String       POTATO_NAME     = "Potato";
+
+    public static final IngredientId MOZZARELLA_ID   = IngredientId.generate();
+    public static final String       MOZZARELLA_NAME = "Mozzarella";
 
     public static CreateIngredient createTomato() {
         return new CreateIngredient(TOMATO_ID, TOMATO_NAME);
@@ -47,6 +56,18 @@ public class IngredientMother {
 
     public static Ingredient cucumber() {
         return new Ingredient(CUCUMBER_ID, CUCUMBER_NAME);
+    }
+
+    public static Ingredient potato() {
+        return new Ingredient(POTATO_ID, POTATO_NAME);
+    }
+
+    public static Ingredient mozzarella() {
+        return new Ingredient(MOZZARELLA_ID, MOZZARELLA_NAME);
+    }
+
+    public static List<Ingredient> allIngredients() {
+        return Arrays.asList(tomato(), cucumber(), potato(), mozzarella());
     }
 
 }

@@ -13,31 +13,31 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
+package org.adhuc.cena.menu.acceptance.steps.ingredients;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import java.util.Optional;
+
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
+
+import cucumber.api.Transformer;
 
 /**
- * An ingredient value on the client side.
+ * A cucumber {@link Transformer} implementation for {@link IngredientValue}s.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(fluent = true)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class IngredientValue {
-    private String name;
+public class IngredientValueTransformer extends Transformer<IngredientValue> {
+
+    @Override
+    public IngredientValue transform(String value) {
+        Optional<IngredientValue> ingredient = IngredientValueMother.getIngredient(value);
+        assertThat(ingredient).as("Cannot find ingredient corresponding to \"" + value + "\"").isPresent();
+        return ingredient.get();
+    }
+
 }

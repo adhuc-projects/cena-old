@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.acceptance.steps.ingredients;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -39,16 +40,14 @@ public class IngredientCreationStepDefinitions {
     IngredientServiceClientSteps ingredientServiceClient;
 
     @Given("^a non-existent \"(.*)\" ingredient$")
-    public void nonExistentIngredient(final String ingredientName) {
-        // TODO get ingredient from ingredientName through cucumber transformer
-        final IngredientValue ingredient = ingredientServiceClient.storeIngredient(new IngredientValue(ingredientName));
+    public void nonExistentIngredient(@Transform(IngredientValueTransformer.class) IngredientValue ingredient) {
+        ingredientServiceClient.storeIngredient(ingredient);
         ingredientServiceClient.assumeIngredientNotInIngredientsList(ingredient);
     }
 
     @Given("^an existing \"(.*)\" ingredient$")
-    public void existingIngredient(final String ingredientName) {
-        // TODO get ingredient from ingredientName through cucumber transformer
-        final IngredientValue ingredient = ingredientServiceClient.storeIngredient(new IngredientValue(ingredientName));
+    public void existingIngredient(@Transform(IngredientValueTransformer.class) IngredientValue ingredient) {
+        ingredientServiceClient.storeIngredient(ingredient);
         ingredientServiceClient.assumeIngredientInIngredientsList(ingredient);
     }
 
