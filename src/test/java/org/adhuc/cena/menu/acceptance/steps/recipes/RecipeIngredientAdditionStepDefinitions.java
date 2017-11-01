@@ -17,7 +17,7 @@ package org.adhuc.cena.menu.acceptance.steps.recipes;
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.AbstractRecipeStorageSteps.RecipeValue;
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
 
 import cucumber.api.java.en.Given;
