@@ -38,7 +38,7 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
 
     @Step("Create the recipe {0}")
     public void createRecipe(final RecipeValue recipe) {
-        withRecipeIfEmpty(recipe);
+        storeRecipeIfEmpty(recipe);
         final String recipesResourceUrl = getRecipesResourceUrl();
         rest().body(new CreateRecipeRequest(recipe.name(), recipe.content()))
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE).post(recipesResourceUrl).andReturn();

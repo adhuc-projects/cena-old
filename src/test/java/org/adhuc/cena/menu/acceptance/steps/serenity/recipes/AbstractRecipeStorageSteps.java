@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import net.serenitybdd.core.Serenity;
-import net.thucydides.core.annotations.Step;
 
 /**
  * An abstract recipe storage steps definition, providing convenient methods to store recipe information between steps.
@@ -47,28 +46,27 @@ public abstract class AbstractRecipeStorageSteps extends AbstractServiceClientSt
 
     private static final String RECIPE_SESSION_KEY = "recipe";
 
-    @Step("Given a recipe {0}")
-    public final RecipeValue withRecipe(final RecipeValue recipe) {
+    public final RecipeValue storeRecipe(final RecipeValue recipe) {
         Serenity.setSessionVariable(RECIPE_SESSION_KEY).to(recipe);
         return recipe;
     }
 
-    protected final RecipeValue withRecipeIfEmpty(final RecipeValue recipe) {
+    protected final RecipeValue storeRecipeIfEmpty(final RecipeValue recipe) {
         Optional<RecipeValue> optional = optionalRecipe();
         if (!optional.isPresent()) {
-            return withRecipe(recipe);
+            return storeRecipe(recipe);
         }
         return optional.get();
     }
 
-    protected final Optional<RecipeValue> optionalRecipe() {
-        return Optional.ofNullable(Serenity.sessionVariableCalled(RECIPE_SESSION_KEY));
-    }
-
-    protected final RecipeValue recipe() {
+    public final RecipeValue recipe() {
         Optional<RecipeValue> recipe = optionalRecipe();
         assertThat(recipe).isPresent();
         return recipe.get();
+    }
+
+    protected final Optional<RecipeValue> optionalRecipe() {
+        return Optional.ofNullable(Serenity.sessionVariableCalled(RECIPE_SESSION_KEY));
     }
 
     @Data

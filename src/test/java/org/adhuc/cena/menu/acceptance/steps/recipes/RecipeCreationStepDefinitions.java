@@ -46,21 +46,21 @@ public class RecipeCreationStepDefinitions {
     public void createRecipe(String recipeName) {
         // TODO get recipe from recipeName through cucumber transformer
         RecipeValue recipe = new RecipeValue(recipeName, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
-        recipeCreationServiceClient.withRecipe(recipe);
+        recipeCreationServiceClient.storeRecipe(recipe);
         recipeCreationServiceClient.createRecipe(recipe);
     }
 
     @When("^he creates a recipe without name$")
     public void createRecipeWithoutName() {
         RecipeValue recipe = new RecipeValue(null, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
-        recipeCreationServiceClient.withRecipe(recipe);
+        recipeCreationServiceClient.storeRecipe(recipe);
         recipeCreationServiceClient.createRecipe(recipe);
     }
 
     @When("^he creates the \"(.*)\" recipe without content$")
     public void createRecipeWithoutContent(String recipeName) {
         RecipeValue recipe = new RecipeValue(recipeName, null);
-        recipeCreationServiceClient.withRecipe(recipe);
+        recipeCreationServiceClient.storeRecipe(recipe);
         recipeCreationServiceClient.createRecipe(recipe);
     }
 

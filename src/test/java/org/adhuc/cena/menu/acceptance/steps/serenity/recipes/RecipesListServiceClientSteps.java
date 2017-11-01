@@ -51,7 +51,7 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
 
     @Step("Assume recipe {0} is in recipes list")
     public RecipeValue assumeRecipeInRecipesList(final RecipeValue recipe) {
-        withRecipeIfEmpty(recipe);
+        storeRecipeIfEmpty(recipe);
         Optional<RecipeValue> foundRecipe = getRecipeFromRecipesList(recipe);
         return foundRecipe.orElseGet(() -> createRecipe(recipe));
     }
@@ -66,7 +66,7 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
 
     @Step("Assert recipe {0} is in recipes list")
     public RecipeValue assertRecipeInRecipesList(final RecipeValue recipe) {
-        withRecipeIfEmpty(recipe);
+        storeRecipeIfEmpty(recipe);
         Optional<RecipeValue> foundRecipe = getRecipeFromRecipesList(recipe);
         assertThat(foundRecipe).isPresent();
         return foundRecipe.get();
