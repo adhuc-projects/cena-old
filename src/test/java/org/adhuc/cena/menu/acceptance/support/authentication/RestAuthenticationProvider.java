@@ -24,6 +24,10 @@ import net.serenitybdd.rest.SerenityRest;
  * Provides access to a {@link RequestSpecification} to call rest-services, managing the authentication process, and
  * abstracts the authentication definition.
  * <p>
+ * This provider also manages the initialization of the underlying {@link SerenityRest#rest()}'s
+ * {@link RequestSpecification}, to ensure that only one is created for each new test execution, and is used for each
+ * call to {@link #rest()} or {@link #restWithAuth(AuthenticationType)}.
+ * <p>
  * Must be used as a singleton, using {@link #instance()} to ensure that it is shared between all steps.
  *
  * @author Alexandre Carbenay
@@ -39,27 +43,41 @@ public class RestAuthenticationProvider {
         return INSTANCE;
     }
 
+    private RequestSpecification     specification;
     private AcceptanceAuthentication authentication;
 
     /**
      * Cleans the currently defined authentication.
      */
     public void clean() {
-        authentication = null;
+        specification = SerenityRest.rest();
+        withAnonymousUser();
     }
 
     /**
      * Provides a {@link RequestSpecification} with potential authentication process already defined.
      */
     public RequestSpecification rest() {
-        return authentication != null ? authentication.restWithAuth() : SerenityRest.rest();
+        return authentication.restWithAuth(specification);
+    }
+
+    /**
+     * Provides a {@link RequestSpecification} with an authentication corresponding to the specified authentication
+     * type. This method enables calling a rest-service with a specific authentication type to ensure the caller to call
+     * the service with the right level of authentication (e.g. for assumptions).
+     * <p>
+     * This method does <b>not</b> set the authentication to be used for all calls, but provides a new request
+     * specification with the authentication corresponding to the requested authentication type.
+     */
+    public RequestSpecification restWithAuth(AuthenticationType authenticationType) {
+        return authenticationType.authentication().restWithAuth(specification);
     }
 
     /**
      * Defines an anonymous user, that is not authenticated.
      */
     public void withAnonymousUser() {
-        withAuthentication(null);
+        withAuthentication(AcceptanceAuthenticationMother.anonymousUser());
     }
 
     /**

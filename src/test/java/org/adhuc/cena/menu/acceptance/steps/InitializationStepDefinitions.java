@@ -26,6 +26,7 @@ public class InitializationStepDefinitions {
     public void init() {
         int port = getPort();
         log.info("Run tests with port {}", port);
+        SerenityRest.reset();
         SerenityRest.setDefaultPort(port);
 
         RestAuthenticationProvider.instance().clean();

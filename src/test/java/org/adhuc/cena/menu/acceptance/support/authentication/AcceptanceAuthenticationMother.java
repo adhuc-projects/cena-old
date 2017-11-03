@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.acceptance.support.authentication;
 
-import static net.serenitybdd.rest.SerenityRest.rest;
-
 import io.restassured.specification.RequestSpecification;
 
 /**
@@ -29,12 +27,21 @@ import io.restassured.specification.RequestSpecification;
  */
 public final class AcceptanceAuthenticationMother {
 
-    protected static AcceptanceAuthentication ingredientManager() {
-        return new BasicAuthentication("ingredient-manager", "ingredient-manager");
+    protected static AcceptanceAuthentication anonymousUser() {
+        return new AcceptanceAuthentication() {
+            @Override
+            public RequestSpecification restWithAuth(RequestSpecification specification) {
+                return specification.auth().none();
+            }
+        };
     }
 
     protected static AcceptanceAuthentication authenticatedUser() {
         return new BasicAuthentication("authenticated-user", "authenticated-user");
+    }
+
+    protected static AcceptanceAuthentication ingredientManager() {
+        return new BasicAuthentication("ingredient-manager", "ingredient-manager");
     }
 
     protected static AcceptanceAuthentication actuatorManager() {
@@ -42,10 +49,10 @@ public final class AcceptanceAuthenticationMother {
     }
 
     protected static interface AcceptanceAuthentication {
-        RequestSpecification restWithAuth();
+        RequestSpecification restWithAuth(RequestSpecification specification);
     }
 
-    protected static class BasicAuthentication implements AcceptanceAuthentication {
+    private static class BasicAuthentication implements AcceptanceAuthentication {
         private final String username;
         private final String password;
 
@@ -55,8 +62,8 @@ public final class AcceptanceAuthenticationMother {
         }
 
         @Override
-        public RequestSpecification restWithAuth() {
-            return rest().auth().preemptive().basic(username, password);
+        public RequestSpecification restWithAuth(RequestSpecification specification) {
+            return specification.auth().preemptive().basic(username, password);
         }
     }
 

@@ -23,6 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import org.springframework.http.HttpStatus;
 
+import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.acceptance.support.authentication.RestAuthenticationProvider;
 import org.adhuc.cena.menu.acceptance.support.resource.ApiClientResource;
 import org.adhuc.cena.menu.exception.ExceptionCode;
@@ -48,6 +49,10 @@ public abstract class AbstractServiceClientSteps extends ScenarioSteps {
 
     protected final RequestSpecification rest() {
         return restAuthenticationProvider.rest();
+    }
+
+    protected final RequestSpecification restWithAuth(AuthenticationType authenticationType) {
+        return restAuthenticationProvider.restWithAuth(authenticationType);
     }
 
     protected final ApiClientResource getApiClientResource() {

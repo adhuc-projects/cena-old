@@ -48,7 +48,7 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     @Step("Assume ingredient {0} is in ingredients list")
     public void assumeIngredientInIngredientsList(final IngredientValue ingredient) {
         if (!isIngredientInIngredientsList(ingredient)) {
-            ingredientCreationServiceClient.createIngredient(ingredient);
+            ingredientCreationServiceClient.createIngredientAsIngredientManager(ingredient);
         }
         assumeTrue(isIngredientInIngredientsList(ingredient));
     }

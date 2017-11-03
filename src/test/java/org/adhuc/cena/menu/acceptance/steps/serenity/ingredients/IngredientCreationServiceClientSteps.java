@@ -20,9 +20,11 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.CreateIngredientRequest;
 
+import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
@@ -40,22 +42,25 @@ public class IngredientCreationServiceClientSteps extends AbstractIngredientServ
     @Steps
     private IngredientDetailServiceClientSteps ingredientDetailServiceClient;
 
-    @Step("Creates the ingredient")
+    @Step("Create the ingredient")
     public void createIngredient() {
         createIngredient(ingredient());
     }
 
-    @Step("Creates an ingredient without name")
+    @Step("Create an ingredient without name")
     public void createIngredientWithoutName() {
         storeIngredient(new IngredientValue());
         createIngredient(ingredient());
     }
 
-    @Step("Creates the ingredient {0}")
-    public void createIngredient(final IngredientValue ingredient) {
-        final String ingredientsResourceUrl = getIngredientsResourceUrl();
-        rest().body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .post(ingredientsResourceUrl).andReturn();
+    @Step("Create the ingredient {0}")
+    public void createIngredient(IngredientValue ingredient) {
+        createIngredient(ingredient, rest());
+    }
+
+    @Step("Create the ingredient {0} as ingredient manager")
+    public void createIngredientAsIngredientManager(IngredientValue ingredient) {
+        createIngredient(ingredient, restWithAuth(AuthenticationType.INGREDIENT_MANAGER));
     }
 
     @Step("Assert ingredient has been successfully created")
@@ -73,6 +78,12 @@ public class IngredientCreationServiceClientSteps extends AbstractIngredientServ
     @Step("Assert ingredient creation results in already used name error")
     public void assertNameAlreadyUsed() {
         assertException(BAD_REQUEST, ExceptionCode.INGREDIENT_NAME_ALREADY_USED);
+    }
+
+    private void createIngredient(IngredientValue ingredient, RequestSpecification rest) {
+        String ingredientsResourceUrl = getIngredientsResourceUrl();
+        rest.body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .post(ingredientsResourceUrl).andReturn();
     }
 
 }
