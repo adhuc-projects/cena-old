@@ -17,9 +17,11 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Method;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.adhuc.cena.menu.application.RecipeIngredientAppService;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResource;
+import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResourceAssembler;
+import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
 /**
  * A REST controller exposing /api/recipes/{recipeId}/ingredients resource.
@@ -42,17 +50,38 @@ import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResource;
 @RequestMapping(path = "/api/recipes/{recipeId}/ingredients", produces = HAL_JSON_VALUE)
 public class RecipeIngredientsController {
 
+    private RecipeIngredientAppService  recipeIngredientAppService;
+    private IngredientResourceAssembler ingredientResourceAssembler;
+
+    private Method                      listMethod;
+
+    @Autowired
+    public RecipeIngredientsController(RecipeIngredientAppService recipeIngredientAppService,
+            IngredientResourceAssembler ingredientResourceAssembler) {
+        this.recipeIngredientAppService = recipeIngredientAppService;
+        this.ingredientResourceAssembler = ingredientResourceAssembler;
+    }
+
+    /**
+     * Initializes the methods to get links for resources.
+     */
+    @PostConstruct
+    public void initMethodsForLinks() throws Exception {
+        listMethod = RecipeIngredientsController.class.getMethod("getRecipeIngredients", RecipeId.class);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<IngredientResource> getRecipeIngredients(@PathVariable String recipeId) {
-        // TODO implement recipe's ingredients list
-        return Collections.emptyList();
+    public ListResource<IngredientResource> getRecipeIngredients(@PathVariable RecipeId recipeId) {
+        return new ListResource<>(
+                ingredientResourceAssembler.toResources(recipeIngredientAppService.getRecipeIngredients(recipeId)))
+                        .withSelfRef(listMethod, recipeId);
     }
 
     @PutMapping("/{ingredientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addIngredientToRecipe(@PathVariable String recipeId, @PathVariable String ingredientId) {
-        // TODO implement adding ingredient to recipe
+    public void addIngredientToRecipe(@PathVariable RecipeId recipeId, @PathVariable IngredientId ingredientId) {
+        recipeIngredientAppService.addIngredientToRecipe(new AddIngredientToRecipe(recipeId, ingredientId));
     }
 
 }

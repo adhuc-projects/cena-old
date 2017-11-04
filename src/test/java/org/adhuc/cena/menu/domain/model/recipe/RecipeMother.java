@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,6 +53,10 @@ public class RecipeMother {
     public static Recipe tomatoCucumberMozzaSalad() {
         return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
                 TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
+    }
+
+    public static AddIngredientToRecipe addCucumberToTomatoCucumberMozzaSalad() {
+        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID);
     }
 
     public static CreateRecipe createTomatoCucumberOliveFetaSalad() {

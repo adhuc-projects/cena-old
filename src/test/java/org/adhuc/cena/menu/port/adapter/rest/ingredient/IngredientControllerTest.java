@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
+import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.assertJsonContainsIngredient;
 
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
+import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 
 /**
  * The {@link IngredientController} test class.
@@ -62,7 +64,7 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @DisplayName("Ingredient controller")
-public class IngredientControllerTest extends IngredientControllerTestSupport {
+public class IngredientControllerTest extends ControllerTestSupport {
 
     private static final String  INGREDIENT_API_URL = "/api/ingredients/{id}";
 

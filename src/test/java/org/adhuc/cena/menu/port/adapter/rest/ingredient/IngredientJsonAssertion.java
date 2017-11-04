@@ -16,29 +16,38 @@
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.springframework.test.web.servlet.ResultActions;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
-import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
 /**
- * An abstract supporting class to be extended by ingredients controllers tests classes.
+ * Provides assertions on ingredients JSON representation.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public abstract class IngredientControllerTestSupport extends ControllerTestSupport {
+public class IngredientJsonAssertion {
 
-    protected void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
+    private static final String INGREDIENTS_API_URL = "/api/ingredients";
+
+    public static void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
             final Ingredient ingredient) throws Exception {
         resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
                 .andExpect(jsonPath(jsonPath + ".id", equalTo(ingredient.id().toString())))
                 .andExpect(jsonPath(jsonPath + ".name").exists())
-                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())));
+                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())))
+                .andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
+                        jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
+    }
+
+    public static String buildIngredientSelfLink(IngredientId ingredientId) {
+        return INGREDIENTS_API_URL + "/" + ingredientId.id();
     }
 
 }

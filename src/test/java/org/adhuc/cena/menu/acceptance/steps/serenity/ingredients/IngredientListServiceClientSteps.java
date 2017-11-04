@@ -46,11 +46,19 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     }
 
     @Step("Assume ingredient {0} is in ingredients list")
-    public void assumeIngredientInIngredientsList(final IngredientValue ingredient) {
-        if (!isIngredientInIngredientsList(ingredient)) {
-            ingredientCreationServiceClient.createIngredientAsIngredientManager(ingredient);
-        }
-        assumeTrue(isIngredientInIngredientsList(ingredient));
+    public IngredientValue assumeIngredientInIngredientsList(final IngredientValue ingredient) {
+        storeIngredientIfEmpty(ingredient);
+        Optional<IngredientValue> foundIngredient = getIngredientFromIngredientsList(ingredient);
+        foundIngredient.ifPresent(i -> storeIngredient(i));
+        return foundIngredient.orElseGet(() -> createIngredientAndAssumeIngredientInIngredientsList(ingredient));
+    }
+
+    @Step("Assume ingredient {0} is in ingredients list after creating it")
+    public IngredientValue createIngredientAndAssumeIngredientInIngredientsList(final IngredientValue ingredient) {
+        ingredientCreationServiceClient.createIngredientAsIngredientManager(ingredient);
+        Optional<IngredientValue> foundIngredient = getIngredientFromIngredientsList(ingredient);
+        assumeTrue("Could not find the ingredient in ingredients list", foundIngredient.isPresent());
+        return storeIngredient(foundIngredient.get());
     }
 
     @Step("Assert ingredient is in ingredients list")

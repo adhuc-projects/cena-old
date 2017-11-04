@@ -33,6 +33,8 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
+import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.assertJsonContainsIngredient;
+import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.buildIngredientSelfLink;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,8 +63,7 @@ import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
-import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
-import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 
 /**
  * The {@link IngredientsController} test class.
@@ -80,7 +81,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @DisplayName("Ingredients controller")
-public class IngredientsControllerTest extends IngredientControllerTestSupport {
+public class IngredientsControllerTest extends ControllerTestSupport {
 
     private static final String  INGREDIENTS_API_URL = "/api/ingredients";
 
@@ -202,18 +203,6 @@ public class IngredientsControllerTest extends IngredientControllerTestSupport {
 
     private String createTomatoRequest() {
         return asJson(CreateIngredientRequest.builder().name(TOMATO_NAME).build());
-    }
-
-    @Override
-    protected void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
-            final Ingredient ingredient) throws Exception {
-        super.assertJsonContainsIngredient(resultActions, jsonPath, ingredient);
-        resultActions.andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
-                jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
-    }
-
-    private String buildIngredientSelfLink(IngredientId ingredientId) {
-        return INGREDIENTS_API_URL + "/" + ingredientId.id().toString();
     }
 
 }

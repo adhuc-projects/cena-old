@@ -216,3 +216,85 @@ include::{snippets}/recipes-create-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/recipes-create-example/http-response.adoc[]
+
+
+[[resources-recipe]]
+== Recipe
+
+The recipe resource is used to retrieve, update, and delete individual recipes
+
+[[resources-recipe-links]]
+=== Links
+
+include::{snippets}/recipe-detail-example/links.adoc[]
+
+[[resources-recipe-retrieve]]
+=== Retrieve a recipe
+
+A `GET` request will retrieve the details of a recipe.
+
+==== Path Parameters
+
+include::{snippets}/recipe-detail-example/path-parameters.adoc[]
+
+==== Response structure
+
+include::{snippets}/recipe-detail-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/recipe-detail-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/recipe-detail-example/http-response.adoc[]
+
+
+[[resources-recipe-ingredients]]
+== Recipe ingredients
+
+The recipe ingredients resource is used to list, add and delete ingredients linked to a recipe. Recipes and ingredients 
+can be linked in a m to n relation.
+
+[[resources-recipe-ingredients-list]]
+=== Listing recipe ingredients
+
+A `GET` request will list all of the ingredients linked to a recipe.
+
+==== Path Parameters
+
+include::{snippets}/recipe-ingredients-list-example/path-parameters.adoc[]
+
+==== Response structure
+
+include::{snippets}/recipe-ingredients-list-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/recipe-ingredients-list-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/recipe-ingredients-list-example/http-response.adoc[]
+
+[[resources-recipe-ingredients-links]]
+==== Links
+
+include::{snippets}/recipe-ingredients-list-example/links.adoc[]
+
+[[resources-recipe-ingredients-add]]
+=== Add an ingredient to a recipe
+
+A `PUT` request is used to add a link between an ingredient and a recipe.
+
+==== Path Parameters
+
+include::{snippets}/recipe-ingredients-add-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/recipe-ingredients-add-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/recipe-ingredients-add-example/http-response.adoc[]
