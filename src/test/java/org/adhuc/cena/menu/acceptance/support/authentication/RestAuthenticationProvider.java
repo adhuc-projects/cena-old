@@ -19,6 +19,7 @@ import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthentic
 
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
+import net.serenitybdd.rest.decorators.request.RequestSpecificationDecorated;
 
 /**
  * Provides access to a {@link RequestSpecification} to call rest-services, managing the authentication process, and
@@ -58,7 +59,7 @@ public class RestAuthenticationProvider {
      * Provides a {@link RequestSpecification} with potential authentication process already defined.
      */
     public RequestSpecification rest() {
-        return authentication.restWithAuth(specification);
+        return authentication.restWithAuth(cleanedSpecification());
     }
 
     /**
@@ -70,7 +71,7 @@ public class RestAuthenticationProvider {
      * specification with the authentication corresponding to the requested authentication type.
      */
     public RequestSpecification restWithAuth(AuthenticationType authenticationType) {
-        return authenticationType.authentication().restWithAuth(specification);
+        return authenticationType.authentication().restWithAuth(cleanedSpecification());
     }
 
     /**
@@ -103,6 +104,16 @@ public class RestAuthenticationProvider {
 
     private void withAuthentication(final AcceptanceAuthentication authentication) {
         this.authentication = authentication;
+    }
+
+    private RequestSpecification cleanedSpecification() {
+        if (RequestSpecificationDecorated.class.isAssignableFrom(specification.getClass())) {
+            RequestSpecificationDecorated decorated = (RequestSpecificationDecorated) specification;
+            decorated.getCore().body("");
+            decorated.getCore().removeCookies();
+            decorated.getCore().removeHeaders();
+        }
+        return specification.auth().none();
     }
 
 }
