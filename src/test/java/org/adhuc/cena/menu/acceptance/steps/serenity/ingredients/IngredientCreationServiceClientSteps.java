@@ -81,8 +81,8 @@ public class IngredientCreationServiceClientSteps extends AbstractIngredientServ
     }
 
     private void createIngredient(IngredientValue ingredient, RequestSpecification rest) {
-        String ingredientsResourceUrl = getIngredientsResourceUrl();
-        rest.body(new CreateIngredientRequest(ingredient.name())).header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        String ingredientsResourceUrl = getIngredientsResourceUrl(rest);
+        rest.header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(new CreateIngredientRequest(ingredient.name()))
                 .post(ingredientsResourceUrl).andReturn();
     }
 

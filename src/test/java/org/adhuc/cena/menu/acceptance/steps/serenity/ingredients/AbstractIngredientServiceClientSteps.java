@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
 
+import io.restassured.specification.RequestSpecification;
+
 /**
  * An abstract ingredient rest-service client steps definition.
  *
@@ -27,7 +29,11 @@ package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
 public abstract class AbstractIngredientServiceClientSteps extends AbstractIngredientStorageSteps {
 
     protected String getIngredientsResourceUrl() {
-        return getApiClientResource().getIngredients().getHref();
+        return getIngredientsResourceUrl(rest());
+    }
+
+    protected String getIngredientsResourceUrl(RequestSpecification rest) {
+        return getApiClientResource(rest).getIngredients().getHref();
     }
 
 }

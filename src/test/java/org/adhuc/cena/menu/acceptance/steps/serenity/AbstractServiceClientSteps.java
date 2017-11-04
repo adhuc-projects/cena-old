@@ -56,7 +56,11 @@ public abstract class AbstractServiceClientSteps extends ScenarioSteps {
     }
 
     protected final ApiClientResource getApiClientResource() {
-        return rest().get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
+        return getApiClientResource(rest());
+    }
+
+    protected final ApiClientResource getApiClientResource(RequestSpecification rest) {
+        return rest.get(API_URL).then().statusCode(OK.value()).extract().as(ApiClientResource.class);
     }
 
     protected final ValidatableResponse assertOk() {
