@@ -19,9 +19,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -33,11 +35,13 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString(exclude = { "id" }, includeFieldNames = false)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@RequiredArgsConstructor
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IngredientValue {
-    private String name;
+    private String       id;
+    private final String name;
 }

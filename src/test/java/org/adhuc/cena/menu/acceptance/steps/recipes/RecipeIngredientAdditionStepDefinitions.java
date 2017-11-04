@@ -15,11 +15,13 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientsListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import net.thucydides.core.annotations.Steps;
 
@@ -35,13 +37,20 @@ import net.thucydides.core.annotations.Steps;
 public class RecipeIngredientAdditionStepDefinitions {
 
     @Steps
-    private RecipesListServiceClientSteps recipesListServiceClient;
+    private RecipesListServiceClientSteps           recipesListServiceClient;
+    @Steps
+    private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
     @Given("^an existing \"(.*)\" recipe created by this user$")
     public void recipeCreatedByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
         // TODO get authenticated user information from world
         recipesListServiceClient.assumeRecipeCreatedByAuthenticatedUser(recipe, "authenticated-user");
+    }
+
+    @When("^he adds the ingredient to the recipe$")
+    public void addIngredientToRecipe() {
+        recipeIngredientsListServiceClient.addIngredientToRecipe();
     }
 
 }

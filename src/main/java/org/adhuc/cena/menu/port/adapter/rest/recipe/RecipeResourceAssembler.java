@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +43,9 @@ public class RecipeResourceAssembler extends ResourceAssemblerSupport<Recipe, Re
 
     @Override
     public RecipeResource toResource(final Recipe recipe) {
-        return createResourceWithId(recipe.id().toString(), recipe);
+        RecipeResource resource = createResourceWithId(recipe.id().toString(), recipe);
+        resource.add(linkTo(RecipeIngredientsController.class, recipe.id().toString()).withRel("ingredients"));
+        return resource;
     }
 
     @Override

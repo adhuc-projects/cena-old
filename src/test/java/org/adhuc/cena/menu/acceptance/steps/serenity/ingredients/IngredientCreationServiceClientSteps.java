@@ -49,7 +49,7 @@ public class IngredientCreationServiceClientSteps extends AbstractIngredientServ
 
     @Step("Create an ingredient without name")
     public void createIngredientWithoutName() {
-        storeIngredient(new IngredientValue());
+        storeIngredient(new IngredientValue(null));
         createIngredient(ingredient());
     }
 

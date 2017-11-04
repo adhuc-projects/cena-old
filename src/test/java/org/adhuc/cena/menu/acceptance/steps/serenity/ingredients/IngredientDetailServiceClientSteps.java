@@ -37,7 +37,7 @@ public class IngredientDetailServiceClientSteps extends AbstractIngredientServic
 
     @Step("Assert ingredient {1} corresponds to expected {0}")
     public void assertIngredientInfoIsEqualToExpected(IngredientValue expected, IngredientValue actual) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.name()).isEqualTo(expected.name());
     }
 
 }

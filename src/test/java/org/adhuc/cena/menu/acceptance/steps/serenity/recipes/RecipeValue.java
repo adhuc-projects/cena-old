@@ -15,12 +15,21 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Optional;
+
+import org.springframework.hateoas.Link;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.adhuc.cena.menu.acceptance.support.resource.HateoasHalClientResourceSupport;
+
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -35,14 +44,22 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@ToString(exclude = { "content", "author" }, includeFieldNames = false)
+@EqualsAndHashCode(callSuper = false)
+@ToString(exclude = { "id", "content", "author" }, includeFieldNames = false, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RecipeValue {
+public class RecipeValue extends HateoasHalClientResourceSupport {
+    private String       id;
     private final String name;
     private final String content;
     private String       author;
+
+    public String getIngredientsListUrl() {
+        Optional<Link> link = links().stream().filter(l -> l.getRel().equals("ingredients")).findFirst();
+        assertThat(link).as("Cannot get ingredients list link for recipe " + this).isPresent();
+        return link.get().getHref();
+    }
 }
