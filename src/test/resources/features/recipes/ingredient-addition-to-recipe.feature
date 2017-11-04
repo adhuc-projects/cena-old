@@ -6,7 +6,8 @@ Scenario: Add an ingredient to a recipe successfully
     And an existing "Tomato, cucumber and mozzarella salad" recipe created by this user
     And an existing "Cucumber" ingredient
   When he adds the ingredient to the recipe
-  Then the ingredient can be found in the recipe's ingredients list
+  Then the ingredient is added to recipe
+    And the ingredient can be found in the recipe's ingredients list
 
 Scenario: Add an ingredient to an unknown recipe
   Given an authenticated user

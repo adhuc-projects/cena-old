@@ -46,4 +46,9 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
         rest().put(recipeIngredientsResourceUrl + "/" + ingredient.id()).andReturn();
     }
 
+    @Step("Assert ingredient has been successfully added to recipe")
+    public void assertIngredientAdditionIsSuccessful() {
+        assertNoContent();
+    }
+
 }

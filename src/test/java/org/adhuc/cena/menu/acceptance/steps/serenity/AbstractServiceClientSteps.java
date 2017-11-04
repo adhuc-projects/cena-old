@@ -19,6 +19,7 @@ import static net.serenitybdd.rest.SerenityRest.then;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import org.springframework.http.HttpStatus;
@@ -77,6 +78,14 @@ public abstract class AbstractServiceClientSteps extends ScenarioSteps {
 
     protected final ValidatableResponse assertCreated(ValidatableResponse response) {
         return assertStatus(response, CREATED);
+    }
+
+    protected final ValidatableResponse assertNoContent() {
+        return assertNoContent(then());
+    }
+
+    protected final ValidatableResponse assertNoContent(ValidatableResponse response) {
+        return assertStatus(response, NO_CONTENT);
     }
 
     protected final ValidatableResponse assertStatus(ValidatableResponse response, HttpStatus status) {

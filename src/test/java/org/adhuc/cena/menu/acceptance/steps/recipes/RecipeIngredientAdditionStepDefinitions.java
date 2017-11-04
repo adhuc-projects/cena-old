@@ -21,6 +21,7 @@ import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceC
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import net.thucydides.core.annotations.Steps;
@@ -51,6 +52,11 @@ public class RecipeIngredientAdditionStepDefinitions {
     @When("^he adds the ingredient to the recipe$")
     public void addIngredientToRecipe() {
         recipeIngredientsListServiceClient.addIngredientToRecipe();
+    }
+
+    @Then("^the ingredient is added to recipe$")
+    public void ingredientAddedToRecipe() {
+        recipeIngredientsListServiceClient.assertIngredientAdditionIsSuccessful();
     }
 
 }
