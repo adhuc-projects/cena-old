@@ -85,10 +85,14 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
         return getIngredientFromIngredientsList(ingredient).isPresent();
     }
 
-    private Optional<IngredientValue> getIngredientFromIngredientsList(final IngredientValue ingredient) {
-        final String ingredientsResourceUrl = getIngredientsResourceUrl();
-        final String ingredientName = ingredient.name();
-        final JsonPath jsonPath = rest().get(ingredientsResourceUrl).then().statusCode(OK.value()).extract().jsonPath();
+    private Optional<IngredientValue> getIngredientFromIngredientsList(IngredientValue ingredient) {
+        String ingredientsResourceUrl = getIngredientsResourceUrl();
+        return getIngredientFromIngredientsList(ingredientsResourceUrl, ingredient);
+    }
+
+    public Optional<IngredientValue> getIngredientFromIngredientsList(String url, IngredientValue ingredient) {
+        String ingredientName = ingredient.name();
+        JsonPath jsonPath = rest().get(url).then().statusCode(OK.value()).extract().jsonPath();
         return Optional.ofNullable(jsonPath.param("name", ingredientName)
                 .getObject("_embedded.data.find { ingredient->ingredient.name == name }", IngredientValue.class));
     }

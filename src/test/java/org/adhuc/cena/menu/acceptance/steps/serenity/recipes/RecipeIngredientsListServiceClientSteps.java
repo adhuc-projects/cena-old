@@ -15,6 +15,10 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Optional;
+
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 
@@ -49,6 +53,26 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
     @Step("Assert ingredient has been successfully added to recipe")
     public void assertIngredientAdditionIsSuccessful() {
         assertNoContent();
+    }
+
+    @Step("Assert ingredient can be found in recipe's ingredients list")
+    public void assertIngredientInRecipeIngredientsList() {
+        assertIngredientInRecipeIngredientsList(recipe(), ingredientListServiceClient.ingredient());
+    }
+
+    @Step("Assert ingredient {1} can be found in recipe {0}'s ingredients list")
+    private void assertIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+        assertThat(isIngredientInRecipeIngredientsList(recipe, ingredient)).isTrue();
+    }
+
+    private boolean isIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+        return getIngredientFromRecipeIngredientsList(recipe, ingredient).isPresent();
+    }
+
+    private Optional<IngredientValue> getIngredientFromRecipeIngredientsList(RecipeValue recipe,
+            IngredientValue ingredient) {
+        String recipeIngredientsResourceUrl = recipe.getIngredientsListUrl();
+        return ingredientListServiceClient.getIngredientFromIngredientsList(recipeIngredientsResourceUrl, ingredient);
     }
 
 }

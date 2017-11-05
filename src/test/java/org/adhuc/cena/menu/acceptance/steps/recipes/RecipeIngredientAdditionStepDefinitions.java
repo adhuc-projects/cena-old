@@ -66,4 +66,9 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipeIngredientsListServiceClient.assertIngredientAdditionIsSuccessful();
     }
 
+    @Then("^the ingredient can be found in the recipe's ingredients list$")
+    public void ingredientInRecipeIngredientsList() {
+        recipeIngredientsListServiceClient.assertIngredientInRecipeIngredientsList();
+    }
+
 }
