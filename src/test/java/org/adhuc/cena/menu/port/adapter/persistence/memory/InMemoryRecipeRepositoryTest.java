@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
@@ -83,6 +84,19 @@ public class InMemoryRecipeRepositoryTest {
         @Test
         public void findAllAfterSaveContainsSavedRecipe() {
             assertThat(repository.findAll()).containsExactly(tomatoCucumberMozzaSalad());
+        }
+
+        @Test
+        @DisplayName("returns an empty recipe when finding by unknown id")
+        public void findOneNotExisting() {
+            assertThat(repository.findOne(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID)).isNotPresent();
+        }
+
+        @Test
+        @DisplayName("returns tomato, cucumber and mozzarella salad when finding by id")
+        public void findOneExisting() {
+            assertThat(repository.findOne(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).isPresent()
+                    .contains(tomatoCucumberMozzaSalad());
         }
 
         @Test

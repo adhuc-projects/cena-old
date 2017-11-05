@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.application.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
@@ -45,6 +46,7 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     }
 
     @Override
+    @PreAuthorize("isAuthenticated() && @recipeEditionAuthorizationService.isAuthor(#command.recipeId(), principal)")
     public void addIngredientToRecipe(AddIngredientToRecipe command) {
         // TODO implement addIngredientToRecipe
     }

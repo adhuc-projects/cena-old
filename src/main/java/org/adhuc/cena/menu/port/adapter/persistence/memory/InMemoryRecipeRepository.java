@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
@@ -50,6 +51,11 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     @Override
     public List<Recipe> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(recipes.values()));
+    }
+
+    @Override
+    public Optional<Recipe> findOne(RecipeId recipeId) {
+        return Optional.ofNullable(recipes.get(recipeId));
     }
 
     @Override

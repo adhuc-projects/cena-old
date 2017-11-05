@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.domain.model.recipe;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A {@link Recipe} repository.
@@ -33,6 +34,16 @@ public interface RecipeRepository {
      * @return all the recipes.
      */
     List<Recipe> findAll();
+
+    /**
+     * Finds the recipe corresponding to the specified identity.
+     *
+     * @param recipeId
+     *            the recipe identity.
+     *
+     * @return the recipe if existing, empty otherwise.
+     */
+    Optional<Recipe> findOne(RecipeId recipeId);
 
     /**
      * Saves the specified recipe.
