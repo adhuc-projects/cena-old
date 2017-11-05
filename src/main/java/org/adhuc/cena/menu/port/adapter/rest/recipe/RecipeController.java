@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 
 /**
  * A REST controller exposing /api/recipes/{recipeId} resource.
@@ -50,7 +51,7 @@ public class RecipeController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public RecipeResource getRecipe(@PathVariable String recipeId) {
+    public RecipeResource getRecipe(@PathVariable RecipeId recipeId) {
         throw new UnsupportedOperationException("Get recipe is not implemented yet");
     }
 

@@ -66,29 +66,12 @@ public class IngredientController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public IngredientResource getIngredient(@PathVariable String ingredientId) {
-        final Optional<Ingredient> ingredient =
-                ingredientAppService.getIngredient(buildWellFormedIngredientId(ingredientId));
+    public IngredientResource getIngredient(@PathVariable IngredientId ingredientId) {
+        final Optional<Ingredient> ingredient = ingredientAppService.getIngredient(ingredientId);
         if (!ingredient.isPresent()) {
             ingredientNotFound(ingredientId);
         }
         return resourceAssembler.toResource(ingredient.get());
-    }
-
-    /**
-     * Builds a well formed ingredient identity from the specified value.
-     *
-     * @param ingredientId
-     *            the ingredient identity value.
-     *
-     * @return a well formed ingredient identity.
-     *
-     * @throws ResourceNotFoundException
-     *             if the ingredient identity value is not well formed.
-     */
-    private IngredientId buildWellFormedIngredientId(final String ingredientId) {
-        return IngredientId.isWellFormed(ingredientId) ? new IngredientId(ingredientId)
-                : ingredientNotFound(ingredientId);
     }
 
     /**
@@ -99,7 +82,7 @@ public class IngredientController {
      *
      * @return never return.
      */
-    private IngredientId ingredientNotFound(final String ingredientId) {
+    private void ingredientNotFound(final IngredientId ingredientId) {
         throw new ResourceNotFoundException("Unable to find resource /api/ingredients/" + ingredientId);
     }
 

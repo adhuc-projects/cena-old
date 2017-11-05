@@ -80,9 +80,9 @@ public class IngredientControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("getting ingredient detail from invalid id returns not found status")
-    public void getIngredientWithInvalidIdStatusNotFound() throws Exception {
-        mvc.perform(get(INGREDIENT_API_URL, "invalid")).andExpect(status().isNotFound());
+    @DisplayName("getting ingredient detail from invalid id returns bad request status")
+    public void getIngredientWithInvalidIdStatusBadRequest() throws Exception {
+        mvc.perform(get(INGREDIENT_API_URL, "invalid")).andExpect(status().isBadRequest());
     }
 
     @Test
