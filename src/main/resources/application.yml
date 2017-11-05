@@ -19,9 +19,11 @@ cena:
       ingredient-manager:
         username: ingredient-manager
         password: ingredient-manager
-      user:
-        username: authenticated-user
-        password: authenticated-user
+      users:
+        - username: authenticated-user
+          password: authenticated-user
+        - username: another-user
+          password: another-user
 
 ### Logging configuration
 logging:

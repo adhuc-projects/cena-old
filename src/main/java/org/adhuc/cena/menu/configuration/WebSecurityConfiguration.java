@@ -17,7 +17,9 @@ package org.adhuc.cena.menu.configuration;
 
 import static org.springframework.util.Assert.notNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,17 +98,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(Arrays.asList(ingredientManager(), user(), actuatorManager()));
+        List<UserDetails> users = new ArrayList<>();
+        users.addAll(users());
+        users.add(ingredientManager());
+        users.add(actuatorManager());
+        return new InMemoryUserDetailsManager(users);
+    }
+
+    private List<UserDetails> users() {
+        return authentication.getUsers().stream()
+                .map(u -> User.withUsername(u.getUsername()).password(u.getPassword()).roles("USER").build())
+                .collect(Collectors.toList());
     }
 
     private UserDetails ingredientManager() {
         return User.withUsername(authentication.getIngredientManager().getUsername())
                 .password(authentication.getIngredientManager().getPassword()).roles("INGREDIENT_MANAGER").build();
-    }
-
-    private UserDetails user() {
-        return User.withUsername(authentication.getUser().getUsername())
-                .password(authentication.getUser().getPassword()).roles("USER").build();
     }
 
     private UserDetails actuatorManager() {

@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.configuration;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Data;
@@ -45,8 +47,8 @@ public class MenuGenerationProperties {
     @Data
     public static class Authentication {
 
-        private UsernamePassword ingredientManager;
-        private UsernamePassword user;
+        private UsernamePassword       ingredientManager;
+        private List<UsernamePassword> users;
 
     }
 
