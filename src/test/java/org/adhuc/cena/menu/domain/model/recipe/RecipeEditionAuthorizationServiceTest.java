@@ -61,26 +61,31 @@ public class RecipeEditionAuthorizationServiceTest {
     }
 
     @Test
+    @DisplayName("throws IllegalArgumentException when checking author from recipe with null identity")
     public void isAuthorNullRecipeId() {
         assertThrows(IllegalArgumentException.class, () -> service.isAuthor(null, USER));
     }
 
     @Test
+    @DisplayName("throws IllegalArgumentException when checking null author from recipe")
     public void isAuthorNullUser() {
         assertThrows(IllegalArgumentException.class, () -> service.isAuthor(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null));
     }
 
     @Test
+    @DisplayName("returns false when checking author from unknown recipe")
     public void isAuthorUnknownRecipe() {
         assertThat(service.isAuthor(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, USER)).isFalse();
     }
 
     @Test
+    @DisplayName("returns true when checking author from recipe created by this author")
     public void isAuthorTrue() {
         assertThat(service.isAuthor(TOMATO_CUCUMBER_MOZZA_SALAD_ID, USER)).isTrue();
     }
 
     @Test
+    @DisplayName("returns false when checking author from recipe created by another author")
     public void isAuthorFalse() {
         assertThat(service.isAuthor(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
                 new User("other-user", "N/A", Collections.emptyList()))).isFalse();
