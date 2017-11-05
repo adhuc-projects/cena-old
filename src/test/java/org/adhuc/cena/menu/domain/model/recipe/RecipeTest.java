@@ -31,6 +31,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+
 /**
  * The {@link Recipe} test class.
  *
@@ -86,20 +88,31 @@ public class RecipeTest {
                 TOMATO_CUCUMBER_MOZZA_SALAD_NAME, TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, null));
     }
 
-    @Test
-    @DisplayName("contains id, name and content used during creation")
-    public void recipeWithValidValues() {
-        Recipe recipe = tomatoCucumberMozzaSalad();
-        assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
-        assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
-        assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
-    }
-
     @Nested
     @DisplayName("tomato, cucumber and mozzarella salad")
     class Tomato {
 
         private Recipe recipe = tomatoCucumberMozzaSalad();
+
+        @Test
+        @DisplayName("contains id, name and content used during creation")
+        public void recipeWithValidValues() {
+            assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+            assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
+            assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+        }
+
+        @Test
+        @DisplayName("has an empty ingredients list after creation")
+        public void recipeWithEmptyIngredientsAfterCreation() {
+            assertThat(recipe.ingredients()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("has an unmodifiable ingredients list")
+        public void recipeWithUnmodifiableIngredients() {
+            assertThrows(UnsupportedOperationException.class, () -> recipe.ingredients().add(IngredientId.generate()));
+        }
 
         @Test
         @DisplayName("cannot have its name changed with null value")
@@ -137,6 +150,14 @@ public class RecipeTest {
         public void changeContentWithValidValue() {
             recipe.name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
             assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT);
+        }
+
+        @Test
+        @DisplayName("contains a new ingredient after adding it")
+        public void addIngredientThenIngredientContained() {
+            IngredientId ingredientId = IngredientId.generate();
+            recipe.addIngredient(ingredientId);
+            assertThat(recipe.ingredients()).contains(ingredientId);
         }
 
     }

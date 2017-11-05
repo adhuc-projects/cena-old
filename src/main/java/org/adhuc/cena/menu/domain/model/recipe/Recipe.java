@@ -18,10 +18,16 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.notNull;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 import org.adhuc.cena.menu.domain.model.BasicEntity;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,7 +44,7 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@EqualsAndHashCode(callSuper = true, exclude = "name")
+@EqualsAndHashCode(callSuper = true, exclude = { "name", "content", "author", "ingredients" })
 @ToString(callSuper = true)
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
@@ -50,6 +56,7 @@ public class Recipe extends BasicEntity<RecipeId> {
     private String             content;
     @NonNull
     private final RecipeAuthor author;
+    private Set<IngredientId>  ingredients;
 
     /**
      * Creates a recipe.
@@ -71,6 +78,7 @@ public class Recipe extends BasicEntity<RecipeId> {
         this.name = name;
         this.content = content;
         this.author = author;
+        ingredients = new HashSet<>();
     }
 
     /**
@@ -95,6 +103,26 @@ public class Recipe extends BasicEntity<RecipeId> {
         hasText(content, "Cannot change content with invalid value");
         this.content = content;
         return this;
+    }
+
+    /**
+     * Gets the ingredients (unmodifiable).
+     *
+     * @return the ingredients.
+     */
+    public Collection<IngredientId> ingredients() {
+        return Collections.unmodifiableCollection(ingredients);
+    }
+
+    /**
+     * Adds the ingredient corresponding to the specified identity to the ingredients list.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     */
+    public void addIngredient(IngredientId ingredientId) {
+        notNull(ingredientId, "Cannot add invalid ingredient identity");
+        ingredients.add(ingredientId);
     }
 
 }
