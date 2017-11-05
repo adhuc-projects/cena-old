@@ -40,6 +40,10 @@ public final class AcceptanceAuthenticationMother {
         return new BasicAuthentication("authenticated-user", "authenticated-user");
     }
 
+    protected static AcceptanceAuthentication anotherAuthenticatedUser() {
+        return new BasicAuthentication("another-user", "another-user");
+    }
+
     protected static AcceptanceAuthentication ingredientManager() {
         return new BasicAuthentication("ingredient-manager", "ingredient-manager");
     }

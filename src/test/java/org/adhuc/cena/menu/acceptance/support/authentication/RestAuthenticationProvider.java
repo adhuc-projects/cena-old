@@ -89,6 +89,13 @@ public class RestAuthenticationProvider {
     }
 
     /**
+     * Defines another authenticated user, with no special roles.
+     */
+    public void withAnotherAuthenticatedUser() {
+        withAuthentication(AcceptanceAuthenticationMother.anotherAuthenticatedUser());
+    }
+
+    /**
      * Defines an ingredient manager.
      */
     public void withIngredientManager() {

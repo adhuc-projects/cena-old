@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeThat;
 
@@ -32,10 +33,16 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public abstract class AbstractRecipeServiceClientSteps extends AbstractRecipeStorageSteps {
 
-    @Step("Assume recipe {0} has been created by authenticated user {1}")
-    public void assumeRecipeCreatedByAuthenticatedUser(RecipeValue recipe, String authenticatedUser) {
+    @Step("Assume recipe {0} has been authored by authenticated user {1}")
+    public void assumeRecipeAuthoredByAuthenticatedUser(RecipeValue recipe, String authenticatedUser) {
         assumeNotNull(recipe.author());
         assumeThat(recipe.author(), equalTo(authenticatedUser));
+    }
+
+    @Step("Assume recipe {0} has been authored by another authenticated user than {1}")
+    public void assumeRecipeAuthoredByAnotherUser(RecipeValue recipe, String authenticatedUser) {
+        assumeNotNull(recipe.author());
+        assumeThat(recipe.author(), not(equalTo(authenticatedUser)));
     }
 
     protected final String getRecipesResourceUrl() {

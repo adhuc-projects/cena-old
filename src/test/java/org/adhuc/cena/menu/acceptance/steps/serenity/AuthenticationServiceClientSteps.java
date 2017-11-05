@@ -40,6 +40,11 @@ public class AuthenticationServiceClientSteps extends AbstractServiceClientSteps
         restAuthenticationProvider.withAuthenticatedUser();
     }
 
+    @Step("Given another authenticated user")
+    public void withAnotherAuthenticatedUser() {
+        restAuthenticationProvider.withAnotherAuthenticatedUser();
+    }
+
     @Step("Given an ingredient manager")
     public void withIngredientManager() {
         restAuthenticationProvider.withIngredientManager();

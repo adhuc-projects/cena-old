@@ -3,7 +3,7 @@ Feature: Add an ingredient to a recipe
 
 Scenario: Add an ingredient to a recipe successfully
   Given an authenticated user
-    And an existing "Tomato, cucumber and mozzarella salad" recipe created by this user
+    And an existing "Tomato, cucumber and mozzarella salad" recipe authored by this user
     And an existing "Cucumber" ingredient
   When he adds the ingredient to the recipe
   Then the ingredient is added to recipe
@@ -18,14 +18,14 @@ Scenario: Add an ingredient to an unknown recipe
 
 Scenario: Add an unknown ingredient to a recipe
   Given an authenticated user
-    And an existing "Tomato, cucumber and mozzarella salad" recipe created by this user
+    And an existing "Tomato, cucumber and mozzarella salad" recipe authored by this user
     And a non-existent "Mozzarella" ingredient
   When he adds the ingredient to the recipe
   Then an error notifies that recipe does not exist
 
-Scenario: Add an ingredient to a recipe of which the creator is someone else
-  Given an authenticated user
-    And an existing "Tomato, cucumber and mozzarella salad" recipe created by another user
+Scenario: Add an ingredient to a recipe of which the author is someone else
+  Given another authenticated user
+    And an existing "Tomato, cucumber and mozzarella salad" recipe authored by another user
     And an existing "Cucumber" ingredient
   When he adds the ingredient to the recipe
   Then an error notifies that user does not have sufficient rights

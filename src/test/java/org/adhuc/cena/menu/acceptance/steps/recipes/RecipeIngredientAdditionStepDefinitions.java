@@ -42,11 +42,18 @@ public class RecipeIngredientAdditionStepDefinitions {
     @Steps
     private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
-    @Given("^an existing \"(.*)\" recipe created by this user$")
-    public void recipeCreatedByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+    @Given("^an existing \"(.*)\" recipe authored by this user$")
+    public void recipeAuthoredByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
         // TODO get authenticated user information from world
-        recipesListServiceClient.assumeRecipeCreatedByAuthenticatedUser(recipe, "authenticated-user");
+        recipesListServiceClient.assumeRecipeAuthoredByAuthenticatedUser(recipe, "authenticated-user");
+    }
+
+    @Given("^an existing \"(.*)\" recipe authored by another user$")
+    public void recipeAuthoredByAnotherUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+        recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
+        // TODO get authenticated user information from world
+        recipesListServiceClient.assumeRecipeAuthoredByAnotherUser(recipe, "another-user");
     }
 
     @When("^he adds the ingredient to the recipe$")
