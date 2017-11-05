@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
 /**
@@ -57,6 +58,15 @@ public class InMemoryIngredientRepositoryTest {
     @DisplayName("throws IllegalArgumentException when saving null ingredient")
     public void saveNullIngredient() {
         assertThrows(IllegalArgumentException.class, () -> repository.save(null));
+    }
+
+    @Test
+    @DisplayName("throws EntityNotFoundException when finding unknown ingredient (not null required)")
+    public void findOneNotNullUnknown() {
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> repository.findOneNotNull(TOMATO_ID));
+        assertThat(exception.entityType()).isEqualTo(Ingredient.class);
+        assertThat(exception.identity()).isEqualTo(TOMATO_ID);
     }
 
     @Nested

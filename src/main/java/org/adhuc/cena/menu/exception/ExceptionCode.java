@@ -44,6 +44,7 @@ public enum ExceptionCode {
     INVALID_REQUEST(101000, "Invalid request"),
     RESOURCE_NOT_FOUND(101001, "Resource not found"),
 
+    ENTITY_NOT_FOUND(900000, "Entity not found"),
     INGREDIENT_NAME_ALREADY_USED(900100, "Ingredient name already used");
 
     private final int    code;

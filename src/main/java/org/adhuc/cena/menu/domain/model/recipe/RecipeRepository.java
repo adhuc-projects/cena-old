@@ -18,6 +18,8 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import java.util.List;
 import java.util.Optional;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+
 /**
  * A {@link Recipe} repository.
  *
@@ -44,6 +46,25 @@ public interface RecipeRepository {
      * @return the recipe if existing, empty otherwise.
      */
     Optional<Recipe> findOne(RecipeId recipeId);
+
+    /**
+     * Finds the recipe corresponding to the specified identity.
+     *
+     * @param recipeId
+     *            the recipe identity.
+     *
+     * @return the recipe if existing.
+     *
+     * @throws EntityNotFoundException
+     *             if no recipe could be found for identity.
+     */
+    default Recipe findOneNotNull(RecipeId recipeId) {
+        Optional<Recipe> recipe = findOne(recipeId);
+        if (recipe.isPresent()) {
+            return recipe.get();
+        }
+        throw new EntityNotFoundException(Recipe.class, recipeId);
+    }
 
     /**
      * Saves the specified recipe.

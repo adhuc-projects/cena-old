@@ -18,6 +18,8 @@ package org.adhuc.cena.menu.domain.model.ingredient;
 import java.util.List;
 import java.util.Optional;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+
 /**
  * An {@link Ingredient} repository.
  *
@@ -44,6 +46,25 @@ public interface IngredientRepository {
      * @return the ingredient if existing, empty otherwise.
      */
     Optional<Ingredient> findOne(IngredientId ingredientId);
+
+    /**
+     * Finds the ingredient corresponding to the specified identity.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     *
+     * @return the ingredient if existing.
+     *
+     * @throws EntityNotFoundException
+     *             if no ingredient could be found for identity.
+     */
+    default Ingredient findOneNotNull(IngredientId ingredientId) {
+        Optional<Ingredient> ingredient = findOne(ingredientId);
+        if (ingredient.isPresent()) {
+            return ingredient.get();
+        }
+        throw new EntityNotFoundException(Ingredient.class, ingredientId);
+    }
 
     /**
      * Finds the ingredient corresponding to the specified name.

@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 
 /**
@@ -60,6 +61,15 @@ public class InMemoryRecipeRepositoryTest {
         assertThrows(IllegalArgumentException.class, () -> repository.save(null));
     }
 
+    @Test
+    @DisplayName("throws EntityNotFoundException when finding unknown ingredient (not null required)")
+    public void findOneNotNullUnknown() {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> repository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID));
+        assertThat(exception.entityType()).isEqualTo(Recipe.class);
+        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+    }
+
     @Nested
     @DisplayName("with no recipe")
     class WithNoIngredient {
@@ -82,6 +92,7 @@ public class InMemoryRecipeRepositoryTest {
         }
 
         @Test
+        @DisplayName("returns a recipes list containing saved recipe")
         public void findAllAfterSaveContainsSavedRecipe() {
             assertThat(repository.findAll()).containsExactly(tomatoCucumberMozzaSalad());
         }
@@ -100,6 +111,7 @@ public class InMemoryRecipeRepositoryTest {
         }
 
         @Test
+        @DisplayName("returns a recipes list containing saved recipe with new value")
         public void saveExistingRecipeOverwritePreviousValue() {
             repository.save(tomatoCucumberMozzaSalad().name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME));
             assertThat(repository.findAll())
@@ -117,6 +129,7 @@ public class InMemoryRecipeRepositoryTest {
             }
 
             @Test
+            @DisplayName("returns a recipes list containing all saved recipes")
             public void findAllAfterMultipleSaveContainsSavedRecipes() {
                 assertThat(repository.findAll()).containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
                         tomatoCucumberOliveFetaSalad());
