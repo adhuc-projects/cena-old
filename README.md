@@ -12,7 +12,7 @@ Considering you have installed the [prerequesite](#general-prerequisites) tools 
 - To start up the application and its dependencies, run:
 `make up`
 
-- You can access the health status page at the following address: [`http://localhost:8080/management/health`](http://localhost:8080/management/health)
+- You can access the API documentation page at the following address: [`http://localhost:8080/api/docs/api-guide.html`](http://localhost:8080/api/docs/api-guide.html)
 
 ## Project resources
 
