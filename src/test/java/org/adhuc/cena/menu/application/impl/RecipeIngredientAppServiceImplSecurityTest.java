@@ -36,6 +36,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 /**
@@ -56,11 +57,14 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     @Autowired
     private RecipeIngredientAppService service;
     @Autowired
-    private RecipeRepository           repository;
+    private RecipeRepository           recipRepository;
+    @Autowired
+    private IngredientRepository       ingredientRepository;
 
     @BeforeEach
     public void setUp() {
-        repository.save(tomatoCucumberMozzaSalad());
+        recipRepository.save(tomatoCucumberMozzaSalad());
+        ingredientRepository.save(cucumber());
     }
 
     @Test
