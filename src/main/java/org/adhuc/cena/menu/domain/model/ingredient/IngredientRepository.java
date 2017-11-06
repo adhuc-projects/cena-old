@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,16 @@ public interface IngredientRepository {
      * @return all the ingredients.
      */
     List<Ingredient> findAll();
+
+    /**
+     * Finds all the ingredients corresponding to the specified identities.
+     *
+     * @param ingredientIds
+     *            the ingredients identities.
+     *
+     * @return the ingredients corresponding to the identities.
+     */
+    List<Ingredient> findAll(Collection<IngredientId> ingredientIds);
 
     /**
      * Finds the ingredient corresponding to the specified identity.

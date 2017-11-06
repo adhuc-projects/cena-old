@@ -15,17 +15,22 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import java.util.Arrays;
+import static org.springframework.util.Assert.notNull;
+
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
-import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeIngredientAdditionService;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 /**
  * A {@link RecipeIngredientAppService} implementation.
@@ -38,17 +43,29 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 @Service
 public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppService {
 
+    private RecipeIngredientAdditionService recipeIngredientAdditionService;
+    private RecipeRepository                recipeRepository;
+    private IngredientRepository            ingredientRepository;
+
+    @Autowired
+    public RecipeIngredientAppServiceImpl(RecipeIngredientAdditionService recipeIngredientAdditionService,
+            RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
+        this.recipeIngredientAdditionService = recipeIngredientAdditionService;
+        this.recipeRepository = recipeRepository;
+        this.ingredientRepository = ingredientRepository;
+    }
+
     @Override
     public List<Ingredient> getRecipeIngredients(RecipeId recipeId) {
-        // TODO implement getRecipeIngredients
-        return Arrays.asList(new Ingredient(IngredientId.generate(), "Tomato"),
-                new Ingredient(IngredientId.generate(), "Cucumber"));
+        Recipe recipe = recipeRepository.findOneNotNull(recipeId);
+        return ingredientRepository.findAll(recipe.ingredients());
     }
 
     @Override
     @PreAuthorize("isAuthenticated() && @recipeEditionAuthorizationService.isAuthor(#command.recipeId(), principal)")
     public void addIngredientToRecipe(AddIngredientToRecipe command) {
-        // TODO implement addIngredientToRecipe
+        notNull(command, "Cannot add ingredient to recipe from invalid command");
+        recipeIngredientAdditionService.addIngredientToRecipe(command);
     }
 
 }

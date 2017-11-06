@@ -15,8 +15,11 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
@@ -81,8 +84,7 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     @DisplayName("grants access to ingredient to recipe addition to authenticated user that is not the recipe author")
     public void addIngredientToRecipeAsRecipeAuthor() {
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-        // TODO activate assertion when implementing getRecipeIngredients()
-        // assertThat(service.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).contains(cucumber());
+        assertThat(service.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).contains(cucumber());
     }
 
 }

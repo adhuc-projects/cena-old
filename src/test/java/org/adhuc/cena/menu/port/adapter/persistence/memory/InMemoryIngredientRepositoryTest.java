@@ -25,6 +25,8 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -79,6 +81,12 @@ public class InMemoryIngredientRepositoryTest {
             assertThat(repository.findAll()).isEmpty();
         }
 
+        @Test
+        @DisplayName("returns empty list from a list of ingredient identities containing tomato and cucumber ids")
+        public void findAllByIdEmpty() {
+            assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID))).isEmpty();
+        }
+
     }
 
     @Nested
@@ -94,6 +102,12 @@ public class InMemoryIngredientRepositoryTest {
         @DisplayName("returns a list containing tomato")
         public void findAllAfterSaveContainsSavedIngredient() {
             assertThat(repository.findAll()).containsExactly(tomato());
+        }
+
+        @Test
+        @DisplayName("returns a list containing tomato from a list of ingredient identities containing tomato and cucumber ids")
+        public void findAllById() {
+            assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID))).containsExactly(tomato());
         }
 
         @Test
@@ -140,6 +154,19 @@ public class InMemoryIngredientRepositoryTest {
             @DisplayName("returns a list containing both tomato and cucumber")
             public void findAllAfterMultipleSaveContainsSavedIngredients() {
                 assertThat(repository.findAll()).containsExactlyInAnyOrder(tomato(), cucumber());
+            }
+
+            @Test
+            @DisplayName("returns a list containing tomato from a list of ingredient identities containing tomato id")
+            public void findAllByIdWithTomatoOnly() {
+                assertThat(repository.findAll(Arrays.asList(TOMATO_ID))).containsExactly(tomato());
+            }
+
+            @Test
+            @DisplayName("returns a list containing both tomato and cucumber from a list of ingredient identities containing tomato and cucumber ids")
+            public void findAllById() {
+                assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID)))
+                        .containsExactlyInAnyOrder(tomato(), cucumber());
             }
 
         }
