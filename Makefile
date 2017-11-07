@@ -14,7 +14,7 @@ build: ## Build the application as a docker image
 	$(maven) clean package -Pdocker
 
 test: ## Run acceptance testing with mvn verify
-	$(maven) verify -Pfunctional-acceptance -Dtest.acceptance.dockerEnv.cena.port=$(PORT)
+	$(maven) clean verify -Pfunctional-acceptance -Dtest.acceptance.dockerEnv.cena.port=$(PORT)
 
 run: ## Run the application
 	java -jar target/menu-generation.jar --server.port=$(PORT)
