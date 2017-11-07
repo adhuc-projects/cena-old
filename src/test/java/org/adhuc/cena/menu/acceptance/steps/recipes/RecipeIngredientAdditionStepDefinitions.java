@@ -42,15 +42,20 @@ public class RecipeIngredientAdditionStepDefinitions {
     @Steps
     private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
+    @Given("^an existing \"(.*)\" recipe$")
+    public void existingRecipe(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+        recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
+    }
+
     @Given("^an existing \"(.*)\" recipe authored by this user$")
-    public void recipeAuthoredByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+    public void existingRecipeAuthoredByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
         // TODO get authenticated user information from world
         recipesListServiceClient.assumeRecipeAuthoredByAuthenticatedUser(recipe, "authenticated-user");
     }
 
     @Given("^an existing \"(.*)\" recipe authored by another user$")
-    public void recipeAuthoredByAnotherUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+    public void existingRecipeAuthoredByAnotherUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
         // TODO get authenticated user information from world
         recipesListServiceClient.assumeRecipeAuthoredByAnotherUser(recipe, "another-user");
