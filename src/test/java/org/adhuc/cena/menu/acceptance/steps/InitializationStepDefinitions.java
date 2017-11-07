@@ -5,6 +5,7 @@ import org.adhuc.cena.menu.acceptance.support.authentication.RestAuthenticationP
 import cucumber.api.java.Before;
 import cucumber.runtime.java.StepDefAnnotation;
 import lombok.extern.slf4j.Slf4j;
+import net.serenitybdd.core.Serenity;
 import net.serenitybdd.rest.SerenityRest;
 
 /**
@@ -26,6 +27,7 @@ public class InitializationStepDefinitions {
     public void init() {
         int port = getPort();
         log.info("Run tests with port {}", port);
+        Serenity.initializeTestSession();
         SerenityRest.reset();
         SerenityRest.setDefaultPort(port);
 

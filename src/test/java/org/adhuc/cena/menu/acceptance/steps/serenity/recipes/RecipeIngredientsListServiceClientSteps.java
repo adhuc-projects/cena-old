@@ -23,6 +23,7 @@ import java.util.Optional;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 
 import net.thucydides.core.annotations.Step;
@@ -49,7 +50,8 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Add ingredient {1} to recipe {0}")
     private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient) {
-        final String recipeIngredientsResourceUrl = recipe().getIngredientsListUrl();
+        final String recipeIngredientsResourceUrl =
+                recipe.exists() ? recipe.getIngredientsListUrl() : determineUnknownRecipeIngredientsResourceUrl();
         String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
         rest().put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
     }
@@ -61,6 +63,11 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Assert ingredient addition to recipe result in an ingredient not found error")
     public void assertIngredientNotFoundError() {
+        assertException(NOT_FOUND, ExceptionCode.ENTITY_NOT_FOUND);
+    }
+
+    @Step("Assert ingredient addition to recipe result in an recipe not found error")
+    public void assertRecipeNotFoundError() {
         assertException(NOT_FOUND, ExceptionCode.ENTITY_NOT_FOUND);
     }
 
@@ -92,6 +99,10 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
             IngredientValue ingredient) {
         String recipeIngredientsResourceUrl = recipe.getIngredientsListUrl();
         return ingredientListServiceClient.getIngredientFromIngredientsList(recipeIngredientsResourceUrl, ingredient);
+    }
+
+    private String determineUnknownRecipeIngredientsResourceUrl() {
+        return getRecipesResourceUrl() + "/" + RecipeId.generate() + "/ingredients";
     }
 
 }

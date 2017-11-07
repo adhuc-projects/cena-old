@@ -24,6 +24,7 @@ import org.springframework.hateoas.Link;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.adhuc.cena.menu.acceptance.support.resource.HateoasHalClientResourceSupport;
 
@@ -52,10 +53,15 @@ import lombok.experimental.Accessors;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecipeValue extends HateoasHalClientResourceSupport {
+    @JsonProperty("id")
     private String       id;
     private final String name;
     private final String content;
     private String       author;
+
+    public boolean exists() {
+        return id != null;
+    }
 
     public String getIngredientsListUrl() {
         Optional<Link> link = links().stream().filter(l -> l.getRel().equals("ingredients")).findFirst();

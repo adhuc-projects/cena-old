@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
 /**
@@ -73,9 +74,9 @@ public class RecipeEditionAuthorizationServiceTest {
     }
 
     @Test
-    @DisplayName("returns false when checking author from unknown recipe")
+    @DisplayName("throws EntityNotFoundException when checking author from unknown recipe")
     public void isAuthorUnknownRecipe() {
-        assertThat(service.isAuthor(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, USER)).isFalse();
+        assertThrows(EntityNotFoundException.class, () -> service.isAuthor(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, USER));
     }
 
     @Test

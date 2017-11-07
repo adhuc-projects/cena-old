@@ -61,6 +61,11 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipesListServiceClient.assumeRecipeAuthoredByAnotherUser(recipe, "another-user");
     }
 
+    @Given("^a non-existent \"(.*)\" recipe$")
+    public void nonExistentRecipe(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
+        recipesListServiceClient.assumeRecipeNotInRecipesList(recipe);
+    }
+
     @When("^he adds the ingredient to the recipe$")
     public void addIngredientToRecipe() {
         recipeIngredientsListServiceClient.addIngredientToRecipe();
@@ -84,6 +89,11 @@ public class RecipeIngredientAdditionStepDefinitions {
     @Then("^an error notifies that ingredient to add does not exist$")
     public void ingredientDoesNotExist() {
         recipeIngredientsListServiceClient.assertIngredientNotFoundError();
+    }
+
+    @Then("^an error notifies that recipe to add ingredient to does not exist$")
+    public void recipeDoesNotExist() {
+        recipeIngredientsListServiceClient.assertRecipeNotFoundError();
     }
 
 }

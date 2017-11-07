@@ -14,7 +14,7 @@ Scenario: Add an ingredient to an unknown recipe
     And a non-existent "Tomato, cucumber and mozzarella salad" recipe
     And an existing "Cucumber" ingredient
   When he adds the ingredient to the recipe
-  Then an error notifies that recipe does not exist
+  Then an error notifies that recipe to add ingredient to does not exist
 
 Scenario: Add an unknown ingredient to a recipe
   Given an authenticated user
