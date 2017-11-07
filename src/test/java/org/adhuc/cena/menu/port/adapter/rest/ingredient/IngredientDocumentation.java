@@ -30,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -93,7 +91,7 @@ public class IngredientDocumentation {
     @Test
     @DisplayName("generates ingredient detail example")
     public void ingredientDetailExample() throws Exception {
-        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(tomato());
 
         mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isOk())
                 .andDo(documentationHandler.document(

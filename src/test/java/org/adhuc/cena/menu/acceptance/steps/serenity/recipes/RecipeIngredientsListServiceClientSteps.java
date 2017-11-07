@@ -16,11 +16,14 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.Optional;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.exception.ExceptionCode;
 
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
@@ -47,12 +50,18 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
     @Step("Add ingredient {1} to recipe {0}")
     private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient) {
         final String recipeIngredientsResourceUrl = recipe().getIngredientsListUrl();
-        rest().put(recipeIngredientsResourceUrl + "/" + ingredient.id()).andReturn();
+        String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
+        rest().put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
     }
 
     @Step("Assert ingredient has been successfully added to recipe")
     public void assertIngredientAdditionIsSuccessful() {
         assertNoContent();
+    }
+
+    @Step("Assert ingredient addition to recipe result in an ingredient not found error")
+    public void assertIngredientNotFoundError() {
+        assertException(NOT_FOUND, ExceptionCode.ENTITY_NOT_FOUND);
     }
 
     @Step("Assert ingredient can be found in recipe's ingredients list")

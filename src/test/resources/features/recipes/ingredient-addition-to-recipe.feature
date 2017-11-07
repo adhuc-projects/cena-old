@@ -21,7 +21,7 @@ Scenario: Add an unknown ingredient to a recipe
     And an existing "Tomato, cucumber, olive and feta salad" recipe authored by this user
     And a non-existent "Feta" ingredient
   When he adds the ingredient to the recipe
-  Then an error notifies that ingredient does not exist
+  Then an error notifies that ingredient to add does not exist
 
 Scenario: Add an ingredient to a recipe of which the author is someone else
   Given another authenticated user

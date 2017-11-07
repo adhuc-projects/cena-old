@@ -81,4 +81,9 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipeIngredientsListServiceClient.assertIngredientNotInRecipeIngredientsList();
     }
 
+    @Then("^an error notifies that ingredient to add does not exist$")
+    public void ingredientDoesNotExist() {
+        recipeIngredientsListServiceClient.assertIngredientNotFoundError();
+    }
+
 }

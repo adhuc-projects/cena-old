@@ -18,7 +18,6 @@ package org.adhuc.cena.menu.application.impl;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,9 +57,9 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     }
 
     @Override
-    public Optional<Ingredient> getIngredient(IngredientId ingredientId) {
+    public Ingredient getIngredient(IngredientId ingredientId) {
         notNull(ingredientId, "Cannot get ingredient from invalid identity");
-        return ingredientRepository.findOne(ingredientId);
+        return ingredientRepository.findOneNotNull(ingredientId);
     }
 
     @Override

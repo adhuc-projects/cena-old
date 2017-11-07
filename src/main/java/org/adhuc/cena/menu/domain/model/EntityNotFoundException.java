@@ -15,6 +15,9 @@
  */
 package org.adhuc.cena.menu.domain.model;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.adhuc.cena.menu.exception.CenaException;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 
@@ -34,6 +37,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(fluent = true)
 @SuppressWarnings("serial")
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class EntityNotFoundException extends CenaException {
 
     private static final ExceptionCode       EXCEPTION_CODE = ExceptionCode.ENTITY_NOT_FOUND;

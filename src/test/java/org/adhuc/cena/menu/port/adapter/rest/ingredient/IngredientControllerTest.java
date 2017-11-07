@@ -24,8 +24,6 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.assertJsonContainsIngredient;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -85,21 +83,13 @@ public class IngredientControllerTest extends ControllerTestSupport {
         mvc.perform(get(INGREDIENT_API_URL, "invalid")).andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("getting ingredient detail from unknown id returns not found status")
-    public void getIngredientNotFoundStatusNotFound() throws Exception {
-        when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.empty());
-
-        mvc.perform(get(INGREDIENT_API_URL, TOMATO_ID.toString())).andExpect(status().isNotFound());
-    }
-
     @Nested
     @DisplayName("getting tomato detail")
     class TomatoDetail {
 
         @BeforeEach
         public void setUp() {
-            when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(Optional.of(tomato()));
+            when(ingredientAppServiceMock.getIngredient(TOMATO_ID)).thenReturn(tomato());
         }
 
         @Test

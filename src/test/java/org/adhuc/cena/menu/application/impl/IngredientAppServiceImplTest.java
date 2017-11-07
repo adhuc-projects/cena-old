@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
@@ -107,13 +108,13 @@ public class IngredientAppServiceImplTest {
         @Test
         @DisplayName("cannot provide ingredient for unknown cucumber identity")
         public void getUnknownIngredient() {
-            assertThat(service.getIngredient(CUCUMBER_ID)).isEmpty();
+            assertThrows(EntityNotFoundException.class, () -> service.getIngredient(CUCUMBER_ID));
         }
 
         @Test
         @DisplayName("returns ingredient from known tomato identity")
         public void getCreatedIngredient() {
-            assertThat(service.getIngredient(TOMATO_ID)).isNotEmpty().contains(tomato());
+            assertThat(service.getIngredient(TOMATO_ID)).isEqualTo(tomato());
         }
 
         @Test

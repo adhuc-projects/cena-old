@@ -17,8 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-import org.adhuc.cena.menu.port.adapter.rest.ResourceNotFoundException;
 
 /**
  * A REST controller exposing /api/ingredients/{ingredientId} resource.
@@ -67,23 +64,7 @@ public class IngredientController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public IngredientResource getIngredient(@PathVariable IngredientId ingredientId) {
-        final Optional<Ingredient> ingredient = ingredientAppService.getIngredient(ingredientId);
-        if (!ingredient.isPresent()) {
-            ingredientNotFound(ingredientId);
-        }
-        return resourceAssembler.toResource(ingredient.get());
-    }
-
-    /**
-     * Throws a {@link ResourceNotFoundException} based on the specified ingredient identity value.
-     *
-     * @param ingredientId
-     *            the ingredient identity value.
-     *
-     * @return never return.
-     */
-    private void ingredientNotFound(final IngredientId ingredientId) {
-        throw new ResourceNotFoundException("Unable to find resource /api/ingredients/" + ingredientId);
+        return resourceAssembler.toResource(ingredientAppService.getIngredient(ingredientId));
     }
 
 }
