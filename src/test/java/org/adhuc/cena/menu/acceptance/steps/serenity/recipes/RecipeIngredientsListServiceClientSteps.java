@@ -60,9 +60,19 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
         assertIngredientInRecipeIngredientsList(recipe(), ingredientListServiceClient.ingredient());
     }
 
+    @Step("Assert ingredient cannot be found in recipe's ingredients list")
+    public void assertIngredientNotInRecipeIngredientsList() {
+        assertIngredientNotInRecipeIngredientsList(recipe(), ingredientListServiceClient.ingredient());
+    }
+
     @Step("Assert ingredient {1} can be found in recipe {0}'s ingredients list")
     private void assertIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
         assertThat(isIngredientInRecipeIngredientsList(recipe, ingredient)).isTrue();
+    }
+
+    @Step("Assert ingredient {1} cannot be found in recipe {0}'s ingredients list")
+    private void assertIngredientNotInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+        assertThat(isIngredientInRecipeIngredientsList(recipe, ingredient)).isFalse();
     }
 
     private boolean isIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {

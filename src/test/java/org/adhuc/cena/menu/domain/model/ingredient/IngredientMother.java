@@ -42,6 +42,12 @@ public class IngredientMother {
     public static final IngredientId MOZZARELLA_ID   = IngredientId.generate();
     public static final String       MOZZARELLA_NAME = "Mozzarella";
 
+    public static final IngredientId OLIVE_ID        = IngredientId.generate();
+    public static final String       OLIVE_NAME      = "Olive";
+
+    public static final IngredientId FETA_ID         = IngredientId.generate();
+    public static final String       FETA_NAME       = "Feta";
+
     public static CreateIngredient createTomato() {
         return new CreateIngredient(TOMATO_ID, TOMATO_NAME);
     }
@@ -66,8 +72,16 @@ public class IngredientMother {
         return new Ingredient(MOZZARELLA_ID, MOZZARELLA_NAME);
     }
 
+    public static Ingredient olive() {
+        return new Ingredient(OLIVE_ID, OLIVE_NAME);
+    }
+
+    public static Ingredient feta() {
+        return new Ingredient(FETA_ID, FETA_NAME);
+    }
+
     public static List<Ingredient> allIngredients() {
-        return Arrays.asList(tomato(), cucumber(), potato(), mozzarella());
+        return Arrays.asList(tomato(), cucumber(), potato(), mozzarella(), olive(), feta());
     }
 
 }

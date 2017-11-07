@@ -71,4 +71,9 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipeIngredientsListServiceClient.assertIngredientInRecipeIngredientsList();
     }
 
+    @Then("^the ingredient cannot be found in the recipe's ingredients list$")
+    public void ingredientNotInRecipeIngredientsList() {
+        recipeIngredientsListServiceClient.assertIngredientNotInRecipeIngredientsList();
+    }
+
 }
