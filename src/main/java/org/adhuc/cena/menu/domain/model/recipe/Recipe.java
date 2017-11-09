@@ -25,6 +25,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.adhuc.cena.menu.domain.model.BasicEntity;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
@@ -56,6 +57,7 @@ public class Recipe extends BasicEntity<RecipeId> {
     private String             content;
     @NonNull
     private final RecipeAuthor author;
+    @JsonIgnore
     private Set<IngredientId>  ingredients;
 
     /**

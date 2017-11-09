@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.domain.model.recipe.CreateRecipe;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeAuthor;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,13 @@ public class RecipeAppServiceImpl implements RecipeAppService {
     @Override
     public List<Recipe> getRecipes() {
         return recipeRepository.findAll();
+    }
+
+    @Override
+    public Recipe getRecipe(RecipeId recipeId) {
+        // TODO implement getRecipe()
+        return new Recipe(recipeId, "Tomato, cucumber, olive and feta salad",
+                "Cut everything into dices, mix it, dress it", new RecipeAuthor("authenticated-user"));
     }
 
     @Override

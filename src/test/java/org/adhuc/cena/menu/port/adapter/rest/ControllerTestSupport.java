@@ -47,7 +47,7 @@ public abstract class ControllerTestSupport {
                 .andExpect(jsonPath("$._links.self.href", equalTo(getRequestUrl(resultActions))));
     }
 
-    private String getRequestUrl(ResultActions resultActions) {
+    protected final String getRequestUrl(ResultActions resultActions) {
         return resultActions.andReturn().getRequest().getRequestURL().toString();
     }
 

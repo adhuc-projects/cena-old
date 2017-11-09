@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 
@@ -41,6 +43,15 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 @RequestMapping(path = "/api/recipes/{recipeId}", produces = HAL_JSON_VALUE)
 public class RecipeController {
 
+    private RecipeAppService        recipeAppService;
+    private RecipeResourceAssembler resourceAssembler;
+
+    @Autowired
+    public RecipeController(RecipeAppService recipeAppService, RecipeResourceAssembler resourceAssembler) {
+        this.recipeAppService = recipeAppService;
+        this.resourceAssembler = resourceAssembler;
+    }
+
     /**
      * Gets the recipe information for the recipe corresponding to the specified identity.
      *
@@ -52,7 +63,7 @@ public class RecipeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public RecipeResource getRecipe(@PathVariable RecipeId recipeId) {
-        throw new UnsupportedOperationException("Get recipe is not implemented yet");
+        return resourceAssembler.toResource(recipeAppService.getRecipe(recipeId));
     }
 
 }

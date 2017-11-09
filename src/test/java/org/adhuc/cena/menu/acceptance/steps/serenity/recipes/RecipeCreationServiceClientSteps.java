@@ -24,6 +24,7 @@ import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.Steps;
 
 /**
  * The recipe rest-service client steps definition.
@@ -36,6 +37,9 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClientSteps {
 
+    @Steps
+    private RecipeDetailServiceClientSteps recipeDetailServiceClient;
+
     @Step("Create the recipe {0}")
     public void createRecipe(final RecipeValue recipe) {
         storeRecipeIfEmpty(recipe);
@@ -47,7 +51,8 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
     @Step("Assert recipe has been successfully created")
     public void assertRecipeSuccessfullyCreated() {
         String recipeLocation = assertCreated().extract().header(LOCATION);
-        // TODO compare created recipe with creation info, getting recipe detail from location
+        RecipeValue recipe = recipeDetailServiceClient.getRecipeFromUrl(recipeLocation);
+        recipeDetailServiceClient.assertRecipeInfoIsEqualToExpected(recipe(), recipe);
     }
 
     @Step("Assert recipe creation results in invalid request error")
