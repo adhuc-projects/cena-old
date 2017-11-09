@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.application.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
@@ -74,6 +75,20 @@ public class RecipeAppServiceImplSecurityTest {
     @DisplayName("grants access to recipes list to authenticated user")
     public void getRecipesAsAuthenticatedUser() {
         assertThat(service.getRecipes()).contains(tomatoCucumberOliveFetaSalad());
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("grants access to recipe detail to anonymous user")
+    public void getRecipeAsAnonymous() {
+        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID)).isEqualTo(tomatoCucumberOliveFetaSalad());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    @DisplayName("grants access to recipe detail to authenticated user")
+    public void getRecipeAsAuthenticatedUser() {
+        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID)).isEqualTo(tomatoCucumberOliveFetaSalad());
     }
 
     @Test

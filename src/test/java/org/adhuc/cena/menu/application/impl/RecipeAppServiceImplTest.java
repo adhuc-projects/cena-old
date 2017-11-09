@@ -18,6 +18,8 @@ package org.adhuc.cena.menu.application.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberOliveFetaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
 /**
@@ -57,6 +60,12 @@ public class RecipeAppServiceImplTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             service.getRecipes().add(tomatoCucumberMozzaSalad());
         });
+    }
+
+    @Test
+    @DisplayName("throws IllegalArgumentException when getting recipe from null identity")
+    public void getRecipeNullId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getRecipe(null));
     }
 
     @Test
@@ -90,6 +99,18 @@ public class RecipeAppServiceImplTest {
         @DisplayName("returns list containing recipe")
         public void getRecipesContainsCreatedRecipe() {
             assertThat(service.getRecipes()).isNotEmpty().containsExactly(tomatoCucumberMozzaSalad());
+        }
+
+        @Test
+        @DisplayName("cannot provide recipe for unknown tomato, cucumber, olive and feta salad identity")
+        public void getUnknownRecipe() {
+            assertThrows(EntityNotFoundException.class, () -> service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID));
+        }
+
+        @Test
+        @DisplayName("returns recipe from known tomato, cucumber and mozza salad identity")
+        public void getCreatedRecipe() {
+            assertThat(service.getRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).isEqualTo(tomatoCucumberMozzaSalad());
         }
 
         @Nested
