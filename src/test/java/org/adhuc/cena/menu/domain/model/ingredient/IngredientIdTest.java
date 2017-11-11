@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 
 /**
  * The {@link IngredientId} test class.
@@ -42,13 +42,13 @@ public class IngredientIdTest {
     @Test
     @DisplayName("cannot be created from null value")
     public void createIngredientIdFromNullString() {
-        assertThrows(NullPointerException.class, () -> new IngredientId(null));
+        assertThrows(EntityNotFoundException.class, () -> new IngredientId(null));
     }
 
     @Test
     @DisplayName("cannot be created from invalid value")
     public void createIngredientIdFromInvalidString() {
-        assertThrows(IllegalArgumentException.class, () -> new IngredientId("invalid"));
+        assertThrows(EntityNotFoundException.class, () -> new IngredientId("invalid"));
     }
 
     @Test
@@ -56,30 +56,6 @@ public class IngredientIdTest {
     public void createIngredientIdFromString() {
         final IngredientId createdId = new IngredientId(TOMATO_ID.toString());
         assertThat(createdId).isEqualTo(TOMATO_ID);
-    }
-
-    @Test
-    @DisplayName("is not well formed with null value")
-    public void isWellFormedNullIsFalse() {
-        assertThat(IngredientId.isWellFormed(null)).isEqualTo(false);
-    }
-
-    @Test
-    @DisplayName("is not well formed with empty value")
-    public void isWellFormedEmptyIsFalse() {
-        assertThat(IngredientId.isWellFormed("")).isEqualTo(false);
-    }
-
-    @Test
-    @DisplayName("is not well formed with invalid value")
-    public void isWellFormedInvalidIsFalse() {
-        assertThat(IngredientId.isWellFormed("invalid")).isEqualTo(false);
-    }
-
-    @Test
-    @DisplayName("is well formed with UUID value")
-    public void isWellFormedUuidIsTrue() {
-        assertThat(IngredientId.isWellFormed(UUID.randomUUID().toString())).isEqualTo(true);
     }
 
 }

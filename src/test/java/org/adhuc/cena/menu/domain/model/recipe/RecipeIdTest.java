@@ -24,6 +24,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+
 /**
  * The {@link RecipeId} test class.
  *
@@ -40,13 +42,13 @@ public class RecipeIdTest {
     @Test
     @DisplayName("cannot be created from null value")
     public void createRecipeIdFromNullString() {
-        assertThrows(NullPointerException.class, () -> new RecipeId(null));
+        assertThrows(EntityNotFoundException.class, () -> new RecipeId(null));
     }
 
     @Test
     @DisplayName("cannot be created from invalid value")
     public void createRecipeIdFromInvalidString() {
-        assertThrows(IllegalArgumentException.class, () -> new RecipeId("invalid"));
+        assertThrows(EntityNotFoundException.class, () -> new RecipeId("invalid"));
     }
 
     @Test

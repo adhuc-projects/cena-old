@@ -41,7 +41,7 @@ public class RecipeId extends Identity {
      *            the identity value.
      */
     public RecipeId(final String id) {
-        this(UUID.fromString(id));
+        this(parseUUID(Recipe.class, id));
     }
 
     private RecipeId(final UUID id) {

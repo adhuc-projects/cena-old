@@ -82,9 +82,9 @@ public class RecipeControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("getting recipe detail from invalid id returns bad request status")
-    public void getRecipeWithInvalidIdStatusBadRequest() throws Exception {
-        mvc.perform(get(RECIPE_API_URL, "invalid")).andExpect(status().isBadRequest());
+    @DisplayName("getting recipe detail from invalid id returns not found status")
+    public void getRecipeWithInvalidIdStatusNotFound() throws Exception {
+        mvc.perform(get(RECIPE_API_URL, "invalid")).andExpect(status().isNotFound());
     }
 
     @Nested

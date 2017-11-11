@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.domain.model;
 
+import static org.springframework.util.Assert.notNull;
+
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -45,6 +47,26 @@ public abstract class Identity {
     @JsonValue
     public String toString() {
         return id.toString();
+    }
+
+    /**
+     * Parse the identity value to an UUID value.
+     *
+     * @param entityType
+     *            the entity type.
+     *
+     * @param value
+     *            the identity value.
+     *
+     * @return the UUID identity value.
+     */
+    protected static UUID parseUUID(Class<? extends Entity<?>> entityType, String value) {
+        try {
+            notNull(value, "Cannot parse identity from null value");
+            return UUID.fromString(value);
+        } catch (final IllegalArgumentException e) {
+            throw new EntityNotFoundException(entityType, value);
+        }
     }
 
 }

@@ -67,7 +67,7 @@ public class RecipeIngredientAdditionServiceTest {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad()));
         assertThat(exception.entityType()).isEqualTo(Recipe.class);
-        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
     }
 
     @Nested
@@ -88,7 +88,7 @@ public class RecipeIngredientAdditionServiceTest {
             EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                     () -> service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad()));
             assertThat(exception.entityType()).isEqualTo(Ingredient.class);
-            assertThat(exception.identity()).isEqualTo(CUCUMBER_ID);
+            assertThat(exception.identity()).isEqualTo(CUCUMBER_ID.toString());
         }
 
         @Nested

@@ -67,7 +67,7 @@ public class InMemoryRecipeRepositoryTest {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> repository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID));
         assertThat(exception.entityType()).isEqualTo(Recipe.class);
-        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
     }
 
     @Nested

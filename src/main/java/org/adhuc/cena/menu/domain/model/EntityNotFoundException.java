@@ -43,7 +43,7 @@ public class EntityNotFoundException extends CenaException {
     private static final ExceptionCode       EXCEPTION_CODE = ExceptionCode.ENTITY_NOT_FOUND;
 
     private final Class<? extends Entity<?>> entityType;
-    private final Identity                   identity;
+    private final String                     identity;
 
     /**
      * Constructs a new {@code EntityNotFoundException} with the specified entity type and identity.
@@ -55,6 +55,19 @@ public class EntityNotFoundException extends CenaException {
      *            the identity.
      */
     public EntityNotFoundException(Class<? extends Entity<?>> entityType, Identity identity) {
+        this(entityType, identity.toString());
+    }
+
+    /**
+     * Constructs a new {@code EntityNotFoundException} with the specified entity type and identity.
+     *
+     * @param entityType
+     *            the entity type.
+     *
+     * @param identity
+     *            the identity value.
+     */
+    public EntityNotFoundException(Class<? extends Entity<?>> entityType, String identity) {
         super("Cannot find entity of type " + entityType + " with identity " + identity, EXCEPTION_CODE);
         this.entityType = entityType;
         this.identity = identity;
