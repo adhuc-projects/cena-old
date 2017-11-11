@@ -65,4 +65,8 @@ public class AuthenticationServiceClientSteps extends AbstractServiceClientSteps
         assertException(HttpStatus.FORBIDDEN);
     }
 
+    public String getAuthenticatedUser() {
+        return restAuthenticationProvider.getAuthenticatedUser();
+    }
+
 }

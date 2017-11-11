@@ -33,6 +33,16 @@ public final class AcceptanceAuthenticationMother {
             public RequestSpecification restWithAuth(RequestSpecification specification) {
                 return specification.auth().none();
             }
+
+            @Override
+            public boolean isAuthenticated() {
+                return false;
+            }
+
+            @Override
+            public String getAuthenticatedUser() {
+                throw new UnsupportedOperationException("Not authenticated");
+            }
         };
     }
 
@@ -54,6 +64,10 @@ public final class AcceptanceAuthenticationMother {
 
     protected static interface AcceptanceAuthentication {
         RequestSpecification restWithAuth(RequestSpecification specification);
+
+        boolean isAuthenticated();
+
+        String getAuthenticatedUser();
     }
 
     private static class BasicAuthentication implements AcceptanceAuthentication {
@@ -68,6 +82,16 @@ public final class AcceptanceAuthenticationMother {
         @Override
         public RequestSpecification restWithAuth(RequestSpecification specification) {
             return specification.auth().preemptive().basic(username, password);
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return true;
+        }
+
+        @Override
+        public String getAuthenticatedUser() {
+            return username;
         }
     }
 

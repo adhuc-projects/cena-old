@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
+import org.adhuc.cena.menu.acceptance.steps.serenity.AuthenticationServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientsListServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
@@ -41,6 +42,8 @@ public class RecipeIngredientAdditionStepDefinitions {
     private RecipesListServiceClientSteps           recipesListServiceClient;
     @Steps
     private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
+    @Steps
+    private AuthenticationServiceClientSteps        authenticationServiceClientSteps;
 
     @Given("^an existing \"(.*)\" recipe$")
     public void existingRecipe(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
@@ -50,15 +53,15 @@ public class RecipeIngredientAdditionStepDefinitions {
     @Given("^an existing \"(.*)\" recipe authored by this user$")
     public void existingRecipeAuthoredByAuthenticatedUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
-        // TODO get authenticated user information from world
-        recipesListServiceClient.assumeRecipeAuthoredByAuthenticatedUser(recipe, "authenticated-user");
+        recipesListServiceClient.assumeRecipeAuthoredByAuthenticatedUser(recipe,
+                authenticationServiceClientSteps.getAuthenticatedUser());
     }
 
     @Given("^an existing \"(.*)\" recipe authored by another user$")
     public void existingRecipeAuthoredByAnotherUser(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
         recipe = recipesListServiceClient.assumeRecipeInRecipesList(recipe);
-        // TODO get authenticated user information from world
-        recipesListServiceClient.assumeRecipeAuthoredByAnotherUser(recipe, "another-user");
+        recipesListServiceClient.assumeRecipeAuthoredByAnotherUser(recipe,
+                authenticationServiceClientSteps.getAuthenticatedUser());
     }
 
     @Given("^a non-existent \"(.*)\" recipe$")

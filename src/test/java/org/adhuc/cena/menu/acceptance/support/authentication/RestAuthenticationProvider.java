@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.acceptance.support.authentication;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthenticationMother.AcceptanceAuthentication;
 
 import io.restassured.specification.RequestSpecification;
@@ -72,6 +74,25 @@ public class RestAuthenticationProvider {
      */
     public RequestSpecification restWithAuth(AuthenticationType authenticationType) {
         return authenticationType.authentication().restWithAuth(cleanedSpecification());
+    }
+
+    /**
+     * Indicates whether the authentication used during acceptance test is considered as authenticated.
+     *
+     * @return {@code true} if authenticated, {@code false} otherwise.
+     */
+    public boolean isAuthenticated() {
+        return authentication.isAuthenticated();
+    }
+
+    /**
+     * Gets the authenticated user. Only when {@link #isAuthenticated()}.
+     *
+     * @return the authenticated user.
+     */
+    public String getAuthenticatedUser() {
+        assertThat(isAuthenticated());
+        return authentication.getAuthenticatedUser();
     }
 
     /**
