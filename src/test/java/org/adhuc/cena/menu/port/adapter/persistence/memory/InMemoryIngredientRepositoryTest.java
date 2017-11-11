@@ -101,13 +101,14 @@ public class InMemoryIngredientRepositoryTest {
         @Test
         @DisplayName("returns a list containing tomato")
         public void findAllAfterSaveContainsSavedIngredient() {
-            assertThat(repository.findAll()).containsExactly(tomato());
+            assertThat(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(tomato());
         }
 
         @Test
         @DisplayName("returns a list containing tomato from a list of ingredient identities containing tomato and cucumber ids")
         public void findAllById() {
-            assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID))).containsExactly(tomato());
+            assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID))).usingFieldByFieldElementComparator()
+                    .containsExactly(tomato());
         }
 
         @Test
@@ -125,20 +126,22 @@ public class InMemoryIngredientRepositoryTest {
         @Test
         @DisplayName("returns tomato ingredient when finding by tomato id")
         public void findOneExisting() {
-            assertThat(repository.findOne(TOMATO_ID)).isPresent().contains(tomato());
+            assertThat(repository.findOne(TOMATO_ID)).isPresent().usingFieldByFieldValueComparator().contains(tomato());
         }
 
         @Test
         @DisplayName("returns tomato ingredient when finding by tomato name")
         public void findOneByNameExisting() {
-            assertThat(repository.findOneByName(TOMATO_NAME)).isPresent().contains(tomato());
+            assertThat(repository.findOneByName(TOMATO_NAME)).isPresent().usingFieldByFieldValueComparator()
+                    .contains(tomato());
         }
 
         @Test
         @DisplayName("overwrites known ingredient when saving with same id")
         public void saveExistingIngredientOverwritePreviousValue() {
             repository.save(tomato().name(CUCUMBER_NAME));
-            assertThat(repository.findAll()).containsExactly(new Ingredient(TOMATO_ID, CUCUMBER_NAME));
+            assertThat(repository.findAll()).usingFieldByFieldElementComparator()
+                    .containsExactly(new Ingredient(TOMATO_ID, CUCUMBER_NAME));
         }
 
         @Nested
@@ -153,20 +156,22 @@ public class InMemoryIngredientRepositoryTest {
             @Test
             @DisplayName("returns a list containing both tomato and cucumber")
             public void findAllAfterMultipleSaveContainsSavedIngredients() {
-                assertThat(repository.findAll()).containsExactlyInAnyOrder(tomato(), cucumber());
+                assertThat(repository.findAll()).usingFieldByFieldElementComparator()
+                        .containsExactlyInAnyOrder(tomato(), cucumber());
             }
 
             @Test
             @DisplayName("returns a list containing tomato from a list of ingredient identities containing tomato id")
             public void findAllByIdWithTomatoOnly() {
-                assertThat(repository.findAll(Arrays.asList(TOMATO_ID))).containsExactly(tomato());
+                assertThat(repository.findAll(Arrays.asList(TOMATO_ID))).usingFieldByFieldElementComparator()
+                        .containsExactly(tomato());
             }
 
             @Test
             @DisplayName("returns a list containing both tomato and cucumber from a list of ingredient identities containing tomato and cucumber ids")
             public void findAllById() {
                 assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID)))
-                        .containsExactlyInAnyOrder(tomato(), cucumber());
+                        .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(tomato(), cucumber());
             }
 
         }

@@ -94,7 +94,8 @@ public class InMemoryRecipeRepositoryTest {
         @Test
         @DisplayName("returns a recipes list containing saved recipe")
         public void findAllAfterSaveContainsSavedRecipe() {
-            assertThat(repository.findAll()).containsExactly(tomatoCucumberMozzaSalad());
+            assertThat(repository.findAll()).usingFieldByFieldElementComparator()
+                    .containsExactly(tomatoCucumberMozzaSalad());
         }
 
         @Test
@@ -107,14 +108,14 @@ public class InMemoryRecipeRepositoryTest {
         @DisplayName("returns tomato, cucumber and mozzarella salad when finding by id")
         public void findOneExisting() {
             assertThat(repository.findOne(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).isPresent()
-                    .contains(tomatoCucumberMozzaSalad());
+                    .usingFieldByFieldValueComparator().contains(tomatoCucumberMozzaSalad());
         }
 
         @Test
         @DisplayName("returns a recipes list containing saved recipe with new value")
         public void saveExistingRecipeOverwritePreviousValue() {
             repository.save(tomatoCucumberMozzaSalad().name(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME));
-            assertThat(repository.findAll())
+            assertThat(repository.findAll()).usingFieldByFieldElementComparator()
                     .containsExactly(new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
                             TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
         }
@@ -131,8 +132,8 @@ public class InMemoryRecipeRepositoryTest {
             @Test
             @DisplayName("returns a recipes list containing all saved recipes")
             public void findAllAfterMultipleSaveContainsSavedRecipes() {
-                assertThat(repository.findAll()).containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
-                        tomatoCucumberOliveFetaSalad());
+                assertThat(repository.findAll()).usingFieldByFieldElementComparator()
+                        .containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
             }
 
         }
