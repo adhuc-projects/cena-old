@@ -35,8 +35,6 @@ Be sure that your `JAVA_HOME` environment variable points to the `jdk1.8.0` fold
 
 The following sections propose to use `Makefile` targets in the form of`make` commands to abstract development lifecycle goals from technologies (mvn, npm,...) and practical details of implementation (locations, profiles,...).
 
-There are a few generic targets all projects agree to use such as `build`, `test`, `up`, `down`, `help`. You are free to add any target that would help you.
-
 `make` is available by default on unix based systems, and can be installed on Windows from this [site](http://gnuwin32.sourceforge.net/packages/make.htm).
 
 ## Usage
