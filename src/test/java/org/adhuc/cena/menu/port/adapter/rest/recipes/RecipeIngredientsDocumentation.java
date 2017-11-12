@@ -112,8 +112,11 @@ public class RecipeIngredientsDocumentation extends ControllerTestSupport {
                         links(linkWithRel("self")
                                 .description("This <<resources-recipe-ingredients,recipe ingredients list>>")),
                         responseFields(
-                                subsectionWithPath("_embedded.data")
+                                subsectionWithPath("_embedded.ingredients")
                                         .description("An array of <<resources-ingredient, Ingredient resources>>"),
+                                subsectionWithPath("_embedded.mainIngredients").description(
+                                        "An array of ingredients identities corresponding to recipe's main ingredients."
+                                                + " Sublist of recipe's ingredients identities"),
                                 subsectionWithPath("_links").description(
                                         "<<resources-recipe-ingredients-links,Links>> to other resources"))));
     }

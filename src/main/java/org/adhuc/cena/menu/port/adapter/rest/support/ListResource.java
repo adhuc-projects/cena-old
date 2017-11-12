@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.support;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -32,31 +30,42 @@ import org.springframework.hateoas.ResourceSupport;
  */
 public class ListResource<R extends ResourceSupport> extends HalResource {
 
-    private static final String EMBEDDED_RESOURCES_RELATIONSHIP = "data";
+    public static final String EMBEDDED_RESOURCES_RELATIONSHIP = "data";
+
+    /**
+     * Creates a list resource embedding the specified list of resources. Relationship name is
+     * {@value #EMBEDDED_RESOURCES_RELATIONSHIP}.
+     *
+     * @param embeddedResources
+     *            the embedded resources.
+     */
+    public ListResource(final List<R> embeddedResources) {
+        this(embeddedResources, EMBEDDED_RESOURCES_RELATIONSHIP);
+    }
 
     /**
      * Creates a list resource embedding the specified list of resources.
      *
      * @param embeddedResources
+     *            the embedded resources.
+     *
+     * @param relationship
+     *            the relationship name.
      */
-    public ListResource(final List<R> embeddedResources) {
-        embedResource(EMBEDDED_RESOURCES_RELATIONSHIP, embeddedResources);
+    public ListResource(final List<R> embeddedResources, String relationship) {
+        embedResource(relationship, embeddedResources);
     }
 
-    /**
-     * Adds the self reference to the resource, based on the specified method.
-     *
-     * @param method
-     *            the method corresponding to self reference.
-     *
-     * @param parameters
-     *            the method parameters to use for self reference.
-     *
-     * @return the resource.
-     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public ListResource<R> embedResource(final String relationship, final Object resource) {
+        return (ListResource<R>) super.embedResource(relationship, resource);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public ListResource<R> withSelfRef(final Method method, final Object... parameters) {
-        this.add(linkTo(method, parameters).withSelfRel());
-        return this;
+        return (ListResource<R>) super.withSelfRef(method, parameters);
     }
 
 }

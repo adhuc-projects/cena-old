@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 
 import javax.annotation.PostConstruct;
 
@@ -50,6 +51,9 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 @RequestMapping(path = "/api/recipes/{recipeId}/ingredients", produces = HAL_JSON_VALUE)
 public class RecipeIngredientsController {
 
+    public static final String          RECIPE_INGREDIENTS_RELATIONSHIP      = "ingredients";
+    public static final String          RECIPE_MAIN_INGREDIENTS_RELATIONSHIP = "mainIngredients";
+
     private RecipeIngredientAppService  recipeIngredientAppService;
     private IngredientResourceAssembler ingredientResourceAssembler;
 
@@ -74,7 +78,9 @@ public class RecipeIngredientsController {
     @ResponseStatus(HttpStatus.OK)
     public ListResource<IngredientResource> getRecipeIngredients(@PathVariable RecipeId recipeId) {
         return new ListResource<>(
-                ingredientResourceAssembler.toResources(recipeIngredientAppService.getRecipeIngredients(recipeId)))
+                ingredientResourceAssembler.toResources(recipeIngredientAppService.getRecipeIngredients(recipeId)),
+                RECIPE_INGREDIENTS_RELATIONSHIP)
+                        .embedResource(RECIPE_MAIN_INGREDIENTS_RELATIONSHIP, Collections.emptyList())
                         .withSelfRef(listMethod, recipeId);
     }
 

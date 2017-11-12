@@ -115,8 +115,10 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         @DisplayName("getting list returns empty list")
         public void getRecipesEmptyListNoData() throws Exception {
             mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID))
-                    .andExpect(jsonPath("$._embedded.data").isArray())
-                    .andExpect(jsonPath("$._embedded.data").isEmpty());
+                    .andExpect(jsonPath("$._embedded.ingredients").isArray())
+                    .andExpect(jsonPath("$._embedded.ingredients").isEmpty())
+                    .andExpect(jsonPath("$._embedded.mainIngredients").isArray())
+                    .andExpect(jsonPath("$._embedded.mainIngredients").isEmpty());
         }
 
     }
@@ -142,11 +144,13 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         public void getRecipesContainsData() throws Exception {
             final ResultActions resultActions =
                     mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID))
-                            .andExpect(jsonPath("$._embedded.data").isArray())
-                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
-                            .andExpect(jsonPath("$._embedded.data", hasSize(2)));
-            assertJsonContainsIngredient(resultActions, "$._embedded.data[0]", tomato());
-            assertJsonContainsIngredient(resultActions, "$._embedded.data[1]", cucumber());
+                            .andExpect(jsonPath("$._embedded.ingredients").isArray())
+                            .andExpect(jsonPath("$._embedded.ingredients").isNotEmpty())
+                            .andExpect(jsonPath("$._embedded.ingredients", hasSize(2)))
+                            .andExpect(jsonPath("$._embedded.mainIngredients").isArray())
+                            .andExpect(jsonPath("$._embedded.mainIngredients").isEmpty());
+            assertJsonContainsIngredient(resultActions, "$._embedded.ingredients[0]", tomato());
+            assertJsonContainsIngredient(resultActions, "$._embedded.ingredients[1]", cucumber());
         }
 
         @Test

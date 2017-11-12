@@ -91,10 +91,16 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     }
 
     public Optional<IngredientValue> getIngredientFromIngredientsList(String url, IngredientValue ingredient) {
+        return getIngredientFromIngredientsList(url, ingredient, "data");
+    }
+
+    public Optional<IngredientValue> getIngredientFromIngredientsList(String url, IngredientValue ingredient,
+            String embeddedRelation) {
         String ingredientName = ingredient.name();
         JsonPath jsonPath = rest().get(url).then().statusCode(OK.value()).extract().jsonPath();
-        return Optional.ofNullable(jsonPath.param("name", ingredientName)
-                .getObject("_embedded.data.find { ingredient->ingredient.name == name }", IngredientValue.class));
+        return Optional.ofNullable(jsonPath.param("name", ingredientName).getObject(
+                "_embedded." + embeddedRelation + ".find { ingredient->ingredient.name == name }",
+                IngredientValue.class));
     }
 
 }

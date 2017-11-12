@@ -99,6 +99,16 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipeIngredientsListServiceClient.assertIngredientNotInRecipeIngredientsList();
     }
 
+    @Then("^the ingredient is a main ingredient of the recipe$")
+    public void mainingredientInRecipe() {
+        recipeIngredientsListServiceClient.assertIngredientMainIngredientInRecipe();
+    }
+
+    @Then("^the ingredient is not a main ingredient of the recipe$")
+    public void notMainingredientInRecipe() {
+        recipeIngredientsListServiceClient.assertIngredientNotMainIngredientInRecipe();
+    }
+
     @Then("^an error notifies that ingredient to add does not exist$")
     public void ingredientDoesNotExist() {
         recipeIngredientsListServiceClient.assertIngredientNotFoundError();

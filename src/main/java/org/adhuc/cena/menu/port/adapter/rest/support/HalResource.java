@@ -15,6 +15,9 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.support;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,9 +60,30 @@ public abstract class HalResource extends ResourceSupport {
      *
      * @param resource
      *            the embedded resource.
+     * 
+     * @return this.
      */
-    public void embedResource(final String relationship, final Object resource) {
+    public HalResource embedResource(final String relationship, final Object resource) {
         embedded.put(relationship, resource);
+        return this;
+    }
+
+    /**
+     * Adds the self reference to the resource, based on the specified method.
+     *
+     * @param method
+     *            the method corresponding to self reference.
+     *
+     * @param parameters
+     *            the method parameters to use for self reference.
+     *
+     * @return the resource.
+     * 
+     * @return this.
+     */
+    public HalResource withSelfRef(final Method method, final Object... parameters) {
+        this.add(linkTo(method, parameters).withSelfRel());
+        return this;
     }
 
 }

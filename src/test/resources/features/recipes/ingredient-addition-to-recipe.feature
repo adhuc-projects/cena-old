@@ -9,6 +9,7 @@ Scenario: Add an ingredient to a recipe successfully
   When he adds the ingredient to the recipe
   Then the ingredient is added to recipe
     And the ingredient can be found in the recipe's ingredients list
+    And the ingredient is not a main ingredient of the recipe
 
 Scenario: Add an ingredient to an unknown recipe
   Given an authenticated user
@@ -48,3 +49,13 @@ Scenario: Add an already added ingredient to a recipe successfully
   When he adds the ingredient to the recipe
   Then the ingredient is added to recipe
     And the ingredient can be found in the recipe's ingredients list
+    And the ingredient is not a main ingredient of the recipe
+
+Scenario: Add a main ingredient to a recipe successfully
+  Given an authenticated user
+    And an existing "Tomato and cantal pie" recipe authored by this user
+    And an existing "Cantal" ingredient
+  When he adds the ingredient to the recipe as a main ingredient
+  Then the ingredient is added to recipe
+    And the ingredient can be found in the recipe's ingredients list
+    And the ingredient is a main ingredient of the recipe
