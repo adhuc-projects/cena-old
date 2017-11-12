@@ -15,7 +15,7 @@
  */
 package org.adhuc.cena.menu.acceptance.support.authentication;
 
-import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthenticationMother.AcceptanceAuthentication;
+import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthenticationMother.AcceptanceAuthenticationKey;
 
 /**
  * The authentication types.
@@ -27,18 +27,18 @@ import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthentic
  */
 public enum AuthenticationType {
 
-    ANONYMOUS_USER(AcceptanceAuthenticationMother.anonymousUser()),
-    AUTHENTICATED_USER(AcceptanceAuthenticationMother.authenticatedUser()),
-    INGREDIENT_MANAGER(AcceptanceAuthenticationMother.ingredientManager());
+    ANONYMOUS_USER(AcceptanceAuthenticationKey.ANONYMOUS_USER),
+    AUTHENTICATED_USER(AcceptanceAuthenticationKey.AUTHENTICATED_USER),
+    INGREDIENT_MANAGER(AcceptanceAuthenticationKey.INGREDIENT_MANAGER);
 
-    private AcceptanceAuthentication authentication;
+    private AcceptanceAuthenticationKey authenticationKey;
 
-    private AuthenticationType(AcceptanceAuthentication authentication) {
-        this.authentication = authentication;
+    private AuthenticationType(AcceptanceAuthenticationKey authenticationKey) {
+        this.authenticationKey = authenticationKey;
     }
 
-    protected AcceptanceAuthentication authentication() {
-        return authentication;
+    protected AcceptanceAuthenticationKey authenticationKey() {
+        return authenticationKey;
     }
 
 }

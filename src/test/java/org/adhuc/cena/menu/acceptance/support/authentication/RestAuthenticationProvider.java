@@ -46,8 +46,13 @@ public class RestAuthenticationProvider {
         return INSTANCE;
     }
 
-    private RequestSpecification     specification;
-    private AcceptanceAuthentication authentication;
+    private AcceptanceAuthenticationMother authenticationMother;
+    private RequestSpecification           specification;
+    private AcceptanceAuthentication       authentication;
+
+    private RestAuthenticationProvider() {
+        authenticationMother = AcceptanceAuthenticationMother.instance();
+    }
 
     /**
      * Cleans the currently defined authentication.
@@ -65,6 +70,18 @@ public class RestAuthenticationProvider {
     }
 
     /**
+     * Provides a {@link RequestSpecification} with an authentication corresponding to the specified authenticated user.
+     * This method enables calling a rest-service with a specific authenticated user to ensure the caller to call the
+     * service with the right authentication (e.g. for assumptions).
+     * <p>
+     * This method does <b>not</b> set the authentication to be used for all calls, but provides a new request
+     * specification with the authentication corresponding to the requested authentication type.
+     */
+    public RequestSpecification restWithAuth(String authenticatedUser) {
+        return authenticationMother.findByAuthenticatedUser(authenticatedUser).restWithAuth(cleanedSpecification());
+    }
+
+    /**
      * Provides a {@link RequestSpecification} with an authentication corresponding to the specified authentication
      * type. This method enables calling a rest-service with a specific authentication type to ensure the caller to call
      * the service with the right level of authentication (e.g. for assumptions).
@@ -73,7 +90,8 @@ public class RestAuthenticationProvider {
      * specification with the authentication corresponding to the requested authentication type.
      */
     public RequestSpecification restWithAuth(AuthenticationType authenticationType) {
-        return authenticationType.authentication().restWithAuth(cleanedSpecification());
+        return authenticationMother.findByAuthenticationKey(authenticationType.authenticationKey())
+                .restWithAuth(cleanedSpecification());
     }
 
     /**
@@ -99,35 +117,35 @@ public class RestAuthenticationProvider {
      * Defines an anonymous user, that is not authenticated.
      */
     public void withAnonymousUser() {
-        withAuthentication(AcceptanceAuthenticationMother.anonymousUser());
+        withAuthentication(authenticationMother.anonymousUser());
     }
 
     /**
      * Defines an authenticated user, with no special roles.
      */
     public void withAuthenticatedUser() {
-        withAuthentication(AcceptanceAuthenticationMother.authenticatedUser());
+        withAuthentication(authenticationMother.authenticatedUser());
     }
 
     /**
      * Defines another authenticated user, with no special roles.
      */
     public void withAnotherAuthenticatedUser() {
-        withAuthentication(AcceptanceAuthenticationMother.anotherAuthenticatedUser());
+        withAuthentication(authenticationMother.anotherAuthenticatedUser());
     }
 
     /**
      * Defines an ingredient manager.
      */
     public void withIngredientManager() {
-        withAuthentication(AcceptanceAuthenticationMother.ingredientManager());
+        withAuthentication(authenticationMother.ingredientManager());
     }
 
     /**
      * Defines an actuator manager.
      */
     public void withActuatorManager() {
-        withAuthentication(AcceptanceAuthenticationMother.actuatorManager());
+        withAuthentication(authenticationMother.actuatorManager());
     }
 
     private void withAuthentication(final AcceptanceAuthentication authentication) {

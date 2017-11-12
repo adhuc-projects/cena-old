@@ -69,6 +69,16 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipesListServiceClient.assumeRecipeNotInRecipesList(recipe);
     }
 
+    @Given("^the ingredient is in the recipe's ingredients list$")
+    public void givenIngredientInRecipeIngredientsList() {
+        recipeIngredientsListServiceClient.assumeIngredientInRecipeIngredientsList();
+    }
+
+    @Given("^the ingredient is not in the recipe's ingredients list$")
+    public void givenIngredientNotInRecipeIngredientsList() {
+        recipeIngredientsListServiceClient.assumeIngredientNotInRecipeIngredientsList();
+    }
+
     @When("^he adds the ingredient to the recipe$")
     public void addIngredientToRecipe() {
         recipeIngredientsListServiceClient.addIngredientToRecipe();

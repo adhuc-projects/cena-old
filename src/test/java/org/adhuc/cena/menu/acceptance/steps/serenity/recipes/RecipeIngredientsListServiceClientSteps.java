@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assume.assumeFalse;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 
+import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
@@ -50,10 +52,12 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Add ingredient {1} to recipe {0}")
     private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient) {
-        final String recipeIngredientsResourceUrl =
-                recipe.exists() ? recipe.getIngredientsListUrl() : determineUnknownRecipeIngredientsResourceUrl();
-        String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
-        rest().put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
+        addIngredientToRecipe(recipe, ingredient, rest());
+    }
+
+    @Step("Add ingredient {1} to recipe {0} as recipe author")
+    public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient) {
+        addIngredientToRecipe(recipe, ingredient, restWithAuth(recipe.author()));
     }
 
     @Step("Assert ingredient has been successfully added to recipe")
@@ -69,6 +73,29 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
     @Step("Assert ingredient addition to recipe result in an recipe not found error")
     public void assertRecipeNotFoundError() {
         assertException(NOT_FOUND, ExceptionCode.ENTITY_NOT_FOUND);
+    }
+
+    @Step("Assume ingredient can be found in recipe's ingredients list")
+    public void assumeIngredientInRecipeIngredientsList() {
+        assumeIngredientInRecipeIngredientsList(recipe(), ingredientListServiceClient.ingredient());
+    }
+
+    @Step("Assume ingredient cannot be found in recipe's ingredients list")
+    public void assumeIngredientNotInRecipeIngredientsList() {
+        assumeIngredientNotInRecipeIngredientsList(recipe(), ingredientListServiceClient.ingredient());
+    }
+
+    @Step("Assume ingredient {1} can be found in recipe {0}'s ingredients list")
+    private void assumeIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+        if (!isIngredientInRecipeIngredientsList(recipe, ingredient)) {
+            addIngredientToRecipeAsRecipeAuthor(recipe, ingredient);
+        }
+    }
+
+    @Step("Assume ingredient {1} cannot be found in recipe {0}'s ingredients list")
+    private void assumeIngredientNotInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+        // TODO remove ingredient from recipe's ingredient
+        assumeFalse(isIngredientInRecipeIngredientsList(recipe, ingredient));
     }
 
     @Step("Assert ingredient can be found in recipe's ingredients list")
@@ -93,6 +120,13 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     private boolean isIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
         return getIngredientFromRecipeIngredientsList(recipe, ingredient).isPresent();
+    }
+
+    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, RequestSpecification rest) {
+        final String recipeIngredientsResourceUrl =
+                recipe.exists() ? recipe.getIngredientsListUrl() : determineUnknownRecipeIngredientsResourceUrl();
+        String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
+        rest.put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
     }
 
     private Optional<IngredientValue> getIngredientFromRecipeIngredientsList(RecipeValue recipe,

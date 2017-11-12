@@ -45,6 +45,12 @@ public class RecipeMother {
             "Cut everything into dices, mix it, dress it";
     public static final RecipeAuthor TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR  = new RecipeAuthor("authenticated-user");
 
+    public static final RecipeId     TOMATO_CANTAL_PIE_ID                     = RecipeId.generate();
+    public static final String       TOMATO_CANTAL_PIE_NAME                   = "Tomato and cantal pie";
+    public static final String       TOMATO_CANTAL_PIE_CONTENT                =
+            "Spread the shortcrust in a pie plate, wrap it with mustard, tomato slices and cantal slices in this order, and bake it during 20 minutes";
+    public static final RecipeAuthor TOMATO_CANTAL_PIE_AUTHOR                 = new RecipeAuthor("authenticated-user");
+
     public static CreateRecipe createTomatoCucumberMozzaSalad() {
         return new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
                 TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
@@ -69,8 +75,13 @@ public class RecipeMother {
                 TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
     }
 
+    public static Recipe tomatoCantalPie() {
+        return new Recipe(TOMATO_CANTAL_PIE_ID, TOMATO_CANTAL_PIE_NAME, TOMATO_CANTAL_PIE_CONTENT,
+                TOMATO_CANTAL_PIE_AUTHOR);
+    }
+
     public static List<Recipe> allRecipes() {
-        return Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
+        return Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad(), tomatoCantalPie());
     }
 
 }

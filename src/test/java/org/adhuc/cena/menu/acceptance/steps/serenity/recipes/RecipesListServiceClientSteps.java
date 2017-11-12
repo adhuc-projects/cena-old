@@ -40,16 +40,6 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
     @Steps
     private RecipeCreationServiceClientSteps recipeCreationServiceClient;
 
-    @Step("Assert recipe is in recipes list")
-    public RecipeValue assertRecipeInRecipesList() {
-        return assertRecipeInRecipesList(recipe());
-    }
-
-    @Step("Assert recipe is not in recipes list")
-    public void assertRecipeNotInRecipesList() {
-        assertRecipeNotInRecipesList(recipe());
-    }
-
     @Step("Assume recipe {0} is in recipes list")
     public RecipeValue assumeRecipeInRecipesList(final RecipeValue recipe) {
         storeRecipeIfEmpty(recipe);
@@ -70,6 +60,16 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
     public void assumeRecipeNotInRecipesList(final RecipeValue recipe) {
         storeRecipeIfEmpty(recipe);
         assumeFalse(isRecipeInRecipesList(recipe));
+    }
+
+    @Step("Assert recipe is in recipes list")
+    public RecipeValue assertRecipeInRecipesList() {
+        return assertRecipeInRecipesList(recipe());
+    }
+
+    @Step("Assert recipe is not in recipes list")
+    public void assertRecipeNotInRecipesList() {
+        assertRecipeNotInRecipesList(recipe());
     }
 
     @Step("Assert recipe {0} is in recipes list")

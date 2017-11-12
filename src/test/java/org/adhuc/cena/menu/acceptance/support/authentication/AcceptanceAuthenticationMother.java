@@ -15,6 +15,12 @@
  */
 package org.adhuc.cena.menu.acceptance.support.authentication;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import io.restassured.specification.RequestSpecification;
 
 /**
@@ -27,49 +33,134 @@ import io.restassured.specification.RequestSpecification;
  */
 public final class AcceptanceAuthenticationMother {
 
-    protected static AcceptanceAuthentication anonymousUser() {
-        return new AcceptanceAuthentication() {
-            @Override
-            public RequestSpecification restWithAuth(RequestSpecification specification) {
-                return specification.auth().none();
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
-
-            @Override
-            public String getAuthenticatedUser() {
-                throw new UnsupportedOperationException("Not authenticated");
-            }
-        };
+    public static enum AcceptanceAuthenticationKey {
+        ANONYMOUS_USER,
+        AUTHENTICATED_USER,
+        ANOTHER_AUTHENTICATED_USER,
+        INGREDIENT_MANAGER,
+        ACTUATOR_MANAGER;
     }
 
-    protected static AcceptanceAuthentication authenticatedUser() {
-        return new BasicAuthentication("authenticated-user", "authenticated-user");
+    private static AcceptanceAuthenticationMother INSTANCE = new AcceptanceAuthenticationMother();
+
+    public static AcceptanceAuthenticationMother instance() {
+        return INSTANCE;
     }
 
-    protected static AcceptanceAuthentication anotherAuthenticatedUser() {
-        return new BasicAuthentication("another-user", "another-user");
+    private Map<AcceptanceAuthenticationKey, AcceptanceAuthentication> authentications;
+
+    private AcceptanceAuthenticationMother() {
+        authentications = new HashMap<>();
+        authentications.put(AcceptanceAuthenticationKey.ANONYMOUS_USER, new AnonymousAuthentication());
+        authentications.put(AcceptanceAuthenticationKey.AUTHENTICATED_USER,
+                new BasicAuthentication("authenticated-user", "authenticated-user"));
+        authentications.put(AcceptanceAuthenticationKey.ANOTHER_AUTHENTICATED_USER,
+                new BasicAuthentication("another-user", "another-user"));
+        authentications.put(AcceptanceAuthenticationKey.INGREDIENT_MANAGER,
+                new BasicAuthentication("ingredient-manager", "ingredient-manager"));
+        authentications.put(AcceptanceAuthenticationKey.ACTUATOR_MANAGER,
+                new BasicAuthentication("management", "management"));
     }
 
-    protected static AcceptanceAuthentication ingredientManager() {
-        return new BasicAuthentication("ingredient-manager", "ingredient-manager");
+    protected AcceptanceAuthentication findByAuthenticationKey(AcceptanceAuthenticationKey authenticationKey) {
+        return authentications.get(authenticationKey);
     }
 
-    protected static AcceptanceAuthentication actuatorManager() {
-        return new BasicAuthentication("management", "management");
+    protected AcceptanceAuthentication findByAuthenticatedUser(String authenticatedUser) {
+        Optional<AcceptanceAuthentication> authentication = authentications.values().stream()
+                .filter(a -> a.isAuthenticated() && a.getAuthenticatedUser().equals(authenticatedUser)).findFirst();
+        assertThat(authentication).isPresent();
+        return authentication.get();
     }
 
+    protected AcceptanceAuthentication anonymousUser() {
+        return authentications.get(AcceptanceAuthenticationKey.ANONYMOUS_USER);
+    }
+
+    protected AcceptanceAuthentication authenticatedUser() {
+        return authentications.get(AcceptanceAuthenticationKey.AUTHENTICATED_USER);
+    }
+
+    protected AcceptanceAuthentication anotherAuthenticatedUser() {
+        return authentications.get(AcceptanceAuthenticationKey.ANOTHER_AUTHENTICATED_USER);
+    }
+
+    protected AcceptanceAuthentication ingredientManager() {
+        return authentications.get(AcceptanceAuthenticationKey.INGREDIENT_MANAGER);
+    }
+
+    protected AcceptanceAuthentication actuatorManager() {
+        return authentications.get(AcceptanceAuthenticationKey.ACTUATOR_MANAGER);
+    }
+
+    /**
+     * Provides convenient methods to set the authentication process into a rest-assured {@link RequestSpecification}.
+     *
+     * @author Alexandre Carbenay
+     *
+     * @version 0.1.0
+     * @since 0.1.0
+     */
     protected static interface AcceptanceAuthentication {
+        /**
+         * Sets the authentication process into the specified request specification.
+         *
+         * @param specification
+         *            the request specification.
+         *
+         * @return the request specification.
+         */
         RequestSpecification restWithAuth(RequestSpecification specification);
 
+        /**
+         * Indicates whether the authentication process authenticates the user or not.
+         *
+         * @return {@code true} if the authentication process authenticates the user, {@code false} otherwise.
+         */
         boolean isAuthenticated();
 
+        /**
+         * Gets the authenticated user if {@link #isAuthenticated()} is {@code true}.
+         *
+         * @return the authenticated user, if any.
+         */
         String getAuthenticatedUser();
     }
 
+    /**
+     * An anonymous authentication process, responsible for ensuring that no authentication is set on a request
+     * specification.
+     *
+     * @author Alexandre Carbenay
+     *
+     * @version 0.1.0
+     * @since 0.1.0
+     */
+    private static class AnonymousAuthentication implements AcceptanceAuthentication {
+        @Override
+        public RequestSpecification restWithAuth(RequestSpecification specification) {
+            return specification.auth().none();
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return false;
+        }
+
+        @Override
+        public String getAuthenticatedUser() {
+            throw new UnsupportedOperationException("Not authenticated");
+        }
+    }
+
+    /**
+     * A basic authentication process.
+     *
+     * @author Alexandre Carbenay
+     *
+     * @version 0.1.0
+     * @since 0.1.0
+     */
     private static class BasicAuthentication implements AcceptanceAuthentication {
         private final String username;
         private final String password;

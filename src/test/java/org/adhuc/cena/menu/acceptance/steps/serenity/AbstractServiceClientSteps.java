@@ -52,6 +52,10 @@ public abstract class AbstractServiceClientSteps extends ScenarioSteps {
         return restAuthenticationProvider.rest();
     }
 
+    protected final RequestSpecification restWithAuth(String authenticatedUser) {
+        return restAuthenticationProvider.restWithAuth(authenticatedUser);
+    }
+
     protected final RequestSpecification restWithAuth(AuthenticationType authenticationType) {
         return restAuthenticationProvider.restWithAuth(authenticationType);
     }

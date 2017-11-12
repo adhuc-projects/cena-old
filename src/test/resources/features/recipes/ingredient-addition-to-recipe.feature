@@ -5,6 +5,7 @@ Scenario: Add an ingredient to a recipe successfully
   Given an authenticated user
     And an existing "Tomato, cucumber, olive and feta salad" recipe authored by this user
     And an existing "Cucumber" ingredient
+    And the ingredient is not in the recipe's ingredients list
   When he adds the ingredient to the recipe
   Then the ingredient is added to recipe
     And the ingredient can be found in the recipe's ingredients list
@@ -38,3 +39,12 @@ Scenario: Add an ingredient to a recipe as anonymous user
   When he adds the ingredient to the recipe
   Then an error notifies that user is not authenticated
     And the ingredient cannot be found in the recipe's ingredients list
+
+Scenario: Add an already added ingredient to a recipe successfully
+  Given an authenticated user
+    And an existing "Tomato and cantal pie" recipe authored by this user
+    And an existing "Mustard" ingredient
+    And the ingredient is in the recipe's ingredients list
+  When he adds the ingredient to the recipe
+  Then the ingredient is added to recipe
+    And the ingredient can be found in the recipe's ingredients list

@@ -48,6 +48,12 @@ public class IngredientMother {
     public static final IngredientId FETA_ID         = IngredientId.generate();
     public static final String       FETA_NAME       = "Feta";
 
+    public static final IngredientId MUSTARD_ID      = IngredientId.generate();
+    public static final String       MUSTARD_NAME    = "Mustard";
+
+    public static final IngredientId CANTAL_ID       = IngredientId.generate();
+    public static final String       CANTAL_NAME     = "Cantal";
+
     public static CreateIngredient createTomato() {
         return new CreateIngredient(TOMATO_ID, TOMATO_NAME);
     }
@@ -80,8 +86,16 @@ public class IngredientMother {
         return new Ingredient(FETA_ID, FETA_NAME);
     }
 
+    public static Ingredient mustard() {
+        return new Ingredient(MUSTARD_ID, MUSTARD_NAME);
+    }
+
+    public static Ingredient cantal() {
+        return new Ingredient(CANTAL_ID, CANTAL_NAME);
+    }
+
     public static List<Ingredient> allIngredients() {
-        return Arrays.asList(tomato(), cucumber(), potato(), mozzarella(), olive(), feta());
+        return Arrays.asList(tomato(), cucumber(), potato(), mozzarella(), olive(), feta(), mustard(), cantal());
     }
 
 }
