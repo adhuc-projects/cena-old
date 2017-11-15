@@ -31,8 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
-import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mozzarella;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mozzaInTomatoCucumberMozzaSalad;
 
 import java.util.Arrays;
 
@@ -58,9 +60,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
-import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResourceAssembler;
+import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 
 /**
@@ -74,8 +78,8 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = RecipeIngredientsController.class,
-        includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
+@WebMvcTest(controllers = RecipeIngredientsController.class, includeFilters = {
+        @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeIngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
@@ -103,20 +107,19 @@ public class RecipeIngredientsDocumentation extends ControllerTestSupport {
     @Test
     @DisplayName("generates recipe ingredients list example")
     public void recipeIngredientsListExample() throws Exception {
+        RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+        RecipeIngredient mozza = new RecipeIngredient(recipeId, mozzaInTomatoCucumberMozzaSalad(), mozzarella());
+        RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
         when(recipeIngredientAppServiceMock.getRecipeIngredients(anyObject()))
-                .thenReturn(Arrays.asList(tomato(), cucumber()));
+                .thenReturn(Arrays.asList(mozza, cucumber));
 
-        mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID)).andExpect(status().isOk())
+        mvc.perform(get(RECIPE_INGREDIENTS_API_URL, recipeId)).andExpect(status().isOk())
                 .andDo(documentationHandler.document(
                         pathParameters(parameterWithName("recipeId").description("The recipe identity")),
                         links(linkWithRel("self")
                                 .description("This <<resources-recipe-ingredients,recipe ingredients list>>")),
-                        responseFields(
-                                subsectionWithPath("_embedded.ingredients")
-                                        .description("An array of <<resources-ingredient, Ingredient resources>>"),
-                                subsectionWithPath("_embedded.mainIngredients").description(
-                                        "An array of ingredients identities corresponding to recipe's main ingredients."
-                                                + " Sublist of recipe's ingredients identities"),
+                        responseFields(subsectionWithPath("_embedded.data").description(
+                                "An array of <<resources-ingredient, Ingredient resources>> with additional information"),
                                 subsectionWithPath("_links").description(
                                         "<<resources-recipe-ingredients-links,Links>> to other resources"))));
     }

@@ -13,21 +13,24 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
+package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * An ingredient value on the client side.
+ * A recipe ingredient value on the client side.
  *
  * @author Alexandre Carbenay
  *
@@ -35,13 +38,20 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@ToString(exclude = { "id" }, includeFieldNames = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true, includeFieldNames = false)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IngredientValue {
-    private String       id;
-    private final String name;
+public class RecipeIngredientValue extends IngredientValue {
+
+    @JsonProperty("mainIngredient")
+    private final boolean isMainIngredient;
+
+    public RecipeIngredientValue(String name, boolean isMainIngredient) {
+        super(name);
+        this.isMainIngredient = isMainIngredient;
+    }
+
 }

@@ -18,7 +18,6 @@ package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeFalse;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Optional;
 
@@ -28,7 +27,6 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 
-import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
@@ -49,17 +47,22 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Add ingredient to recipe")
     public void addIngredientToRecipe() {
-        addIngredientToRecipe(recipe(), ingredientListServiceClient.ingredient());
+        addIngredientToRecipe(recipe(), ingredientListServiceClient.ingredient(), false);
     }
 
-    @Step("Add ingredient {1} to recipe {0}")
-    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient) {
-        addIngredientToRecipe(recipe, ingredient, rest());
+    @Step("Add main ingredient to recipe")
+    public void addMainIngredientToRecipe() {
+        addIngredientToRecipe(recipe(), ingredientListServiceClient.ingredient(), true);
+    }
+
+    @Step("Add ingredient {1} to recipe {0} (main = {2})")
+    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main) {
+        addIngredientToRecipe(recipe, ingredient, main, rest());
     }
 
     @Step("Add ingredient {1} to recipe {0} as recipe author")
     public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient) {
-        addIngredientToRecipe(recipe, ingredient, restWithAuth(recipe.author()));
+        addIngredientToRecipe(recipe, ingredient, false, restWithAuth(recipe.author()));
     }
 
     @Step("Assert ingredient has been successfully added to recipe")
@@ -122,49 +125,33 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Assert ingredient is a main ingredient in recipe")
     public void assertIngredientMainIngredientInRecipe() {
-        assertIngredientMainIngredientInRecipe(recipe(), ingredientListServiceClient.ingredient());
+        RecipeIngredientValue ingredient = ingredientListServiceClient.ingredient();
+        assertThat(ingredient.isMainIngredient()).isTrue();
     }
 
     @Step("Assert ingredient is not a main ingredient in recipe ")
     public void assertIngredientNotMainIngredientInRecipe() {
-        assertIngredientNotMainIngredientInRecipe(recipe(), ingredientListServiceClient.ingredient());
+        RecipeIngredientValue ingredient = ingredientListServiceClient.ingredient();
+        assertThat(ingredient.isMainIngredient()).isFalse();
     }
 
-    @Step("Assert ingredient {1} is a main ingredient in recipe {0}")
-    public void assertIngredientMainIngredientInRecipe(RecipeValue recipe, IngredientValue ingredient) {
-        assertThat(isIngredientInRecipeMainIngredientsList(recipe, ingredient)).isTrue();
-    }
-
-    @Step("Assert ingredient {1} is not a main ingredient in recipe {0}")
-    public void assertIngredientNotMainIngredientInRecipe(RecipeValue recipe, IngredientValue ingredient) {
-        assertThat(isIngredientInRecipeMainIngredientsList(recipe, ingredient)).isFalse();
-    }
-
-    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, RequestSpecification rest) {
+    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main,
+            RequestSpecification rest) {
         final String recipeIngredientsResourceUrl =
                 recipe.exists() ? recipe.getIngredientsListUrl() : determineUnknownRecipeIngredientsResourceUrl();
         String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
-        rest.put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
+        rest.param("main", main).put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
     }
 
     private boolean isIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
         return getIngredientFromRecipeIngredientsList(recipe, ingredient).isPresent();
     }
 
-    private Optional<IngredientValue> getIngredientFromRecipeIngredientsList(RecipeValue recipe,
+    private Optional<RecipeIngredientValue> getIngredientFromRecipeIngredientsList(RecipeValue recipe,
             IngredientValue ingredient) {
         String recipeIngredientsResourceUrl = recipe.getIngredientsListUrl();
         return ingredientListServiceClient.getIngredientFromIngredientsList(recipeIngredientsResourceUrl, ingredient,
-                "ingredients");
-    }
-
-    private boolean isIngredientInRecipeMainIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
-        JsonPath jsonPath =
-                rest().get(recipe.getIngredientsListUrl()).then().statusCode(OK.value()).extract().jsonPath();
-        return Optional
-                .ofNullable(jsonPath.param("id", ingredient.id())
-                        .getObject("_embedded.mainIngredients.find { ingredientId->ingredientId == id }", String.class))
-                .isPresent();
+                RecipeIngredientValue.class);
     }
 
     private String determineUnknownRecipeIngredientsResourceUrl() {

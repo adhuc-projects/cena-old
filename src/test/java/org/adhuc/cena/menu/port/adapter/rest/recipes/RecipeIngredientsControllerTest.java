@@ -26,11 +26,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MUSTARD_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
-import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mozzarella;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CANTAL_PIE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
-import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.assertJsonContainsIngredient;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addMustardToTomatoCantalPie;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mozzaInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.port.adapter.rest.recipes.RecipeJsonAssertion.assertJsonContainsRecipeIngredient;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,16 +60,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.recipe.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
-import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResourceAssembler;
+import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 
 /**
- *
+ * The {@link RecipeIngredientsController} test class.
  *
  * @author Alexandre Carbenay
  *
@@ -73,8 +82,8 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @Tag("integration")
 @Tag("restController")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = RecipeIngredientsController.class,
-        includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
+@WebMvcTest(controllers = RecipeIngredientsController.class, includeFilters = {
+        @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeIngredientResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @DisplayName("Recipe ingredients controller")
@@ -88,11 +97,13 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
     private MockMvc                    mvc;
 
     @MockBean
+    private RecipeAppService           recipeAppServiceMock;
+    @MockBean
     private RecipeIngredientAppService recipeIngredientAppServiceMock;
 
     @BeforeEach
     public void setUp() {
-        reset(recipeIngredientAppServiceMock);
+        reset(recipeAppServiceMock, recipeIngredientAppServiceMock);
     }
 
     @Nested
@@ -101,6 +112,7 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
 
         @BeforeEach
         public void setUp() {
+            when(recipeAppServiceMock.getRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).thenReturn(tomatoCucumberMozzaSalad());
             when(recipeIngredientAppServiceMock.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID))
                     .thenReturn(Collections.emptyList());
         }
@@ -115,22 +127,28 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         @DisplayName("getting list returns empty list")
         public void getRecipesEmptyListNoData() throws Exception {
             mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID))
-                    .andExpect(jsonPath("$._embedded.ingredients").isArray())
-                    .andExpect(jsonPath("$._embedded.ingredients").isEmpty())
-                    .andExpect(jsonPath("$._embedded.mainIngredients").isArray())
-                    .andExpect(jsonPath("$._embedded.mainIngredients").isEmpty());
+                    .andExpect(jsonPath("$._embedded.data").isArray())
+                    .andExpect(jsonPath("$._embedded.data").isEmpty());
         }
 
     }
 
     @Nested
-    @DisplayName("with 2 ingredients")
+    @DisplayName("with 1 main ingredient and 1 basic ingredient")
     class With2Ingredients {
+
+        private RecipeIngredient mozza;
+        private RecipeIngredient cucumber;
 
         @BeforeEach
         public void setUp() {
-            when(recipeIngredientAppServiceMock.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID))
-                    .thenReturn(Arrays.asList(tomato(), cucumber()));
+            RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+            mozza = new RecipeIngredient(recipeId, mozzaInTomatoCucumberMozzaSalad(), mozzarella());
+            cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
+
+            when(recipeAppServiceMock.getRecipe(recipeId)).thenReturn(tomatoCucumberMozzaSalad());
+            when(recipeIngredientAppServiceMock.getRecipeIngredients(recipeId))
+                    .thenReturn(Arrays.asList(mozza, cucumber));
         }
 
         @Test
@@ -144,13 +162,11 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         public void getRecipesContainsData() throws Exception {
             final ResultActions resultActions =
                     mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID))
-                            .andExpect(jsonPath("$._embedded.ingredients").isArray())
-                            .andExpect(jsonPath("$._embedded.ingredients").isNotEmpty())
-                            .andExpect(jsonPath("$._embedded.ingredients", hasSize(2)))
-                            .andExpect(jsonPath("$._embedded.mainIngredients").isArray())
-                            .andExpect(jsonPath("$._embedded.mainIngredients").isEmpty());
-            assertJsonContainsIngredient(resultActions, "$._embedded.ingredients[0]", tomato());
-            assertJsonContainsIngredient(resultActions, "$._embedded.ingredients[1]", cucumber());
+                            .andExpect(jsonPath("$._embedded.data").isArray())
+                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                            .andExpect(jsonPath("$._embedded.data", hasSize(2)));
+            assertJsonContainsRecipeIngredient(resultActions, "$._embedded.data[0]", mozza);
+            assertJsonContainsRecipeIngredient(resultActions, "$._embedded.data[1]", cucumber);
         }
 
         @Test
@@ -171,13 +187,27 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("adding ingredient to recipe calls the application service with command")
+    @DisplayName("adding ingredient to recipe as basic ingredient calls the application service with command")
     @WithMockUser(authorities = "USER")
-    public void addIngredientToRecipeCallsAppServiceWithCommand() throws Exception {
+    public void addBasicIngredientToRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<AddIngredientToRecipe> commandCaptor =
                 ArgumentCaptor.forClass(AddIngredientToRecipe.class);
 
-        mvc.perform(put(RECIPE_INGREDIENTS_ADDITION_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID)).andReturn();
+        mvc.perform(put(RECIPE_INGREDIENTS_ADDITION_API_URL, TOMATO_CANTAL_PIE_ID, MUSTARD_ID)).andReturn();
+
+        verify(recipeIngredientAppServiceMock).addIngredientToRecipe(commandCaptor.capture());
+        assertThat(commandCaptor.getValue()).isEqualTo(addMustardToTomatoCantalPie());
+    }
+
+    @Test
+    @DisplayName("adding ingredient to recipe as main ingredient calls the application service with command")
+    @WithMockUser(authorities = "USER")
+    public void addMainIngredientToRecipeCallsAppServiceWithCommand() throws Exception {
+        final ArgumentCaptor<AddIngredientToRecipe> commandCaptor =
+                ArgumentCaptor.forClass(AddIngredientToRecipe.class);
+
+        mvc.perform(put(RECIPE_INGREDIENTS_ADDITION_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID).param("main",
+                Boolean.TRUE.toString())).andReturn();
 
         verify(recipeIngredientAppServiceMock).addIngredientToRecipe(commandCaptor.capture());
         assertThat(commandCaptor.getValue()).isEqualTo(addCucumberToTomatoCucumberMozzaSalad());

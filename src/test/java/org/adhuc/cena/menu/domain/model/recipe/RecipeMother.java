@@ -16,9 +16,14 @@
 package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MOZZARELLA_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MUSTARD_ID;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 /**
  * An object mother to create testing domain elements related to {@link Recipe}s.
@@ -62,7 +67,19 @@ public class RecipeMother {
     }
 
     public static AddIngredientToRecipe addCucumberToTomatoCucumberMozzaSalad() {
-        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID);
+        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID, true);
+    }
+
+    public static RecipeIngredientId cucumberInTomatoCucumberMozzaSalad() {
+        return new RecipeIngredientId(CUCUMBER_ID, true);
+    }
+
+    public static AddIngredientToRecipe addMozzaToTomatoCucumberMozzaSalad() {
+        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, MOZZARELLA_ID, false);
+    }
+
+    public static RecipeIngredientId mozzaInTomatoCucumberMozzaSalad() {
+        return new RecipeIngredientId(MOZZARELLA_ID, false);
     }
 
     public static CreateRecipe createTomatoCucumberOliveFetaSalad() {
@@ -78,6 +95,14 @@ public class RecipeMother {
     public static Recipe tomatoCantalPie() {
         return new Recipe(TOMATO_CANTAL_PIE_ID, TOMATO_CANTAL_PIE_NAME, TOMATO_CANTAL_PIE_CONTENT,
                 TOMATO_CANTAL_PIE_AUTHOR);
+    }
+
+    public static AddIngredientToRecipe addMustardToTomatoCantalPie() {
+        return new AddIngredientToRecipe(TOMATO_CANTAL_PIE_ID, MUSTARD_ID, false);
+    }
+
+    public static RecipeIngredientId MustardInTomatoCantalPie() {
+        return new RecipeIngredientId(MUSTARD_ID, false);
     }
 
     public static List<Recipe> allRecipes() {

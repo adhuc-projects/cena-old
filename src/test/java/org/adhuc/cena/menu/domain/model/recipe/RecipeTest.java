@@ -18,6 +18,8 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MOZZARELLA_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
@@ -26,12 +28,14 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 /**
  * The {@link Recipe} test class.
@@ -90,7 +94,7 @@ public class RecipeTest {
 
     @Nested
     @DisplayName("tomato, cucumber and mozzarella salad")
-    class Tomato {
+    class TomatoCucumberMozza {
 
         private Recipe recipe = tomatoCucumberMozzaSalad();
 
@@ -111,7 +115,8 @@ public class RecipeTest {
         @Test
         @DisplayName("has an unmodifiable ingredients list")
         public void recipeWithUnmodifiableIngredients() {
-            assertThrows(UnsupportedOperationException.class, () -> recipe.ingredients().add(IngredientId.generate()));
+            assertThrows(UnsupportedOperationException.class,
+                    () -> recipe.ingredients().add(new RecipeIngredientId(IngredientId.generate(), false)));
         }
 
         @Test
@@ -155,9 +160,73 @@ public class RecipeTest {
         @Test
         @DisplayName("contains a new ingredient after adding it")
         public void addIngredientThenIngredientContained() {
-            IngredientId ingredientId = IngredientId.generate();
-            recipe.addIngredient(ingredientId);
-            assertThat(recipe.ingredients()).contains(ingredientId);
+            RecipeIngredientId ingredient = new RecipeIngredientId(IngredientId.generate(), false);
+            assertThat(recipe.addIngredient(ingredient)).isTrue();
+            assertThat(recipe.ingredients()).contains(ingredient);
+        }
+
+        @Test
+        @DisplayName("contains a new main ingredient after adding it")
+        public void addMainIngredientThenIngredientContained() {
+            RecipeIngredientId ingredient = new RecipeIngredientId(IngredientId.generate(), true);
+            assertThat(recipe.addIngredient(ingredient)).isTrue();
+            assertThat(recipe.ingredients()).contains(ingredient);
+        }
+
+        @Nested
+        @DisplayName("with tomato main ingredient")
+        class WithTomatoMainIngredient {
+
+            @BeforeEach
+            public void setUp() {
+                recipe.addIngredient(new RecipeIngredientId(TOMATO_ID, true));
+            }
+
+            @Test
+            @DisplayName("add tomato main ingredient twice does not change recipe")
+            public void addTomatoMainIngredientTwiceDoesNotChangeRecipe() {
+                RecipeIngredientId ingredient = new RecipeIngredientId(TOMATO_ID, true);
+                assertThat(recipe.addIngredient(ingredient)).isFalse();
+                assertThat(recipe.ingredients()).contains(ingredient);
+            }
+
+            @Test
+            @DisplayName("remove tomato from main ingredients")
+            public void removeTomatoFromMainIngredients() {
+                RecipeIngredientId ingredient = new RecipeIngredientId(TOMATO_ID, false);
+                assertThat(recipe.addIngredient(ingredient)).isTrue();
+                assertThat(recipe.ingredients()).contains(ingredient)
+                        .doesNotContain(new RecipeIngredientId(TOMATO_ID, true));
+            }
+
+        }
+
+        @Nested
+        @DisplayName("with mozzarella basic ingredient")
+        class WithMozzaBasicIngredient {
+
+            @BeforeEach
+            public void setUp() {
+                recipe.addIngredient(new RecipeIngredientId(MOZZARELLA_ID, false));
+            }
+
+            @Test
+            @DisplayName("add mozzarella basic ingredient twice does not change recipe")
+            public void addMozzaNotMainIngredientTwiceDoesNotChangeRecipe() {
+                RecipeIngredientId ingredient = new RecipeIngredientId(MOZZARELLA_ID, false);
+                assertThat(recipe.addIngredient(ingredient)).isFalse();
+                assertThat(recipe.ingredients()).contains(ingredient);
+            }
+
+            @Test
+            @DisplayName("add mozzarella to main ingredients")
+            public void addMozzaToMainIngredients() {
+                RecipeIngredientId ingredient = new RecipeIngredientId(MOZZARELLA_ID, true);
+                assertThat(recipe.addIngredient(ingredient)).isTrue();
+                assertThat(recipe.ingredients()).contains(ingredient)
+                        .doesNotContain(new RecipeIngredientId(MOZZARELLA_ID, false));
+            }
+
         }
 
     }

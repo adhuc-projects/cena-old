@@ -20,8 +20,12 @@ import static org.junit.Assume.assumeFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mozzarella;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addMozzaToTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mozzaInTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +34,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeIngredientAdditionService;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditionService;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryIngredientRepository;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
@@ -63,6 +69,7 @@ public class RecipeIngredientAppServiceImplTest {
 
         recipeRepository.save(tomatoCucumberMozzaSalad());
         ingredientRepository.save(cucumber());
+        ingredientRepository.save(mozzarella());
     }
 
     @Test
@@ -74,9 +81,22 @@ public class RecipeIngredientAppServiceImplTest {
     @Test
     @DisplayName("adds ingredient to recipe and retrieve the recipe ingredients containing added ingredient")
     public void addIngredientToRecipeRetrieveRecipeIngredientsContainingIngredient() {
-        assumeFalse(service.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID).contains(cucumber()));
+        RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+        RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
+        assumeFalse(service.getRecipeIngredients(recipeId).contains(cucumber));
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).contains(cucumber());
+        assertThat(service.getRecipeIngredients(recipeId)).contains(cucumber);
+    }
+
+    @Test
+    @DisplayName("retrieves all the ingredients after addition")
+    public void retrieveAllIngredientsAfterAddition() {
+        RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+        RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
+        RecipeIngredient mozza = new RecipeIngredient(recipeId, mozzaInTomatoCucumberMozzaSalad(), mozzarella());
+        service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
+        service.addIngredientToRecipe(addMozzaToTomatoCucumberMozzaSalad());
+        assertThat(service.getRecipeIngredients(recipeId)).containsExactlyInAnyOrder(cucumber, mozza);
     }
 
 }

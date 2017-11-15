@@ -15,12 +15,15 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
+import static java.util.Collections.unmodifiableCollection;
+
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -28,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.adhuc.cena.menu.domain.model.BasicEntity;
-import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,13 +55,13 @@ import lombok.experimental.Accessors;
 public class Recipe extends BasicEntity<RecipeId> {
 
     @NonNull
-    private String             name;
+    private String                        name;
     @NonNull
-    private String             content;
+    private String                        content;
     @NonNull
-    private final RecipeAuthor author;
+    private final RecipeAuthor            author;
     @JsonIgnore
-    private Set<IngredientId>  ingredients;
+    private final Set<RecipeIngredientId> ingredients;
 
     /**
      * Creates a recipe.
@@ -112,19 +115,26 @@ public class Recipe extends BasicEntity<RecipeId> {
      *
      * @return the ingredients.
      */
-    public Collection<IngredientId> ingredients() {
-        return Collections.unmodifiableCollection(ingredients);
+    public Collection<RecipeIngredientId> ingredients() {
+        return unmodifiableCollection(ingredients);
     }
 
     /**
      * Adds the ingredient corresponding to the specified identity to the ingredients list.
      *
-     * @param ingredientId
-     *            the ingredient identity.
+     * @param ingredient
+     *            the ingredient.
+     *
+     * @return {@code true} if the ingredients list changed, {@code false} otherwise.
      */
-    public void addIngredient(IngredientId ingredientId) {
-        notNull(ingredientId, "Cannot add invalid ingredient identity");
-        ingredients.add(ingredientId);
+    public boolean addIngredient(RecipeIngredientId ingredient) {
+        notNull(ingredient, "Cannot add invalid ingredient to recipe");
+        Optional<RecipeIngredientId> existingIngredient =
+                ingredients.stream().filter(i -> i.ingredientId().equals(ingredient.ingredientId())).findFirst();
+        boolean changedOrUnknown =
+                existingIngredient.isPresent() && !Objects.equals(existingIngredient.get(), ingredient)
+                        ? ingredients.remove(existingIngredient.get()) : true;
+        return changedOrUnknown ? ingredients.add(ingredient) : false;
     }
 
 }

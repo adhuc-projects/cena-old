@@ -19,10 +19,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import static org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientJsonAssertion.assertJsonContainsIngredient;
+
 import org.springframework.test.web.servlet.ResultActions;
 
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 
 /**
  * Provides assertions on recipes JSON representation.
@@ -36,8 +39,8 @@ public class RecipeJsonAssertion {
 
     private static final String RECIPES_API_URL = "/api/recipes";
 
-    public static void assertJsonContainsRecipe(final ResultActions resultActions, final String jsonPath,
-            final Recipe recipe) throws Exception {
+    public static void assertJsonContainsRecipe(ResultActions resultActions, String jsonPath, Recipe recipe)
+            throws Exception {
         resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
                 .andExpect(jsonPath(jsonPath + ".id", equalTo(recipe.id().toString())))
                 .andExpect(jsonPath(jsonPath + ".name").exists())
@@ -49,6 +52,13 @@ public class RecipeJsonAssertion {
                 .andExpect(jsonPath(jsonPath + ".ingredients").doesNotExist())
                 .andExpect(jsonPath(jsonPath + "._links.self.href").exists())
                 .andExpect(jsonPath(jsonPath + "._links.self.href", endsWith(buildRecipeSelfLink(recipe.id()))));
+    }
+
+    public static void assertJsonContainsRecipeIngredient(ResultActions resultActions, String jsonPath,
+            RecipeIngredient recipeIngredient) throws Exception {
+        assertJsonContainsIngredient(resultActions, jsonPath, recipeIngredient.ingredient(), false);
+        resultActions.andExpect(jsonPath(jsonPath + ".mainIngredient").exists())
+                .andExpect(jsonPath(jsonPath + ".mainIngredient", equalTo(recipeIngredient.id().isMainIngredient())));
     }
 
     public static String buildRecipeSelfLink(RecipeId recipeId) {

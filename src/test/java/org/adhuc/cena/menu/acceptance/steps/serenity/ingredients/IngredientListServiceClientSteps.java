@@ -49,7 +49,6 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     public IngredientValue assumeIngredientInIngredientsList(final IngredientValue ingredient) {
         storeIngredientIfEmpty(ingredient);
         Optional<IngredientValue> foundIngredient = getIngredientFromIngredientsList(ingredient);
-        foundIngredient.ifPresent(i -> storeIngredient(i));
         return foundIngredient.orElseGet(() -> createIngredientAndAssumeIngredientInIngredientsList(ingredient));
     }
 
@@ -91,16 +90,22 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     }
 
     public Optional<IngredientValue> getIngredientFromIngredientsList(String url, IngredientValue ingredient) {
-        return getIngredientFromIngredientsList(url, ingredient, "data");
+        return getIngredientFromIngredientsList(url, ingredient, "data", IngredientValue.class);
     }
 
-    public Optional<IngredientValue> getIngredientFromIngredientsList(String url, IngredientValue ingredient,
-            String embeddedRelation) {
+    public <I extends IngredientValue> Optional<I> getIngredientFromIngredientsList(String url,
+            IngredientValue ingredient, Class<I> clazz) {
+        return getIngredientFromIngredientsList(url, ingredient, "data", clazz);
+    }
+
+    public <I extends IngredientValue> Optional<I> getIngredientFromIngredientsList(String url,
+            IngredientValue ingredient, String embeddedRelation, Class<I> clazz) {
         String ingredientName = ingredient.name();
         JsonPath jsonPath = rest().get(url).then().statusCode(OK.value()).extract().jsonPath();
-        return Optional.ofNullable(jsonPath.param("name", ingredientName).getObject(
-                "_embedded." + embeddedRelation + ".find { ingredient->ingredient.name == name }",
-                IngredientValue.class));
+        Optional<I> foundIngredient = Optional.ofNullable(jsonPath.param("name", ingredientName)
+                .getObject("_embedded." + embeddedRelation + ".find { ingredient->ingredient.name == name }", clazz));
+        foundIngredient.ifPresent(i -> storeIngredient(i));
+        return foundIngredient;
     }
 
 }

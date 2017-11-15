@@ -13,7 +13,10 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.recipe;
+package org.adhuc.cena.menu.domain.model.recipe.ingredient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
@@ -22,7 +25,8 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 
 /**
- * An ingredient addition to recipe command.
+ * A relation between a recipe and an ingredient, that indicates whether the ingredient is a main ingredient of the
+ * recipe.
  *
  * @author Alexandre Carbenay
  *
@@ -31,11 +35,12 @@ import lombok.experimental.Accessors;
  */
 @Value
 @Accessors(fluent = true)
-public class AddIngredientToRecipe {
+public class RecipeIngredientId {
 
     @NonNull
-    private final RecipeId     recipeId;
-    @NonNull
+    @JsonIgnore
     private final IngredientId ingredientId;
+    @JsonProperty("mainIngredient")
+    private final boolean      isMainIngredient;
 
 }

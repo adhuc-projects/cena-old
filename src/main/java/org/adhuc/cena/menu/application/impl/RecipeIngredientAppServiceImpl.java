@@ -18,6 +18,9 @@ package org.adhuc.cena.menu.application.impl;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,12 +28,14 @@ import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
-import org.adhuc.cena.menu.domain.model.recipe.AddIngredientToRecipe;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeIngredientAdditionService;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditionService;
 
 /**
  * A {@link RecipeIngredientAppService} implementation.
@@ -56,9 +61,15 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     }
 
     @Override
-    public List<Ingredient> getRecipeIngredients(RecipeId recipeId) {
+    public List<RecipeIngredient> getRecipeIngredients(RecipeId recipeId) {
         Recipe recipe = recipeRepository.findOneNotNull(recipeId);
-        return ingredientRepository.findAll(recipe.ingredients());
+        List<IngredientId> ingredientIds =
+                recipe.ingredients().stream().map(i -> i.ingredientId()).collect(Collectors.toList());
+        Map<IngredientId, Ingredient> ingredients = ingredientRepository.findAll(ingredientIds).stream()
+                .collect(Collectors.toMap(Ingredient::id, Function.identity()));
+        return recipe.ingredients().stream()
+                .map(i -> new RecipeIngredient(recipe.id(), i, ingredients.get(i.ingredientId())))
+                .collect(Collectors.toList());
     }
 
     @Override

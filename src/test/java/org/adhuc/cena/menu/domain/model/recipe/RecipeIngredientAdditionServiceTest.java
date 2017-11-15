@@ -17,12 +17,17 @@ package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mustard;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.MustardInTomatoCantalPie;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CANTAL_PIE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addMustardToTomatoCantalPie;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditionService;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryIngredientRepository;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
@@ -104,31 +110,35 @@ public class RecipeIngredientAdditionServiceTest {
             @DisplayName("adds correctly ingredient to recipe")
             public void addIngredientToRecipe() {
                 service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-                assertThat(recipeRepository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID).ingredients())
-                        .contains(CUCUMBER_ID);
+
+                Recipe recipe = recipeRepository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+                assertThat(recipe.ingredients()).contains(cucumberInTomatoCucumberMozzaSalad());
             }
 
-            @Nested
-            @DisplayName("already linked to recipe")
-            public class AlreadyLinked {
+        }
 
-                @BeforeEach
-                public void setUp() {
-                    recipe.addIngredient(CUCUMBER_ID);
-                }
+    }
 
-                @Test
-                @DisplayName("adds correctly ingredient to recipe")
-                public void addIngredientToRecipe() {
-                    assumeTrue(recipeRepository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID).ingredients()
-                            .contains(CUCUMBER_ID));
-                    service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-                    assertThat(recipeRepository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID).ingredients())
-                            .contains(CUCUMBER_ID);
-                }
+    @Nested
+    @DisplayName("with tomato and cantal pie recipe and mustard ingredient")
+    public class WithTomatoCantalPie {
 
-            }
+        private Recipe recipe;
 
+        @BeforeEach
+        public void setUp() {
+            recipe = tomatoCantalPie();
+            recipeRepository.save(recipe);
+            ingredientRepository.save(mustard());
+        }
+
+        @Test
+        @DisplayName("adds correctly ingredient to recipe")
+        public void addIngredientToRecipe() {
+            service.addIngredientToRecipe(addMustardToTomatoCantalPie());
+
+            Recipe recipe = recipeRepository.findOneNotNull(TOMATO_CANTAL_PIE_ID);
+            assertThat(recipe.ingredients()).contains(MustardInTomatoCantalPie());
         }
 
     }

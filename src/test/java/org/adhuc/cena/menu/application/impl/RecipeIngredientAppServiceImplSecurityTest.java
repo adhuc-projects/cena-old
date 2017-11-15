@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 
 /**
  * The {@link RecipeIngredientAppServiceImpl} security tests.
@@ -87,8 +90,11 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     @WithMockUser(username = "authenticated-user", roles = "USER")
     @DisplayName("grants access to ingredient to recipe addition to authenticated user that is not the recipe author")
     public void addIngredientToRecipeAsRecipeAuthor() {
+        RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+        RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
+
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipeIngredients(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).contains(cucumber());
+        assertThat(service.getRecipeIngredients(recipeId)).contains(cucumber);
     }
 
 }

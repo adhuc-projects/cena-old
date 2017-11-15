@@ -37,26 +37,26 @@ public abstract class AbstractIngredientStorageSteps extends AbstractServiceClie
 
     private static final String INGREDIENT_SESSION_KEY = "ingredient";
 
-    public final IngredientValue storeIngredient(final IngredientValue ingredient) {
+    public final <I extends IngredientValue> I storeIngredient(I ingredient) {
         Serenity.setSessionVariable(INGREDIENT_SESSION_KEY).to(ingredient);
         return ingredient;
     }
 
-    protected final IngredientValue storeIngredientIfEmpty(final IngredientValue ingredient) {
-        Optional<IngredientValue> optional = optionalIngredient();
+    protected final <I extends IngredientValue> I storeIngredientIfEmpty(I ingredient) {
+        Optional<I> optional = optionalIngredient();
         if (!optional.isPresent()) {
             return storeIngredient(ingredient);
         }
         return optional.get();
     }
 
-    public final IngredientValue ingredient() {
-        Optional<IngredientValue> recipe = optionalIngredient();
+    public final <I extends IngredientValue> I ingredient() {
+        Optional<I> recipe = optionalIngredient();
         assertThat(recipe).isPresent();
         return recipe.get();
     }
 
-    protected final Optional<IngredientValue> optionalIngredient() {
+    protected final <I extends IngredientValue> Optional<I> optionalIngredient() {
         return Optional.ofNullable(Serenity.sessionVariableCalled(INGREDIENT_SESSION_KEY));
     }
 

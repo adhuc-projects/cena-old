@@ -18,7 +18,6 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 
 import javax.annotation.PostConstruct;
 
@@ -28,15 +27,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-import org.adhuc.cena.menu.domain.model.recipe.AddIngredientToRecipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
-import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResource;
-import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientResourceAssembler;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
 /**
@@ -51,19 +49,16 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 @RequestMapping(path = "/api/recipes/{recipeId}/ingredients", produces = HAL_JSON_VALUE)
 public class RecipeIngredientsController {
 
-    public static final String          RECIPE_INGREDIENTS_RELATIONSHIP      = "ingredients";
-    public static final String          RECIPE_MAIN_INGREDIENTS_RELATIONSHIP = "mainIngredients";
+    private RecipeIngredientAppService        recipeIngredientAppService;
+    private RecipeIngredientResourceAssembler recipeIngredientResourceAssembler;
 
-    private RecipeIngredientAppService  recipeIngredientAppService;
-    private IngredientResourceAssembler ingredientResourceAssembler;
-
-    private Method                      listMethod;
+    private Method                            listMethod;
 
     @Autowired
     public RecipeIngredientsController(RecipeIngredientAppService recipeIngredientAppService,
-            IngredientResourceAssembler ingredientResourceAssembler) {
+            RecipeIngredientResourceAssembler recipeIngredientResourceAssembler) {
         this.recipeIngredientAppService = recipeIngredientAppService;
-        this.ingredientResourceAssembler = ingredientResourceAssembler;
+        this.recipeIngredientResourceAssembler = recipeIngredientResourceAssembler;
     }
 
     /**
@@ -76,18 +71,18 @@ public class RecipeIngredientsController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListResource<IngredientResource> getRecipeIngredients(@PathVariable RecipeId recipeId) {
-        return new ListResource<>(
-                ingredientResourceAssembler.toResources(recipeIngredientAppService.getRecipeIngredients(recipeId)),
-                RECIPE_INGREDIENTS_RELATIONSHIP)
-                        .embedResource(RECIPE_MAIN_INGREDIENTS_RELATIONSHIP, Collections.emptyList())
-                        .withSelfRef(listMethod, recipeId);
+    public ListResource<RecipeIngredientResource> getRecipeIngredients(@PathVariable RecipeId recipeId) {
+        return new ListResource<>(recipeIngredientResourceAssembler
+                .toResources(recipeIngredientAppService.getRecipeIngredients(recipeId))).withSelfRef(listMethod,
+                        recipeId);
     }
 
     @PutMapping("/{ingredientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addIngredientToRecipe(@PathVariable RecipeId recipeId, @PathVariable IngredientId ingredientId) {
-        recipeIngredientAppService.addIngredientToRecipe(new AddIngredientToRecipe(recipeId, ingredientId));
+    public void addIngredientToRecipe(@PathVariable RecipeId recipeId, @PathVariable IngredientId ingredientId,
+            @RequestParam(name = "main", defaultValue = "false") boolean mainIngredient) {
+        recipeIngredientAppService
+                .addIngredientToRecipe(new AddIngredientToRecipe(recipeId, ingredientId, mainIngredient));
     }
 
 }

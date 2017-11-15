@@ -13,35 +13,28 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
+package org.adhuc.cena.menu.domain.model.recipe.ingredient;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.Value;
 import lombok.experimental.Accessors;
 
 /**
- * An ingredient value on the client side.
+ * An ingredient wrapper that contains relation to a recipe.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@ToString(exclude = { "id" }, includeFieldNames = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-@RequiredArgsConstructor
+@Value
 @Accessors(fluent = true)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class IngredientValue {
-    private String       id;
-    private final String name;
+public class RecipeIngredient {
+
+    private RecipeId           recipeId;
+    private RecipeIngredientId id;
+    private Ingredient         ingredient;
+
 }

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.recipe;
+package org.adhuc.cena.menu.domain.model.recipe.ingredient;
 
 import static org.springframework.util.Assert.notNull;
 
@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
+import org.adhuc.cena.menu.domain.model.recipe.Recipe;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 /**
  * A domain service responsible for adding ingredients to recipes.
@@ -54,7 +56,7 @@ public class RecipeIngredientAdditionService {
         notNull(command, "Cannot add ingredient to recipe from invalid command");
         Recipe recipe = recipeRepository.findOneNotNull(command.recipeId());
         Ingredient ingredient = ingredientRepository.findOneNotNull(command.ingredientId());
-        recipe.addIngredient(ingredient.id());
+        recipe.addIngredient(new RecipeIngredientId(ingredient.id(), command.isMainIngredient()));
         recipeRepository.save(recipe);
     }
 

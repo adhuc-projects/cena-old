@@ -84,6 +84,11 @@ public class RecipeIngredientAdditionStepDefinitions {
         recipeIngredientsListServiceClient.addIngredientToRecipe();
     }
 
+    @When("^he adds the ingredient to the recipe as a main ingredient$")
+    public void addMainIngredientToRecipe() {
+        recipeIngredientsListServiceClient.addMainIngredientToRecipe();
+    }
+
     @Then("^the ingredient is added to recipe$")
     public void ingredientAddedToRecipe() {
         recipeIngredientsListServiceClient.assertIngredientAdditionIsSuccessful();

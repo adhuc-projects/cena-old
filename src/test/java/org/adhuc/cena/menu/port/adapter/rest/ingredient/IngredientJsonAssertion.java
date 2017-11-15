@@ -38,12 +38,19 @@ public class IngredientJsonAssertion {
 
     public static void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
             final Ingredient ingredient) throws Exception {
+        assertJsonContainsIngredient(resultActions, jsonPath, ingredient, true);
+    }
+
+    public static void assertJsonContainsIngredient(final ResultActions resultActions, final String jsonPath,
+            final Ingredient ingredient, boolean assertOnLinks) throws Exception {
         resultActions.andExpect(jsonPath(jsonPath + ".id").exists())
                 .andExpect(jsonPath(jsonPath + ".id", equalTo(ingredient.id().toString())))
                 .andExpect(jsonPath(jsonPath + ".name").exists())
-                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())))
-                .andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
-                        jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
+                .andExpect(jsonPath(jsonPath + ".name", equalTo(ingredient.name())));
+        if (assertOnLinks) {
+            resultActions.andExpect(jsonPath(jsonPath + "._links.self.href").exists()).andExpect(
+                    jsonPath(jsonPath + "._links.self.href", endsWith(buildIngredientSelfLink(ingredient.id()))));
+        }
     }
 
     public static String buildIngredientSelfLink(IngredientId ingredientId) {
