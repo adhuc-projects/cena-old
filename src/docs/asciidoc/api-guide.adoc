@@ -291,6 +291,10 @@ A `PUT` request is used to add a link between an ingredient and a recipe.
 
 include::{snippets}/recipe-ingredients-add-example/path-parameters.adoc[]
 
+==== Request Parameters
+
+include::{snippets}/recipe-ingredients-add-example/request-parameters.adoc[]
+
 ==== Example request
 
 include::{snippets}/recipe-ingredients-add-example/curl-request.adoc[]

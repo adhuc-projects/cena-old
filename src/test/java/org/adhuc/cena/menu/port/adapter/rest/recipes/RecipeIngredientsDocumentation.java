@@ -27,6 +27,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
@@ -130,11 +131,12 @@ public class RecipeIngredientsDocumentation extends ControllerTestSupport {
     public void recipeIngredientsAddExample() throws Exception {
         doNothing().when(recipeIngredientAppServiceMock).addIngredientToRecipe(anyObject());
 
-        mvc.perform(put(RECIPE_INGREDIENTS_ADDITION_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID))
-                .andExpect(status().isNoContent())
-                .andDo(documentationHandler
-                        .document(pathParameters(parameterWithName("recipeId").description("The recipe identity"),
-                                parameterWithName("ingredientId").description("The ingredient identity"))));
+        mvc.perform(put(RECIPE_INGREDIENTS_ADDITION_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID).param("main",
+                "true")).andExpect(status().isNoContent())
+                .andDo(documentationHandler.document(
+                        pathParameters(parameterWithName("recipeId").description("The recipe identity"),
+                                parameterWithName("ingredientId").description("The ingredient identity")),
+                        requestParameters(parameterWithName("main").description("Main ingredient of the recipe"))));
     }
 
 }
