@@ -107,20 +107,6 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         reset(recipeAppServiceMock, recipeIngredientAppServiceMock);
     }
 
-    @Test
-    @DisplayName("contains self link to list")
-    public void getRecipeIngredientsHasSelfLink() throws Exception {
-        assertSelfLinkEqualToRequestUrl(
-                mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())));
-    }
-
-    @Test
-    @DisplayName("contains link to recipe detail")
-    public void getRecipeIngredientsHasRecipeLink() throws Exception {
-        mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())).andExpect(jsonPath(
-                "$._links.recipe.href", endsWith("/api/recipes/" + TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())));
-    }
-
     @Nested
     @DisplayName("with empty ingredients list")
     class WithEmptyIngredientsList {
@@ -189,6 +175,13 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
         public void getRecipesHasSelfLink() throws Exception {
             assertSelfLinkEqualToRequestUrl(
                     mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID)));
+        }
+
+        @Test
+        @DisplayName("contains link to recipe detail")
+        public void getRecipeIngredientsHasRecipeLink() throws Exception {
+            mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())).andExpect(jsonPath(
+                    "$._links.recipe.href", endsWith("/api/recipes/" + TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())));
         }
 
     }
