@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -104,6 +105,20 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
     @BeforeEach
     public void setUp() {
         reset(recipeAppServiceMock, recipeIngredientAppServiceMock);
+    }
+
+    @Test
+    @DisplayName("contains self link to list")
+    public void getRecipeIngredientsHasSelfLink() throws Exception {
+        assertSelfLinkEqualToRequestUrl(
+                mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())));
+    }
+
+    @Test
+    @DisplayName("contains link to recipe detail")
+    public void getRecipeIngredientsHasRecipeLink() throws Exception {
+        mvc.perform(get(RECIPE_INGREDIENTS_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())).andExpect(jsonPath(
+                "$._links.recipe.href", endsWith("/api/recipes/" + TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString())));
     }
 
     @Nested

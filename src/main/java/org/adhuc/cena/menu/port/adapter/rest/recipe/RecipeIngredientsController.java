@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 import java.lang.reflect.Method;
 
@@ -72,9 +73,11 @@ public class RecipeIngredientsController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ListResource<RecipeIngredientResource> getRecipeIngredients(@PathVariable RecipeId recipeId) {
-        return new ListResource<>(recipeIngredientResourceAssembler
+        ListResource<RecipeIngredientResource> resource = new ListResource<>(recipeIngredientResourceAssembler
                 .toResources(recipeIngredientAppService.getRecipeIngredients(recipeId))).withSelfRef(listMethod,
                         recipeId);
+        resource.add(linkTo(RecipeController.class, recipeId.toString()).withRel("recipe"));
+        return resource;
     }
 
     @PutMapping("/{ingredientId}")

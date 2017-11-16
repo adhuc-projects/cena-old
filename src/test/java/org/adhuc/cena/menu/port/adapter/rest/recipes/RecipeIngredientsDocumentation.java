@@ -118,7 +118,8 @@ public class RecipeIngredientsDocumentation extends ControllerTestSupport {
                 .andDo(documentationHandler.document(
                         pathParameters(parameterWithName("recipeId").description("The recipe identity")),
                         links(linkWithRel("self")
-                                .description("This <<resources-recipe-ingredients,recipe ingredients list>>")),
+                                .description("This <<resources-recipe-ingredients,recipe ingredients list>>"),
+                                linkWithRel("recipe").description("The <<resources-recipe,recipe detail>>")),
                         responseFields(subsectionWithPath("_embedded.data").description(
                                 "An array of <<resources-ingredient, Ingredient resources>> with additional information"),
                                 subsectionWithPath("_links").description(
