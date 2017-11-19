@@ -31,6 +31,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.adhuc.cena.menu.domain.model.BasicEntity;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.IngredientNotLinkedToRecipeException;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 import lombok.Data;
@@ -117,6 +119,26 @@ public class Recipe extends BasicEntity<RecipeId> {
      */
     public Collection<RecipeIngredientId> ingredients() {
         return unmodifiableCollection(ingredients);
+    }
+
+    /**
+     * Gets the ingredient corresponding to the specified identity.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     *
+     * @return the ingredient.
+     *
+     * @throws IngredientNotLinkedToRecipeException
+     *             if the ingredient is not linked to the recipe.
+     */
+    public RecipeIngredientId ingredient(IngredientId ingredientId) {
+        Optional<RecipeIngredientId> ingredient =
+                ingredients.stream().filter(i -> i.ingredientId().equals(ingredientId)).findFirst();
+        if (ingredient.isPresent()) {
+            return ingredient.get();
+        }
+        throw new IngredientNotLinkedToRecipeException(id(), ingredientId);
     }
 
     /**

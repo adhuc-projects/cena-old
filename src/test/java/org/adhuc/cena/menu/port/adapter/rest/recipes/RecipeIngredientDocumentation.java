@@ -16,24 +16,23 @@
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
-import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mozzarella;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mozzaInTomatoCucumberMozzaSalad;
-
-import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +48,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -60,11 +60,12 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
+import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientDocumentation;
+import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientController;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
-import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 
 /**
- * The recipe ingredients related rest-services documentation.
+ * The recipe ingredient related rest-services documentation.
  *
  * @author Alexandre Carbenay
  *
@@ -74,16 +75,17 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = RecipeIngredientsController.class, includeFilters = {
+@WebMvcTest(controllers = RecipeIngredientController.class, includeFilters = {
         @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeIngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
-@DisplayName("Recipe ingredients resource documentation")
-public class RecipeIngredientsDocumentation extends ControllerTestSupport {
+@DisplayName("Recipe ingredient resource documentation")
+public class RecipeIngredientDocumentation extends ControllerTestSupport {
 
-    private static final String            RECIPE_INGREDIENTS_API_URL = "/api/recipes/{recipeId}/ingredients";
+    private static final String            RECIPE_INGREDIENT_API_URL =
+            "/api/recipes/{recipeId}/ingredients/{ingredientId}";
 
     @Autowired
     private MockMvc                        mvc;
@@ -99,25 +101,38 @@ public class RecipeIngredientsDocumentation extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("generates recipe ingredients list example")
-    public void recipeIngredientsListExample() throws Exception {
+    @DisplayName("generates recipe ingredient detail example")
+    public void recipeIngredientDetailExample() throws Exception {
         RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
-        RecipeIngredient mozza = new RecipeIngredient(recipeId, mozzaInTomatoCucumberMozzaSalad(), mozzarella());
         RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
-        when(recipeIngredientAppServiceMock.getRecipeIngredients(anyObject()))
-                .thenReturn(Arrays.asList(mozza, cucumber));
+        when(recipeIngredientAppServiceMock.getRecipeIngredient(anyObject(), anyObject())).thenReturn(cucumber);
 
-        mvc.perform(get(RECIPE_INGREDIENTS_API_URL, recipeId)).andExpect(status().isOk())
+        mvc.perform(get(RECIPE_INGREDIENT_API_URL, recipeId, CUCUMBER_ID)).andExpect(status().isOk())
                 .andDo(documentationHandler.document(
-                        pathParameters(parameterWithName("recipeId").description("The recipe identity")),
+                        pathParameters(parameterWithName("recipeId").description("The recipe identity"),
+                                parameterWithName("ingredientId").description("The ingredient identity")),
                         links(linkWithRel("self")
-                                .description("This <<resources-recipe-ingredients,recipe ingredients list>>"),
-                                linkWithRel("recipe").description("The <<resources-recipe,recipe detail>>")),
-                        responseFields(
-                                subsectionWithPath("_embedded.data").description(
-                                        "An array of <<resources-recipe-ingredient, Recipe ingredient resources>>"),
-                                subsectionWithPath("_links").description(
-                                        "<<resources-recipe-ingredients-links,Links>> to other resources"))));
+                                .description("This <<resources-recipe-ingredient,recipe ingredient detail>>"),
+                                linkWithRel("list")
+                                        .description("The <<resources-recipe-ingredients,recipe ingredients list>>")),
+                        IngredientDocumentation
+                                .ingredientResponseFields(
+                                        "<<resources-recipe-ingredient-links,Links>> to other resources")
+                                .and(fieldWithPath("mainIngredient").description("Main ingredient of the recipe"))));
+    }
+
+    @Test
+    @DisplayName("generates recipe ingredient addition example")
+    @WithMockUser(authorities = "USER")
+    public void recipeIngredientsAddExample() throws Exception {
+        doNothing().when(recipeIngredientAppServiceMock).addIngredientToRecipe(anyObject());
+
+        mvc.perform(put(RECIPE_INGREDIENT_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID).param("main", "true"))
+                .andExpect(status().isNoContent())
+                .andDo(documentationHandler.document(
+                        pathParameters(parameterWithName("recipeId").description("The recipe identity"),
+                                parameterWithName("ingredientId").description("The ingredient identity")),
+                        requestParameters(parameterWithName("main").description("Main ingredient of the recipe"))));
     }
 
 }

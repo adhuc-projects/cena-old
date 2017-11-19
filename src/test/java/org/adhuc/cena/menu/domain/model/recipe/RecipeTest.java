@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.IngredientNotLinkedToRecipeException;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 /**
@@ -120,6 +121,15 @@ public class RecipeTest {
         }
 
         @Test
+        @DisplayName("throws IngredientNotLinkedToRecipeException when getting ingredient")
+        public void getIngredientNotLinked() {
+            IngredientNotLinkedToRecipeException exception =
+                    assertThrows(IngredientNotLinkedToRecipeException.class, () -> recipe.ingredient(TOMATO_ID));
+            assertThat(exception.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+            assertThat(exception.ingredientId()).isEqualTo(TOMATO_ID);
+        }
+
+        @Test
         @DisplayName("cannot have its name changed with null value")
         public void changeNameWithNullValue() {
             assertThrows(IllegalArgumentException.class, () -> recipe.name(null));
@@ -197,6 +207,12 @@ public class RecipeTest {
                 assertThat(recipe.addIngredient(ingredient)).isTrue();
                 assertThat(recipe.ingredients()).contains(ingredient)
                         .doesNotContain(new RecipeIngredientId(TOMATO_ID, true));
+            }
+
+            @Test
+            @DisplayName("finds ingredient from identity")
+            public void getIngredientLinkedToRecipe() {
+                assertThat(recipe.ingredient(TOMATO_ID)).isEqualTo(new RecipeIngredientId(TOMATO_ID, true));
             }
 
         }

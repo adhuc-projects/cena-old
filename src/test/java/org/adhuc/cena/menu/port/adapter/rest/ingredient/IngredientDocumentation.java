@@ -44,6 +44,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -97,9 +98,13 @@ public class IngredientDocumentation {
                 .andDo(documentationHandler.document(
                         pathParameters(parameterWithName("id").description("The ingredient identity")),
                         links(linkWithRel("self").description("This <<resources-ingredient,ingredient>>")),
-                        responseFields(fieldWithPath("id").description("The ingredient identity"),
-                                fieldWithPath("name").description("The ingredient name"), subsectionWithPath("_links")
-                                        .description("<<resources-ingredient-links,Links>> to other resources"))));
+                        ingredientResponseFields("<<resources-ingredient-links,Links>> to other resources")));
+    }
+
+    public static ResponseFieldsSnippet ingredientResponseFields(String linksDescription) {
+        return responseFields(fieldWithPath("id").description("The ingredient identity"),
+                fieldWithPath("name").description("The ingredient name"),
+                subsectionWithPath("_links").description(linksDescription));
     }
 
 }

@@ -36,6 +36,7 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditionService;
+import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 /**
  * A {@link RecipeIngredientAppService} implementation.
@@ -70,6 +71,14 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
         return recipe.ingredients().stream()
                 .map(i -> new RecipeIngredient(recipe.id(), i, ingredients.get(i.ingredientId())))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public RecipeIngredient getRecipeIngredient(RecipeId recipeId, IngredientId ingredientId) {
+        Recipe recipe = recipeRepository.findOneNotNull(recipeId);
+        Ingredient ingredient = ingredientRepository.findOneNotNull(ingredientId);
+        RecipeIngredientId recipeIngredientId = recipe.ingredient(ingredientId);
+        return new RecipeIngredient(recipeId, recipeIngredientId, ingredient);
     }
 
     @Override

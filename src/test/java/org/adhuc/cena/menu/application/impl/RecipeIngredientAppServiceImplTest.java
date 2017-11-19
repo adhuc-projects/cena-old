@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mozzarella;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
@@ -33,6 +34,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
@@ -73,6 +76,20 @@ public class RecipeIngredientAppServiceImplTest {
     }
 
     @Test
+    @DisplayName("get ingredient from unknown recipe")
+    public void getIngredientFromUnknownRecipe() {
+        assertThrows(EntityNotFoundException.class,
+                () -> service.getRecipeIngredient(RecipeId.generate(), CUCUMBER_ID));
+    }
+
+    @Test
+    @DisplayName("get unknown ingredient from recipe")
+    public void getUnknownIngredientFromRecipe() {
+        assertThrows(EntityNotFoundException.class,
+                () -> service.getRecipeIngredient(TOMATO_CUCUMBER_MOZZA_SALAD_ID, IngredientId.generate()));
+    }
+
+    @Test
     @DisplayName("throws IllegalArgumentException when adding ingredient to recipe from null command")
     public void addIngredientToRecipeNullCommand() {
         assertThrows(IllegalArgumentException.class, () -> service.addIngredientToRecipe(null));
@@ -86,6 +103,7 @@ public class RecipeIngredientAppServiceImplTest {
         assumeFalse(service.getRecipeIngredients(recipeId).contains(cucumber));
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
         assertThat(service.getRecipeIngredients(recipeId)).contains(cucumber);
+        assertThat(service.getRecipeIngredient(recipeId, CUCUMBER_ID)).isEqualTo(cucumber);
     }
 
     @Test

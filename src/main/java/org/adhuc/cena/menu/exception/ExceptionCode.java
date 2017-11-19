@@ -44,7 +44,8 @@ public enum ExceptionCode {
     INVALID_REQUEST(101000, "Invalid request"),
 
     ENTITY_NOT_FOUND(900000, "Entity not found"),
-    INGREDIENT_NAME_ALREADY_USED(900100, "Ingredient name already used");
+    INGREDIENT_NAME_ALREADY_USED(900100, "Ingredient name already used"),
+    INGREDIENT_NOT_LINKED_TO_RECIPE(900200, "Ingredient is not linked to the recipe");
 
     private final int    code;
     private final String description;

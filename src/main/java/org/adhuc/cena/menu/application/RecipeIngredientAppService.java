@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.application;
 
 import java.util.List;
 
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.AddIngredientToRecipe;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
@@ -40,6 +41,19 @@ public interface RecipeIngredientAppService {
      * @return the ingredients linked to recipe (not modifiable).
      */
     List<RecipeIngredient> getRecipeIngredients(RecipeId recipeId);
+
+    /**
+     * Gets the ingredient linked to the recipe.
+     *
+     * @param recipeId
+     *            the recipe identity.
+     *
+     * @param ingredientId
+     *            the ingredient identity.
+     *
+     * @return the ingredient link to recipe.
+     */
+    RecipeIngredient getRecipeIngredient(RecipeId recipeId, IngredientId ingredientId);
 
     /**
      * Adds an ingredient to a recipe.
