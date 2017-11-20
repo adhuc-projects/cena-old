@@ -1,5 +1,5 @@
 Feature: Create a recipe in the system
-  Recipes can be created only by an authenticated user
+  As an authenticated user, I want to create a recipe so that it can be selected during menus generation
 
 Scenario: Create a recipe successfully
   Given an authenticated user

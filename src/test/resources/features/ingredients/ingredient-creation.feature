@@ -1,6 +1,5 @@
 Feature: Create an ingredient in the system
-  Ingredients can be created only by an ingredient manager
-  An ingredient name is unique in the system
+  As an ingredient manager, I want to create an ingredient in the system so that recipes can be composed of ingredients
 
 Scenario: Create an ingredient successfully
   Given an authenticated ingredient manager

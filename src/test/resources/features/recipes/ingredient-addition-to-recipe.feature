@@ -1,5 +1,5 @@
 Feature: Add an ingredient to a recipe
-  Ingredients can be added to recipes only by the recipe creator
+  As a recipe author, I want to add an ingredient to my recipe so that it can be selected based on its ingredients during menus generation
 
 Scenario: Add an ingredient to a recipe successfully
   Given an authenticated user
