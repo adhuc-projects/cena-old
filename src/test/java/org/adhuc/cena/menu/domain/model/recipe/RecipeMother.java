@@ -101,7 +101,7 @@ public class RecipeMother {
         return new AddIngredientToRecipe(TOMATO_CANTAL_PIE_ID, MUSTARD_ID, false);
     }
 
-    public static RecipeIngredientId MustardInTomatoCantalPie() {
+    public static RecipeIngredientId mustardInTomatoCantalPie() {
         return new RecipeIngredientId(MUSTARD_ID, false);
     }
 

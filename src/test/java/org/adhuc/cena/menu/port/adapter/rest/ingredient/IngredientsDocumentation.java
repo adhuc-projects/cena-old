@@ -80,6 +80,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 @DisplayName("Ingredients resource documentation")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class IngredientsDocumentation extends ControllerTestSupport {
 
     private static final String            INGREDIENTS_API_URL = "/api/ingredients";

@@ -81,6 +81,7 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 @DisplayName("Recipe ingredients resource documentation")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class RecipeIngredientsDocumentation extends ControllerTestSupport {
 
     private static final String            RECIPE_INGREDIENTS_API_URL = "/api/recipes/{recipeId}/ingredients";

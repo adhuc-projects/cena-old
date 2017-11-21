@@ -70,6 +70,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ErrorsSnippet
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 @DisplayName("API documentation")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class ApiDocumentation extends ControllerTestSupport {
 
     private static final String            API_URL = "/api";

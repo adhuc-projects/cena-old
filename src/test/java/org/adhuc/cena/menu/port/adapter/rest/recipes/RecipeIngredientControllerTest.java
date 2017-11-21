@@ -78,6 +78,7 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @DisplayName("Recipe ingredient controller")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class RecipeIngredientControllerTest extends ControllerTestSupport {
 
     private static final String        RECIPE_INGREDIENT_API_URL = "/api/recipes/{recipeId}/ingredients/{ingredientId}";

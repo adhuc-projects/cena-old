@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucumber;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.mustard;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.MustardInTomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CANTAL_PIE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addCucumberToTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addMustardToTomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mustardInTomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
@@ -138,7 +138,7 @@ public class RecipeIngredientAdditionServiceTest {
             service.addIngredientToRecipe(addMustardToTomatoCantalPie());
 
             Recipe recipe = recipeRepository.findOneNotNull(TOMATO_CANTAL_PIE_ID);
-            assertThat(recipe.ingredients()).contains(MustardInTomatoCantalPie());
+            assertThat(recipe.ingredients()).contains(mustardInTomatoCantalPie());
         }
 
     }

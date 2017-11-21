@@ -72,6 +72,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 @Import(WebSecurityConfiguration.class)
 @AutoConfigureRestDocs("target/generated-snippets")
 @DisplayName("Ingredient resource documentation")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class IngredientDocumentation {
 
     private static final String            INGREDIENT_API_URL = "/api/ingredients/{id}";
