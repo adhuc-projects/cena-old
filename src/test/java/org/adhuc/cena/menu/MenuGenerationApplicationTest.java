@@ -32,10 +32,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Tag("integration")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class MenuGenerationApplicationTest {
 
     @Test
     public void contextLoads() {
+        // Ensure that the production application can start
     }
 
 }

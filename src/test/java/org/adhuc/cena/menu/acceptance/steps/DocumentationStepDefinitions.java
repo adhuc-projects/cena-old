@@ -34,7 +34,7 @@ import net.thucydides.core.annotations.Steps;
 public class DocumentationStepDefinitions {
 
     @Steps
-    DocumentationServiceClientSteps documentationServiceClient;
+    private DocumentationServiceClientSteps documentationServiceClient;
 
     @When("^I access to the documentation$")
     public void accessToDocumentation() {

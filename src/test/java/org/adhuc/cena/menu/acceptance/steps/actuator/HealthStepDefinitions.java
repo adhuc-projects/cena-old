@@ -35,7 +35,7 @@ import net.thucydides.core.annotations.Steps;
 public class HealthStepDefinitions {
 
     @Steps
-    ActuatorServiceClientSteps actuatorServiceClient;
+    private ActuatorServiceClientSteps actuatorServiceClient;
 
     @Given("^a running service$")
     public void runningService() {

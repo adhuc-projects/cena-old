@@ -42,16 +42,16 @@ public class RestAuthenticationProvider {
 
     private static RestAuthenticationProvider INSTANCE = new RestAuthenticationProvider();
 
-    public static RestAuthenticationProvider instance() {
-        return INSTANCE;
-    }
-
-    private AcceptanceAuthenticationMother authenticationMother;
-    private RequestSpecification           specification;
-    private AcceptanceAuthentication       authentication;
+    private AcceptanceAuthenticationMother    authenticationMother;
+    private RequestSpecification              specification;
+    private AcceptanceAuthentication          authentication;
 
     private RestAuthenticationProvider() {
         authenticationMother = AcceptanceAuthenticationMother.instance();
+    }
+
+    public static RestAuthenticationProvider instance() {
+        return INSTANCE;
     }
 
     /**

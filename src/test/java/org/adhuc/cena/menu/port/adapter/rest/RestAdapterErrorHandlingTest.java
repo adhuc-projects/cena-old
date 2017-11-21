@@ -59,6 +59,7 @@ import org.adhuc.cena.menu.exception.ExceptionCode;
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @AutoConfigureMockMvc
 @DisplayName("REST adapter error handling")
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class RestAdapterErrorHandlingTest {
 
     @Autowired

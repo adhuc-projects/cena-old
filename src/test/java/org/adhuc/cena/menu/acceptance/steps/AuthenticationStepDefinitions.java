@@ -32,7 +32,7 @@ import net.thucydides.core.annotations.Steps;
 public class AuthenticationStepDefinitions {
 
     @Steps
-    AuthenticationServiceClientSteps authenticationServiceClient;
+    private AuthenticationServiceClientSteps authenticationServiceClient;
 
     @Given("^an authenticated ingredient manager$")
     public void authenticatedIngredientManager() {

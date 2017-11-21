@@ -41,13 +41,13 @@ public final class AcceptanceAuthenticationMother {
         ACTUATOR_MANAGER;
     }
 
-    private static AcceptanceAuthenticationMother INSTANCE = new AcceptanceAuthenticationMother();
+    private static AcceptanceAuthenticationMother                      INSTANCE = new AcceptanceAuthenticationMother();
+
+    private Map<AcceptanceAuthenticationKey, AcceptanceAuthentication> authentications;
 
     public static AcceptanceAuthenticationMother instance() {
         return INSTANCE;
     }
-
-    private Map<AcceptanceAuthenticationKey, AcceptanceAuthentication> authentications;
 
     private AcceptanceAuthenticationMother() {
         authentications = new HashMap<>();

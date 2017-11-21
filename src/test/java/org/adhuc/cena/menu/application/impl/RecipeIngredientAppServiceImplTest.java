@@ -57,16 +57,14 @@ import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeReposit
 @DisplayName("Recipe ingredient service")
 public class RecipeIngredientAppServiceImplTest {
 
-    private RecipeRepository                recipeRepository;
-    private IngredientRepository            ingredientRepository;
-    private RecipeIngredientAdditionService recipeIngredientAdditionService;
-    private RecipeIngredientAppServiceImpl  service;
+    private RecipeIngredientAppServiceImpl service;
 
     @BeforeEach
     public void setUp() {
-        recipeRepository = new InMemoryRecipeRepository();
-        ingredientRepository = new InMemoryIngredientRepository();
-        recipeIngredientAdditionService = new RecipeIngredientAdditionService(recipeRepository, ingredientRepository);
+        RecipeRepository recipeRepository = new InMemoryRecipeRepository();
+        IngredientRepository ingredientRepository = new InMemoryIngredientRepository();
+        RecipeIngredientAdditionService recipeIngredientAdditionService =
+                new RecipeIngredientAdditionService(recipeRepository, ingredientRepository);
         service = new RecipeIngredientAppServiceImpl(recipeIngredientAdditionService, recipeRepository,
                 ingredientRepository);
 
