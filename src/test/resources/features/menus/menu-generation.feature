@@ -6,7 +6,9 @@ Scenario Outline: Generate a menus list successfully
     And a list of existing recipes with at least <meals_count> elements
   When he specifies a period of time of <days> days starting from <start_date>
     And he specifies the frequence of meals as <meal_frequence>
-  Then the number of meals in the list is <meals_count>
+    And he generates the menus
+  Then the menus have been generated
+    And the number of meals in the list is <meals_count>
     And no meal has redundant recipe
     And no meal has the same main ingredients as the previous nor next day
 

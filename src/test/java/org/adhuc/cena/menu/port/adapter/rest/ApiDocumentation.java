@@ -96,7 +96,8 @@ public class ApiDocumentation extends ControllerTestSupport {
                 linkWithRel("management").description(
                         "The https://docs.spring.io/spring-boot/docs/1.5.7.RELEASE/reference/htmlsingle/#production-ready-endpoints[Spring Boot Actuator] endpoints"),
                 linkWithRel("ingredients").description("The <<resources-ingredients,Ingredients resource>>"),
-                linkWithRel("recipes").description("The <<resources-recipes,Recipes resource>>")),
+                linkWithRel("recipes").description("The <<resources-recipes,Recipes resource>>"),
+                linkWithRel("menus").description("The <<resources-menus,Menus resource>>")),
                 responseFields(subsectionWithPath("_links")
                         .description("<<resources-index-links,Links>> to other resources"))));
     }

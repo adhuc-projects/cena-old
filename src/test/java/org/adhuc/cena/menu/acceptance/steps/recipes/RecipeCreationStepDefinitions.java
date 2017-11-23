@@ -19,7 +19,6 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeCreationServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
-import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipesListServiceClientSteps;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
@@ -40,8 +39,6 @@ public class RecipeCreationStepDefinitions {
 
     @Steps
     private RecipeCreationServiceClientSteps recipeCreationServiceClient;
-    @Steps
-    private RecipesListServiceClientSteps    recipesListServiceClient;
 
     @When("^he creates the \"(.*)\" recipe$")
     public void createRecipe(@Transform(RecipeValueTransformer.class) RecipeValue recipe) {
@@ -76,16 +73,6 @@ public class RecipeCreationStepDefinitions {
     @Then("^an error notifies that recipe must have a content$")
     public void errorOnRecipeCreationWithoutContent() {
         recipeCreationServiceClient.assertInvalidRequestError();
-    }
-
-    @Then("^the recipe can be found in the list$")
-    public void recipeFoundInList() {
-        recipesListServiceClient.assertRecipeInRecipesList();
-    }
-
-    @Then("^the recipe cannot be found in the list$")
-    public void recipeNotFoundInList() {
-        recipesListServiceClient.assertRecipeNotInRecipesList();
     }
 
 }

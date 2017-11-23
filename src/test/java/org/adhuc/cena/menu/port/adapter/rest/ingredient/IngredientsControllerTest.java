@@ -54,6 +54,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -152,6 +153,14 @@ public class IngredientsControllerTest extends ControllerTestSupport {
             assertSelfLinkEqualToRequestUrl(mvc.perform(get(INGREDIENTS_API_URL)));
         }
 
+    }
+
+    @Test
+    @DisplayName("creating ingredient as anonymous user returns unauthorized status")
+    @WithAnonymousUser
+    public void createIngredientAsAnonymousUser() throws Exception {
+        mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(asJson(createTomatoRequest())))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

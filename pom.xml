@@ -334,6 +334,11 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+
     <!-- Unit testings dependencies -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>

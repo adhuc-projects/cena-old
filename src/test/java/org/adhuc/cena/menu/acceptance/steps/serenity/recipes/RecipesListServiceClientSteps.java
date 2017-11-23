@@ -16,8 +16,8 @@
 package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Optional;
@@ -52,7 +52,7 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
     public RecipeValue createRecipeAndAssumeRecipeInRecipesList(final RecipeValue recipe) {
         recipeCreationServiceClient.createRecipe(recipe);
         Optional<RecipeValue> foundRecipe = getRecipeFromRecipesList(recipe);
-        assumeTrue("Could not find the recipe in recipes list", foundRecipe.isPresent());
+        assumeTrue(foundRecipe.isPresent(), "Could not find the recipe in recipes list");
         return storeRecipe(foundRecipe.get());
     }
 
@@ -60,6 +60,11 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
     public void assumeRecipeNotInRecipesList(final RecipeValue recipe) {
         storeRecipeIfEmpty(recipe);
         assumeFalse(isRecipeInRecipesList(recipe));
+    }
+
+    @Step("Assume there are at least {0} recipes in list")
+    public void assumeAtLeastExistingRecipes(int recipesCount) {
+        // TODO assume that there are enough recipes
     }
 
     @Step("Assert recipe is in recipes list")

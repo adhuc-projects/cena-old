@@ -54,6 +54,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -159,6 +160,14 @@ public class RecipesControllerTest extends ControllerTestSupport {
             assertSelfLinkEqualToRequestUrl(mvc.perform(get(RECIPES_API_URL)));
         }
 
+    }
+
+    @Test
+    @DisplayName("creating recipe as anonymous user returns unauthorized status")
+    @WithAnonymousUser
+    public void createRecipeAsAnonymousUser() throws Exception {
+        mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
+                .content(asJson(createTomatoCucumberMozzaSaladRequest()))).andExpect(status().isUnauthorized());
     }
 
     @Test

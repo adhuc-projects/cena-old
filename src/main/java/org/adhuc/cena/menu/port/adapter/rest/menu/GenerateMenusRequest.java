@@ -13,38 +13,42 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.port.adapter.rest.menu;
 
-import org.springframework.hateoas.Link;
+import java.time.LocalDate;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * A request to generate menus.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class GenerateMenusRequest {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
-
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
-    }
-
-    public Link getMenus() {
-        return getLink("menus");
-    }
+    @NotNull
+    @Min(1)
+    @Max(10)
+    private Integer       days;
+    @NotNull
+    private LocalDate     startDate;
+    @NotNull
+    private MealFrequence frequence;
 
 }

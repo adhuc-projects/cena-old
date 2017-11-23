@@ -56,8 +56,10 @@ import org.adhuc.cena.menu.configuration.MenuGenerationProperties.Authentication
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private SecurityProperties securityProperties;
-    private Authentication     authentication;
+    private static final String[] SECURED_RESOURCES = new String[] { "/api/ingredients/**", "/api/recipes/**" };
+
+    private SecurityProperties    securityProperties;
+    private Authentication        authentication;
 
     @Autowired
     public WebSecurityConfiguration(SecurityProperties securityProperties,
@@ -70,9 +72,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/**").authenticated().antMatchers(HttpMethod.GET, "/api/**")
-                .permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, SECURED_RESOURCES).authenticated()
+                .antMatchers(HttpMethod.PUT, SECURED_RESOURCES).authenticated().antMatchers("/api/**").permitAll();
         http.csrf().disable();
         http.httpBasic();
     }

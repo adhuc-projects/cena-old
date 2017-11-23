@@ -13,38 +13,25 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.acceptance.steps.menus;
 
-import org.springframework.hateoas.Link;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+
+import cucumber.api.Transformer;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * A cucumber {@link Transformer} implementation for {@link MealFrequence}s.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public class MealFrequenceTransformer extends Transformer<MealFrequence> {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
-
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
-    }
-
-    public Link getMenus() {
-        return getLink("menus");
+    @Override
+    public MealFrequence transform(String value) {
+        return MealFrequence.valueOf(value);
     }
 
 }

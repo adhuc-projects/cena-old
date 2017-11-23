@@ -13,38 +13,27 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
+package org.adhuc.cena.menu.acceptance.steps;
 
-import org.springframework.hateoas.Link;
+import java.time.LocalDate;
+
+import cucumber.api.Transformer;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * A cucumber {@link Transformer} implementation for {@link LocalDate}s.
+ * <p>
+ * Inputs must be formatted using {@link java.time.format.DateTimeFormatter#ISO_LOCAL_DATE ISO_LOCAL_DATE}.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public class LocalDateTransformer extends Transformer<LocalDate> {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
-
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
-    }
-
-    public Link getMenus() {
-        return getLink("menus");
+    @Override
+    public LocalDate transform(String value) {
+        return LocalDate.parse(value);
     }
 
 }

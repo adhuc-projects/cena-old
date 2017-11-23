@@ -13,38 +13,21 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.resource;
-
-import org.springframework.hateoas.Link;
+package org.adhuc.cena.menu.domain.model.menu;
 
 /**
- * A REST resource encapsulating API information on the client side.
+ * The meal frequences in menus.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ApiClientResource extends HateoasHalClientResourceSupport {
+public enum MealFrequence {
 
-    public Link getManagement() {
-        return getLink("management");
-    }
-
-    public Link getDocumentation() {
-        return getLink("documentation");
-    }
-
-    public Link getIngredients() {
-        return getLink("ingredients");
-    }
-
-    public Link getRecipes() {
-        return getLink("recipes");
-    }
-
-    public Link getMenus() {
-        return getLink("menus");
-    }
+    /** One meal for week days, two for week-end days. */
+    WEEK_WORKING_DAYS,
+    /** Two meals for each day in a week. */
+    TWICE_A_DAY;
 
 }
