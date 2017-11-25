@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.http.HttpStatus.OK;
 
+import static org.adhuc.cena.menu.acceptance.steps.recipes.RecipeValueMother.existingRecipes;
+
+import java.util.List;
 import java.util.Optional;
 
 import io.restassured.path.json.JsonPath;
@@ -64,7 +67,14 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
 
     @Step("Assume there are at least {0} recipes in list")
     public void assumeAtLeastExistingRecipes(int recipesCount) {
-        // TODO assume that there are enough recipes
+        int actualRecipesCount = getRecipes().size();
+        if (recipesCount > actualRecipesCount) {
+            List<RecipeValue> recipes = existingRecipes();
+            for (int i = actualRecipesCount; i < recipesCount && i < recipes.size(); i++) {
+                recipeCreationServiceClient.createRecipeAsAuthenticatedUser(recipes.get(i));
+            }
+            assumeTrue(getRecipes().size() >= recipesCount, "Must contain more that " + recipesCount + " recipes");
+        }
     }
 
     @Step("Assert recipe is in recipes list")
@@ -94,12 +104,18 @@ public class RecipesListServiceClientSteps extends AbstractRecipeServiceClientSt
         return getRecipeFromRecipesList(recipe).isPresent();
     }
 
+    private List<RecipeValue> getRecipes() {
+        return getRecipesAsJsonPath().getList("_embedded.data", RecipeValue.class);
+    }
+
     private Optional<RecipeValue> getRecipeFromRecipesList(final RecipeValue recipe) {
-        final String recipesResourceUrl = getRecipesResourceUrl();
-        final String recipeName = recipe.name();
-        final JsonPath jsonPath = rest().get(recipesResourceUrl).then().statusCode(OK.value()).extract().jsonPath();
-        return Optional.ofNullable(jsonPath.param("name", recipeName)
+        return Optional.ofNullable(getRecipesAsJsonPath().param("name", recipe.name())
                 .getObject("_embedded.data.find { recipe->recipe.name == name }", RecipeValue.class));
+    }
+
+    private JsonPath getRecipesAsJsonPath() {
+        String recipesResourceUrl = getRecipesResourceUrl();
+        return rest().get(recipesResourceUrl).then().statusCode(OK.value()).extract().jsonPath();
     }
 
 }

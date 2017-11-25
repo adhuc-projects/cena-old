@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeThat;
 
+import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -46,7 +47,11 @@ public abstract class AbstractRecipeServiceClientSteps extends AbstractRecipeSto
     }
 
     protected final String getRecipesResourceUrl() {
-        return getApiClientResource().getRecipes().getHref();
+        return getRecipesResourceUrl(rest());
+    }
+
+    protected final String getRecipesResourceUrl(RequestSpecification rest) {
+        return getApiClientResource(rest).getRecipes().getHref();
     }
 
 }

@@ -20,9 +20,11 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 
+import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
@@ -41,11 +43,14 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
     private RecipeDetailServiceClientSteps recipeDetailServiceClient;
 
     @Step("Create the recipe {0}")
-    public void createRecipe(final RecipeValue recipe) {
+    public void createRecipe(RecipeValue recipe) {
         storeRecipeIfEmpty(recipe);
-        final String recipesResourceUrl = getRecipesResourceUrl();
-        rest().body(new CreateRecipeRequest(recipe.name(), recipe.content()))
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE).post(recipesResourceUrl).andReturn();
+        createRecipe(recipe, rest());
+    }
+
+    @Step("Create the recipe {0} as authenticated user")
+    public void createRecipeAsAuthenticatedUser(RecipeValue recipe) {
+        createRecipe(recipe, restWithAuth(AuthenticationType.AUTHENTICATED_USER));
     }
 
     @Step("Assert recipe has been successfully created")
@@ -63,6 +68,12 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
     @Step("Get recipe from {0}")
     public RecipeValue getRecipeFromUrl(String recipeDetailUrl) {
         return rest().get(recipeDetailUrl).then().extract().as(RecipeValue.class);
+    }
+
+    private void createRecipe(RecipeValue recipe, RequestSpecification rest) {
+        String recipesResourceUrl = getRecipesResourceUrl(rest);
+        rest.header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(new CreateRecipeRequest(recipe.name(), recipe.content()))
+                .post(recipesResourceUrl).andReturn();
     }
 
 }

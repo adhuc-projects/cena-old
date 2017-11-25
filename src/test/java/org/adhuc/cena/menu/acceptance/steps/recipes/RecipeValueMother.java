@@ -15,13 +15,14 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
-import org.adhuc.cena.menu.domain.model.recipe.Recipe;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeMother;
 
 /**
  * An object mother to create testing elements related to {@link RecipeValue}s.
@@ -35,20 +36,110 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeMother;
  */
 public class RecipeValueMother {
 
-    private static final Map<String, RecipeValue> RECIPES = new HashMap<>();
+    private static final Map<String, RecipeValue> EXISTING_RECIPES = new HashMap<>();
+    private static final Map<String, RecipeValue> ALL_RECIPES      = new HashMap<>();
 
     static {
-        for (Recipe recipe : RecipeMother.allRecipes()) {
-            addRecipe(recipe);
-        }
+        List<RecipeValue> existingRecipes = Arrays.asList(tomatoCantalPie(), quicheLorraine(), watercressSoup(),
+                gazpacho(), poachedEggsSalad(), norvegianSalad(), omelette(), chiliConCarne(), sauerkraut(),
+                leeksWithHamAndBechamelSauce(), moussaka(), lasagne(), duckBreastFilletWithTurnips(), croqueMonsieur(),
+                raclette(), duckParmentier());
+        addAllRecipes(existingRecipes, EXISTING_RECIPES);
+        addAllRecipes(existingRecipes, ALL_RECIPES);
+
+        List<RecipeValue> recipesUsedInTests =
+                Arrays.asList(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
+        addAllRecipes(recipesUsedInTests, ALL_RECIPES);
+    }
+
+    public static List<RecipeValue> allRecipes() {
+        return new ArrayList<>(ALL_RECIPES.values());
+    }
+
+    public static List<RecipeValue> existingRecipes() {
+        return new ArrayList<>(EXISTING_RECIPES.values());
     }
 
     public static Optional<RecipeValue> getRecipe(String recipeName) {
-        return Optional.ofNullable(RECIPES.get(recipeName));
+        return Optional.ofNullable(ALL_RECIPES.get(recipeName));
     }
 
-    private static void addRecipe(Recipe recipe) {
-        RECIPES.put(recipe.name(), new RecipeValue(recipe.name(), recipe.content()));
+    public static RecipeValue tomatoCucumberMozzaSalad() {
+        return new RecipeValue("Tomato, cucumber and mozzarella salad", "Cut everything into dices, mix it, dress it");
+    }
+
+    public static RecipeValue tomatoCucumberOliveFetaSalad() {
+        return new RecipeValue("Tomato, cucumber, olive and feta salad", "Cut everything into dices, mix it, dress it");
+    }
+
+    public static RecipeValue tomatoCantalPie() {
+        return new RecipeValue("Tomato and cantal pie",
+                "Spread the shortcrust in a pie plate, wrap it with mustard, tomato slices and cantal slices in this order, and bake it during 20 minutes");
+    }
+
+    public static RecipeValue quicheLorraine() {
+        return new RecipeValue("Quiche lorraine",
+                "Spread the shortcrust in a pie plate, beat the eggs with milk, add lardons, pour on the pastry and bake it during 30 minutes");
+    }
+
+    public static RecipeValue watercressSoup() {
+        return new RecipeValue("Watercress soup", "Watercress soup recipe content");
+    }
+
+    public static RecipeValue gazpacho() {
+        return new RecipeValue("Gazpacho", "Gazpacho recipe content");
+    }
+
+    public static RecipeValue poachedEggsSalad() {
+        return new RecipeValue("Poached eggs salad", "Poached eggs salad recipe content");
+    }
+
+    public static RecipeValue norvegianSalad() {
+        return new RecipeValue("Norvegian salad", "Norvegian salad recipe content");
+    }
+
+    public static RecipeValue omelette() {
+        return new RecipeValue("Omelette", "Omelette recipe content");
+    }
+
+    public static RecipeValue chiliConCarne() {
+        return new RecipeValue("Chili con carne", "Chili con carne recipe content");
+    }
+
+    public static RecipeValue sauerkraut() {
+        return new RecipeValue("Sauerkraut", "Sauerkraut recipe content");
+    }
+
+    public static RecipeValue leeksWithHamAndBechamelSauce() {
+        return new RecipeValue("Leeks with ham and béchamel sauce", "Leeks with ham and béchamel sauce recipe content");
+    }
+
+    public static RecipeValue moussaka() {
+        return new RecipeValue("Moussaka", "Moussaka recipe content");
+    }
+
+    public static RecipeValue lasagne() {
+        return new RecipeValue("Lasagne", "Lasagne recipe content");
+    }
+
+    public static RecipeValue duckBreastFilletWithTurnips() {
+        return new RecipeValue("Duck breast fillet with turnips", "Duck breast fillet with turnips recipe content");
+    }
+
+    public static RecipeValue croqueMonsieur() {
+        return new RecipeValue("Croque-monsieur", "Croque-monsieur recipe content");
+    }
+
+    public static RecipeValue raclette() {
+        return new RecipeValue("Raclette", "Raclette recipe content");
+    }
+
+    public static RecipeValue duckParmentier() {
+        return new RecipeValue("Duck parmentier", "Duck parmentier recipe content");
+    }
+
+    private static void addAllRecipes(List<RecipeValue> recipes, Map<String, RecipeValue> map) {
+        recipes.stream().forEach(r -> map.put(r.name(), r));
     }
 
 }
