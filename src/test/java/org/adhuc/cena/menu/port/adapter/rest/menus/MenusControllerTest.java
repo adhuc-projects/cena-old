@@ -16,10 +16,14 @@
 package org.adhuc.cena.menu.port.adapter.rest.menus;
 
 import static org.hamcrest.Matchers.endsWith;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
 
 import java.time.LocalDate;
 
@@ -31,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -39,6 +44,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
@@ -69,8 +75,12 @@ public class MenusControllerTest extends ControllerTestSupport {
     @Autowired
     private MockMvc             mvc;
 
+    @MockBean
+    private MenuAppService      menuAppServiceMock;
+
     @BeforeEach
     public void setUp() {
+        reset(menuAppServiceMock);
     }
 
     @Test
@@ -133,6 +143,15 @@ public class MenusControllerTest extends ControllerTestSupport {
     public void generateMenusAsAnonymousUserReturnsCreatedStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("generating menus for 1 day for week working days starting on 02-01-2017 calls application service")
+    @WithMockUser(authorities = "USER")
+    public void generateMenus1DayWeekWorkingDays2Jan17CallsAppService() throws Exception {
+        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
+                .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
+        verify(menuAppServiceMock).generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
     }
 
     @Test

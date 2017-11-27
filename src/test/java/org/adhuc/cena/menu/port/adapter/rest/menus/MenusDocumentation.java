@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.menus;
 
+import static org.mockito.Mockito.reset;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -38,6 +40,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
@@ -74,8 +77,12 @@ public class MenusDocumentation extends ControllerTestSupport {
     @Autowired
     private RestDocumentationResultHandler documentationHandler;
 
+    @MockBean
+    private MenuAppService                 menuAppServiceMock;
+
     @BeforeEach
     public void setUp() {
+        reset(menuAppServiceMock);
     }
 
     @Test
@@ -83,8 +90,7 @@ public class MenusDocumentation extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void menusGenerateExample() throws Exception {
         ConstrainedFields fields = new ConstrainedFields(GenerateMenusRequest.class);
-        mvc.perform(post(MENUS_API_URL)
-                .contentType(APPLICATION_JSON).content(asJson(generateMenusRequest())))
+        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(generateMenusRequest())))
                 .andExpect(status().isCreated())
                 .andDo(documentationHandler.document(
                         requestFields(fields.withPath("days").description("The number of days to generate menus for"),

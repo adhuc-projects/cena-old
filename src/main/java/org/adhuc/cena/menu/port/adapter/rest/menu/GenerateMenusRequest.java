@@ -21,6 +21,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
 
 import lombok.AllArgsConstructor;
@@ -44,11 +45,20 @@ public class GenerateMenusRequest {
 
     @NotNull
     @Min(1)
-    @Max(10)
+    @Max(GenerateMenus.MAX_MENUS_GENERATION_DAYS)
     private Integer       days;
     @NotNull
     private LocalDate     startDate;
     @NotNull
     private MealFrequence frequence;
+
+    /**
+     * Converts this request to a {@code GenerateMenus} command.
+     *
+     * @return the menus generation command.
+     */
+    public GenerateMenus toCommand() {
+        return new GenerateMenus(days, startDate, frequence);
+    }
 
 }
