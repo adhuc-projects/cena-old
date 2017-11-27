@@ -13,19 +13,19 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model;
+package org.adhuc.cena.menu.domain.model.menu;
 
 /**
- * An aggregate identity definition.
+ * The meal types definition.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface Identity {
+public enum MealType {
 
-    @Override
-    String toString();
+    LUNCH,
+    DINNER;
 
 }

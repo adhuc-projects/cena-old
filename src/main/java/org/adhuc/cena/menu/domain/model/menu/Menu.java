@@ -13,53 +13,28 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.recipe;
+package org.adhuc.cena.menu.domain.model.menu;
 
-import java.util.UUID;
-
-import org.adhuc.cena.menu.domain.model.UuidIdentity;
-
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import org.adhuc.cena.menu.domain.model.BasicEntity;
 
 /**
- * A recipe identity.
+ * A menu definition, consisting of the different dishes served during a meal.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Value
-@EqualsAndHashCode(callSuper = true)
-public class RecipeId extends UuidIdentity {
+public class Menu extends BasicEntity<MenuId> {
 
     /**
-     * Creates a recipe identity with the specified value.
+     * Creates a menu.
      *
      * @param id
-     *            the identity value.
+     *            the menu identity.
      */
-    public RecipeId(final String id) {
-        this(parseUUID(Recipe.class, id));
-    }
-
-    private RecipeId(final UUID id) {
+    public Menu(MenuId id) {
         super(id);
-    }
-
-    /**
-     * Generates a new recipe identity.
-     *
-     * @return a new recipe identity.
-     */
-    public static RecipeId generate() {
-        return new RecipeId(UUID.randomUUID());
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 
 }

@@ -37,6 +37,11 @@ public class MenuMother {
     public static final LocalDate     MENU_2017_01_01_START_DATE  = LocalDate.parse("2017-01-01");
     public static final MealFrequence MENU_2017_01_01_FREQUENCE   = MealFrequence.TWICE_A_DAY;
 
+    public static final LocalDate     DINNER_2017_01_02_DATE      = LocalDate.parse("2017-01-02");
+    public static final MealType      DINNER_2017_01_02_MEAL_TYPE = MealType.DINNER;
+    public static final MenuId        DINNER_2017_01_02           =
+            new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE);
+
     public static GenerateMenus generateMenus1DayAt20170102WeekWorkingDays() {
         return new GenerateMenus(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCE);
     }
