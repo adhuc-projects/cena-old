@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.time.LocalDate;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest.GenerateMenusRequestBuilder;
 
@@ -50,9 +50,9 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
         requestBuilder.startDate(startDate);
     }
 
-    @Step("Specify menus generation meal frequence as {0}")
-    public void setMenusGenerationMealFrequence(MealFrequence frequence) {
-        requestBuilder.frequence(frequence);
+    @Step("Specify menus generation meal frequency as {0}")
+    public void setMenusGenerationMealFrequency(MealFrequency frequency) {
+        requestBuilder.frequency(frequency);
     }
 
     @Step("Generate menus")

@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_DAYS;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_FREQUENCE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_FREQUENCY;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_START_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_DAYS;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
 
 import org.junit.jupiter.api.DisplayName;
@@ -46,53 +46,53 @@ public class GenerateMenusTest {
     @DisplayName("cannot be created with negative days")
     public void generateMenusWithNegativeDays() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(-1, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCE));
+                () -> new GenerateMenus(-1, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with 0 days")
     public void generateMenusWithZeroDays() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(0, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCE));
+                () -> new GenerateMenus(0, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with more than 10 days")
     public void generateMenusWith11Days() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(11, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCE));
+                () -> new GenerateMenus(11, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with invalid start date")
     public void generateMenusWithInvalidStartDate() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(MENU_2017_01_02_DAYS, null, MENU_2017_01_02_FREQUENCE));
+                () -> new GenerateMenus(MENU_2017_01_02_DAYS, null, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
-    @DisplayName("cannot be created with invalid meal frequence")
-    public void generateMenusWithInvalidMealFrequence() {
+    @DisplayName("cannot be created with invalid meal frequency")
+    public void generateMenusWithInvalidMealFrequency() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GenerateMenus(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, null));
     }
 
     @Test
-    @DisplayName("is composed of days, start date and frequence, with days higher or equal to 1")
+    @DisplayName("is composed of days, start date and frequency, with days higher or equal to 1")
     public void generateMenus1DayAt20170102WeekWorkingDays() {
         GenerateMenus command = MenuMother.generateMenus1DayAt20170102WeekWorkingDays();
         assertThat(command.days()).isEqualTo(MENU_2017_01_02_DAYS);
         assertThat(command.startDate()).isEqualTo(MENU_2017_01_02_START_DATE);
-        assertThat(command.frequence()).isEqualTo(MENU_2017_01_02_FREQUENCE);
+        assertThat(command.frequency()).isEqualTo(MENU_2017_01_02_FREQUENCY);
     }
 
     @Test
-    @DisplayName("is composed of days, start date and frequence, with days higher or equal to 1")
+    @DisplayName("is composed of days, start date and frequency, with days higher or equal to 1")
     public void generateMenus10DaysAt20170101TwiceADay() {
         GenerateMenus command = MenuMother.generateMenus10DaysAt20170101TwiceADay();
         assertThat(command.days()).isEqualTo(MENU_2017_01_01_DAYS);
         assertThat(command.startDate()).isEqualTo(MENU_2017_01_01_START_DATE);
-        assertThat(command.frequence()).isEqualTo(MENU_2017_01_01_FREQUENCE);
+        assertThat(command.frequency()).isEqualTo(MENU_2017_01_01_FREQUENCY);
     }
 
 }

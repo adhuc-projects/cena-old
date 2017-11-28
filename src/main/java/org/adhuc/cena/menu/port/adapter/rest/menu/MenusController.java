@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.MenuAppService;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
@@ -68,7 +68,7 @@ public class MenusController extends AbstractRequestValidationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ListResource<MenuResource> getMenus(@RequestParam("days") Integer days,
-            @RequestParam("frequence") MealFrequence frequence,
+            @RequestParam("frequency") MealFrequency frequency,
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
         throw new UnsupportedOperationException("Menus list not implemented yet");
     }
@@ -88,7 +88,7 @@ public class MenusController extends AbstractRequestValidationController {
         menuAppService.generateMenus(request.toCommand());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(methodOn(MenusController.class).getMenus(request.getDays(),
-                request.getFrequence(), request.getStartDate())).toUri());
+                request.getFrequency(), request.getStartDate())).toUri());
         return httpHeaders;
     }
 

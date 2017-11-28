@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 import org.adhuc.cena.menu.acceptance.steps.LocalDateTransformer;
 import org.adhuc.cena.menu.acceptance.steps.serenity.menus.MenusGenerationServiceClientSteps;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
@@ -47,9 +47,9 @@ public class MenusGenerationStepDefinitions {
         menusGenerationServiceClient.setMenusGenerationStartDate(startDate);
     }
 
-    @When("^he specifies the frequence of meals as (.*)$")
-    public void specifyMealsFrequence(@Transform(MealFrequenceTransformer.class) MealFrequence frequence) {
-        menusGenerationServiceClient.setMenusGenerationMealFrequence(frequence);
+    @When("^he specifies the frequency of meals as (.*)$")
+    public void specifyMealsFrequency(@Transform(MealFrequencyTransformer.class) MealFrequency frequency) {
+        menusGenerationServiceClient.setMenusGenerationMealFrequency(frequency);
     }
 
     @When("^he generates the menus$")

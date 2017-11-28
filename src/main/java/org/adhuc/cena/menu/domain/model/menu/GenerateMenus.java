@@ -44,16 +44,16 @@ public class GenerateMenus {
     @NonNull
     private LocalDate           startDate;
     @NonNull
-    private MealFrequence       frequence;
+    private MealFrequency       frequency;
 
-    public GenerateMenus(int days, LocalDate startDate, MealFrequence frequence) {
+    public GenerateMenus(int days, LocalDate startDate, MealFrequency frequency) {
         isTrue(days >= 1, "Cannot generate menus for negative days count");
         isTrue(days <= MAX_MENUS_GENERATION_DAYS, MAX_MENUS_GENERATION_DAYS_MESSAGE);
         notNull(startDate, "Cannot generate menus from invalid start date");
-        notNull(frequence, "Cannot generate menus with invalid frequence");
+        notNull(frequency, "Cannot generate menus with invalid frequency");
         this.days = days;
         this.startDate = startDate;
-        this.frequence = frequence;
+        this.frequency = frequency;
     }
 
 }

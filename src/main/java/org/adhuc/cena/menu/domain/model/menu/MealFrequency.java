@@ -13,25 +13,21 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.menus;
-
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
-
-import cucumber.api.Transformer;
+package org.adhuc.cena.menu.domain.model.menu;
 
 /**
- * A cucumber {@link Transformer} implementation for {@link MealFrequence}s.
+ * The meal frequencies in menus.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public class MealFrequenceTransformer extends Transformer<MealFrequence> {
+public enum MealFrequency {
 
-    @Override
-    public MealFrequence transform(String value) {
-        return MealFrequence.valueOf(value);
-    }
+    /** One meal for week days, two for week-end days. */
+    WEEK_WORKING_DAYS,
+    /** Two meals for each day in a week. */
+    TWICE_A_DAY;
 
 }

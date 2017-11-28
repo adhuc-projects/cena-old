@@ -47,7 +47,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
@@ -88,7 +88,7 @@ public class MenusControllerTest extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void generateMenusWithoutDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .frequence(MealFrequence.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -97,7 +97,7 @@ public class MenusControllerTest extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void generateMenusWithNegativeDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(-1).frequence(MealFrequence.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(-1).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -106,7 +106,7 @@ public class MenusControllerTest extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void generateMenusWith0DaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(0).frequence(MealFrequence.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(0).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -115,14 +115,14 @@ public class MenusControllerTest extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void generateMenusWithTooMuchDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(11).frequence(MealFrequence.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(11).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("generating menus without frequence returns bad request")
+    @DisplayName("generating menus without frequency returns bad request")
     @WithMockUser(authorities = "USER")
-    public void generateMenusWithoutFrequenceReturnsBadRequestStatus() throws Exception {
+    public void generateMenusWithoutFrequencyReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(
                 asJson(GenerateMenusRequest.builder().days(1).startDate(LocalDate.parse("2017-01-02")).build())))
                 .andExpect(status().isBadRequest());
@@ -133,7 +133,7 @@ public class MenusControllerTest extends ControllerTestSupport {
     @WithMockUser(authorities = "USER")
     public void generateMenusWithoutStartDateReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(
-                asJson(GenerateMenusRequest.builder().days(1).frequence(MealFrequence.WEEK_WORKING_DAYS).build())))
+                asJson(GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS).build())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -181,18 +181,18 @@ public class MenusControllerTest extends ControllerTestSupport {
     }
 
     private GenerateMenusRequest generateMenus1DayWeekWorkingDays2Jan17Request() {
-        return GenerateMenusRequest.builder().days(1).frequence(MealFrequence.WEEK_WORKING_DAYS)
+        return GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS)
                 .startDate(LocalDate.parse("2017-01-02")).build();
     }
 
     private GenerateMenusRequest generateMenus10DaysTwiceADay1Jan17Request() {
-        return GenerateMenusRequest.builder().days(10).frequence(MealFrequence.TWICE_A_DAY)
+        return GenerateMenusRequest.builder().days(10).frequency(MealFrequency.TWICE_A_DAY)
                 .startDate(LocalDate.parse("2017-01-01")).build();
     }
 
     private String buildMenusListLink(GenerateMenusRequest request) {
         return UriComponentsBuilder.fromPath(MENUS_API_URL).queryParam("days", Integer.toString(request.getDays()))
-                .queryParam("frequence", request.getFrequence().toString())
+                .queryParam("frequency", request.getFrequency().toString())
                 .queryParam("startDate", request.getStartDate().toString()).build().toUriString();
     }
 

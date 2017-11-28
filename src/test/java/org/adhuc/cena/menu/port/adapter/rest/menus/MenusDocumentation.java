@@ -43,7 +43,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
@@ -95,11 +95,11 @@ public class MenusDocumentation extends ControllerTestSupport {
                 .andDo(documentationHandler.document(
                         requestFields(fields.withPath("days").description("The number of days to generate menus for"),
                                 fields.withPath("startDate").description("The menus generation start date"),
-                                fields.withPath("frequence").description("The menus frequence"))));
+                                fields.withPath("frequency").description("The menus frequency"))));
     }
 
     private GenerateMenusRequest generateMenusRequest() {
-        return GenerateMenusRequest.builder().days(1).frequence(MealFrequence.WEEK_WORKING_DAYS)
+        return GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS)
                 .startDate(LocalDate.parse("2017-01-02")).build();
     }
 

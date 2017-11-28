@@ -22,7 +22,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequence;
+import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,7 +50,7 @@ public class GenerateMenusRequest {
     @NotNull
     private LocalDate     startDate;
     @NotNull
-    private MealFrequence frequence;
+    private MealFrequency frequency;
 
     /**
      * Converts this request to a {@code GenerateMenus} command.
@@ -58,7 +58,7 @@ public class GenerateMenusRequest {
      * @return the menus generation command.
      */
     public GenerateMenus toCommand() {
-        return new GenerateMenus(days, startDate, frequence);
+        return new GenerateMenus(days, startDate, frequency);
     }
 
 }
