@@ -62,7 +62,7 @@ public class InMemoryRecipeRepositoryTest {
     }
 
     @Test
-    @DisplayName("throws EntityNotFoundException when finding unknown ingredient (not null required)")
+    @DisplayName("throws EntityNotFoundException when finding unknown recipe (not null required)")
     public void findOneNotNullUnknown() {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> repository.findOneNotNull(TOMATO_CUCUMBER_MOZZA_SALAD_ID));
@@ -72,7 +72,7 @@ public class InMemoryRecipeRepositoryTest {
 
     @Nested
     @DisplayName("with no recipe")
-    class WithNoIngredient {
+    class WithNoRecipe {
 
         @Test
         @DisplayName("returns empty list")
