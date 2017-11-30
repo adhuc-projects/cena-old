@@ -67,4 +67,9 @@ public class MenusGenerationStepDefinitions {
         menusGenerationServiceClient.assertExactNumberOfMealsInMenusList(mealsCount);
     }
 
+    @Then("^the meals distribution corresponds to the specifications$")
+    public void mealsDistributionCorrespondToSpecifications() {
+        menusGenerationServiceClient.assertMealsDistributionCorrespondToSpecifications();
+    }
+
 }

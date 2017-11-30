@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 
 import lombok.AccessLevel;
@@ -48,8 +47,7 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MenuValue {
 
-    private final RecipeValue recipe;
-    private final LocalDate   date;
-    private final MealType    mealType;
+    private final LocalDate date;
+    private final MealType  type;
 
 }

@@ -9,6 +9,7 @@ Scenario Outline: Generate a menus list successfully
     And he generates the menus
   Then the menus have been generated
     And the number of meals in the list is <meals_count>
+    And the meals distribution corresponds to the specifications
     And no meal has redundant recipe
     And no meal has the same main ingredients as the previous nor next day
 
