@@ -15,9 +15,14 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.menus;
 
+import static net.serenitybdd.rest.SerenityRest.then;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
@@ -65,6 +70,18 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
     @Step("Assert menus have been successfully generated")
     public void assertMenusSuccessfullyGenerated() {
         assertCreated();
+    }
+
+    @Step("Assert there is exactly {0} meals in menus list")
+    public void assertExactNumberOfMealsInMenusList(int mealsCount) {
+        String menuListUrl = then().extract().header(LOCATION);
+        List<MenuValue> menus = getMenuListFromUrl(menuListUrl);
+        assertThat(menus).hasSize(mealsCount);
+    }
+
+    @Step("Get menu list from {0}")
+    private List<MenuValue> getMenuListFromUrl(String menuListUrl) {
+        return rest().get(menuListUrl).then().extract().jsonPath().getList("_embedded.data", MenuValue.class);
     }
 
     private String getMenusResourceUrl(RequestSpecification rest) {

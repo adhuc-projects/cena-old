@@ -13,59 +13,43 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.menu;
+package org.adhuc.cena.menu.acceptance.steps.serenity.menus;
 
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.adhuc.cena.menu.domain.model.Dateable;
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
-import org.adhuc.cena.menu.domain.model.Identity;
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
+import org.adhuc.cena.menu.domain.model.menu.MealType;
 
-import lombok.NonNull;
-import lombok.Value;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * A menu identity definition, consisting of the menu date and the meal type.
+ * A menu value on the client side.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Value
+@Data
+@ToString(includeFieldNames = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@RequiredArgsConstructor
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class MenuId implements Identity, Dateable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MenuValue {
 
-    @NonNull
-    private LocalDate date;
-    @NonNull
-    private MealType  type;
-
-    /**
-     * Creates a menu identity based on the specified date and meal type.
-     *
-     * @param date
-     *            the menu date.
-     *
-     * @param type
-     *            the meal type.
-     */
-    public MenuId(LocalDate date, MealType type) {
-        notNull(date, "date");
-        notNull(type, "meal type");
-        this.date = date;
-        this.type = type;
-    }
-
-    private void notNull(Object value, String name) {
-        if (value == null) {
-            throw new EntityNotFoundException(Menu.class, "with invalid " + name);
-        }
-    }
+    private final RecipeValue recipe;
+    private final LocalDate   date;
+    private final MealType    mealType;
 
 }

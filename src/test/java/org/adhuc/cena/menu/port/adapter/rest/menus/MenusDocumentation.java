@@ -16,12 +16,27 @@
 package org.adhuc.cena.menu.port.adapter.rest.menus;
 
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
+
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +47,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -44,10 +63,12 @@ import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
+import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
+import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
 
 /**
@@ -61,7 +82,8 @@ import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = MenusController.class)
+@WebMvcTest(controllers = MenusController.class,
+        includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = MenuResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
@@ -86,6 +108,26 @@ public class MenusDocumentation extends ControllerTestSupport {
     }
 
     @Test
+    @DisplayName("generates menus list example")
+    @WithMockUser(authorities = "USER")
+    public void menusListExample() throws Exception {
+        when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-02"))))
+                .thenReturn(Arrays.asList(lunch20170102(), dinner20170102()));
+        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
+                .andExpect(status().isOk())
+                .andDo(documentationHandler.document(requestParameters(
+                        parameterWithName("days").description("The number of days to get menus for (default = 1)"),
+                        parameterWithName("startDate")
+                                .description("The start date to get menus for (default = current date)")),
+                        links(linkWithRel("self").description("This <<resources-menus,menus list>>")),
+                        responseFields(
+                                subsectionWithPath("_embedded.data")
+                                        .description("An array of <<resources-menu, Menu resources>>"),
+                                subsectionWithPath("_links")
+                                        .description("<<resources-menus-links,Links>> to other resources"))));
+    }
+
+    @Test
     @DisplayName("generates menus generation example")
     @WithMockUser(authorities = "USER")
     public void menusGenerateExample() throws Exception {
@@ -101,6 +143,17 @@ public class MenusDocumentation extends ControllerTestSupport {
     private GenerateMenusRequest generateMenusRequest() {
         return GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS)
                 .startDate(LocalDate.parse("2017-01-02")).build();
+    }
+
+    @TestConfiguration
+    public static class FixedClockTestConfiguration {
+
+        @Bean
+        public Clock clock() {
+            return Clock.fixed(LocalDate.parse("2017-01-01").atStartOfDay().toInstant(ZoneOffset.UTC),
+                    ZoneId.systemDefault());
+        }
+
     }
 
 }

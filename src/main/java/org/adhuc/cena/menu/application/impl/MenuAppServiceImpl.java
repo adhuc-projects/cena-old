@@ -15,10 +15,19 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
+import static org.springframework.util.Assert.notNull;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
+import org.adhuc.cena.menu.domain.model.menu.Menu;
+import org.adhuc.cena.menu.domain.model.menu.MenuGenerationService;
+import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
+import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 
 /**
  * A {@link MenuAppService} implementation.
@@ -31,9 +40,24 @@ import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 @Service
 public class MenuAppServiceImpl implements MenuAppService {
 
+    private MenuRepository        menuRepository;
+    private MenuGenerationService menuGenerationService;
+
+    @Autowired
+    public MenuAppServiceImpl(MenuRepository menuRepository, MenuGenerationService menuGenerationService) {
+        this.menuRepository = menuRepository;
+        this.menuGenerationService = menuGenerationService;
+    }
+
+    @Override
+    public List<Menu> getMenus(MenusQuery query) {
+        return menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
+    }
+
     @Override
     public void generateMenus(GenerateMenus command) {
-        // TODO implement MenuAppServiceImpl.generateMenus();
+        notNull(command, "Cannot generate menus from invalid command");
+        menuGenerationService.generateMenus(command);
     }
 
 }

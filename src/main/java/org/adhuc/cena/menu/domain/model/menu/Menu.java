@@ -15,7 +15,20 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
+import static org.springframework.util.Assert.notNull;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.adhuc.cena.menu.domain.model.BasicEntity;
+import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * A menu definition, consisting of the different dishes served during a meal.
@@ -25,16 +38,30 @@ import org.adhuc.cena.menu.domain.model.BasicEntity;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Data
+@EqualsAndHashCode(callSuper = true, exclude = { "recipe" })
+@ToString(callSuper = true)
+@Accessors(fluent = true)
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class Menu extends BasicEntity<MenuId> {
+
+    @NonNull
+    @JsonIgnore
+    private RecipeId recipe;
 
     /**
      * Creates a menu.
      *
      * @param id
      *            the menu identity.
+     *
+     * @param recipe
+     *            the recipe served during the meal.
      */
-    public Menu(MenuId id) {
+    public Menu(MenuId id, RecipeId recipe) {
         super(id);
+        notNull(recipe, "Cannot create menu without recipe");
+        this.recipe = recipe;
     }
 
 }

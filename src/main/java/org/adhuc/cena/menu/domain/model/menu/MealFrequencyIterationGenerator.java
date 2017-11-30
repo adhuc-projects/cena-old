@@ -13,40 +13,28 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.menu;
+package org.adhuc.cena.menu.domain.model.menu;
 
-import org.springframework.hateoas.ResourceSupport;
-
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import org.adhuc.cena.menu.domain.model.menu.Menu;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Set;
 
 /**
- * A REST resource encapsulating menu information.
+ * A menus iterations generator based on meal frequency.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class MenuResource extends ResourceSupport {
-
-    @JsonUnwrapped
-    private final Menu menu;
+public interface MealFrequencyIterationGenerator {
 
     /**
-     * Creates a menu resource encapsulating the menu information.
+     * Generates the menus iterations.
      *
-     * @param menu
-     *            the menu information.
+     * @param command
+     *            the command.
+     *
+     * @return the menu identities corresponding to the iterations.
      */
-    public MenuResource(final Menu menu) {
-        this.menu = menu;
-    }
+    Set<MenuId> generateIterations(GenerateMenus command);
 
 }

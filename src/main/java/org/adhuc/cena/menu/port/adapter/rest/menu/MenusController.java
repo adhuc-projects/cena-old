@@ -19,12 +19,17 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.lang.reflect.Method;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Optional;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
@@ -37,7 +42,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.MenuAppService;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
+import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 
@@ -53,11 +58,25 @@ import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
 @RequestMapping(path = "/api/menus", produces = HAL_JSON_VALUE)
 public class MenusController extends AbstractRequestValidationController {
 
-    private MenuAppService menuAppService;
+    private Clock                 clock;
+    private MenuAppService        menuAppService;
+    private MenuResourceAssembler resourceAssembler;
+
+    private Method                listMethod;
 
     @Autowired
-    public MenusController(MenuAppService menuAppService) {
+    public MenusController(Clock clock, MenuAppService menuAppService, MenuResourceAssembler resourceAssembler) {
+        this.clock = clock;
         this.menuAppService = menuAppService;
+        this.resourceAssembler = resourceAssembler;
+    }
+
+    /**
+     * Initializes the methods to get links for resources.
+     */
+    @PostConstruct
+    public void initMethodsForLinks() throws Exception {
+        listMethod = MenusController.class.getMethod("getMenus", Integer.class, LocalDate.class);
     }
 
     /**
@@ -67,10 +86,11 @@ public class MenusController extends AbstractRequestValidationController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ListResource<MenuResource> getMenus(@RequestParam("days") Integer days,
-            @RequestParam("frequency") MealFrequency frequency,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
-        throw new UnsupportedOperationException("Menus list not implemented yet");
+    public ListResource<MenuResource> getMenus(@RequestParam(name = "days", defaultValue = "1") Integer days,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate startDate) {
+        return new ListResource<>(resourceAssembler
+                .toResources(menuAppService.getMenus(new MenusQuery(days, startDateOrDefault(startDate)))))
+                        .withSelfRef(listMethod, days, startDate);
     }
 
     /**
@@ -87,9 +107,13 @@ public class MenusController extends AbstractRequestValidationController {
         validateRequest(errors);
         menuAppService.generateMenus(request.toCommand());
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(linkTo(methodOn(MenusController.class).getMenus(request.getDays(),
-                request.getFrequency(), request.getStartDate())).toUri());
+        httpHeaders.setLocation(
+                linkTo(methodOn(MenusController.class).getMenus(request.getDays(), request.getStartDate())).toUri());
         return httpHeaders;
+    }
+
+    private LocalDate startDateOrDefault(LocalDate startDate) {
+        return Optional.ofNullable(startDate).orElse(LocalDate.now(clock));
     }
 
 }

@@ -15,41 +15,66 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.menus;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170101;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170101;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
+import org.adhuc.cena.menu.domain.model.menu.Menu;
+import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
+import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
 
 /**
@@ -63,7 +88,8 @@ import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
 @Tag("integration")
 @Tag("restController")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = MenusController.class)
+@WebMvcTest(controllers = MenusController.class,
+        includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = MenuResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
 @DisplayName("Menus controller")
@@ -81,6 +107,108 @@ public class MenusControllerTest extends ControllerTestSupport {
     @BeforeEach
     public void setUp() {
         reset(menuAppServiceMock);
+    }
+
+    @Nested
+    @DisplayName("with empty menus list")
+    class WithEmptyMenusList {
+
+        @BeforeEach
+        public void setUp() {
+            when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-02"))))
+                    .thenReturn(Collections.emptyList());
+        }
+
+        @Test
+        @DisplayName("getting menus starting at 2017-01-02 for 1 day returns OK")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("getting menus starting at 2017-01-02 for 1 day returns empty list")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
+                    .andExpect(jsonPath("$._embedded.data").isArray())
+                    .andExpect(jsonPath("$._embedded.data").isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("with 4 menus in the list")
+    class With4Menus {
+
+        @BeforeEach
+        public void setUp() {
+            when(menuAppServiceMock.getMenus(new MenusQuery(2, LocalDate.parse("2017-01-02"))))
+                    .thenReturn(Arrays.asList(lunch20170102(), dinner20170102(), lunch20170103(), dinner20170103()));
+        }
+
+        @Test
+        @DisplayName("getting menus starting at 2017-01-01 for 2 days returns OK")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02"))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("getting menus starting at 2017-01-01 for 2 days returns list with 4 menus")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
+            final ResultActions resultActions =
+                    mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02"))
+                            .andExpect(jsonPath("$._embedded.data").isArray())
+                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                            .andExpect(jsonPath("$._embedded.data", hasSize(4)));
+            assertJsonContainsMenu(resultActions, "$._embedded.data[0]", lunch20170102());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[1]", dinner20170102());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[2]", lunch20170103());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[3]", dinner20170103());
+        }
+
+        @Test
+        @DisplayName("getting list contains self link to resource")
+        public void getMenusHasSelfLink() throws Exception {
+            assertSelfLinkEqualToRequestUrl(mvc
+                    .perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02")));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("getting menus list with default parameters")
+    class WithDefaultMenusListParams {
+
+        @BeforeEach
+        public void setUp() {
+            when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-01"))))
+                    .thenReturn(Arrays.asList(lunch20170101(), dinner20170101()));
+        }
+
+        @Test
+        @DisplayName("returns OK")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
+            mvc.perform(get(MENUS_API_URL)).andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("returns list with 2 menus")
+        @WithMockUser(authorities = "USER")
+        public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
+            final ResultActions resultActions =
+                    mvc.perform(get(MENUS_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
+                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                            .andExpect(jsonPath("$._embedded.data", hasSize(2)));
+            assertJsonContainsMenu(resultActions, "$._embedded.data[0]", lunch20170101());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[1]", dinner20170101());
+        }
+
     }
 
     @Test
@@ -192,8 +320,30 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     private String buildMenusListLink(GenerateMenusRequest request) {
         return UriComponentsBuilder.fromPath(MENUS_API_URL).queryParam("days", Integer.toString(request.getDays()))
-                .queryParam("frequency", request.getFrequency().toString())
                 .queryParam("startDate", request.getStartDate().toString()).build().toUriString();
+    }
+
+    private void assertJsonContainsMenu(ResultActions resultActions, String jsonPath, Menu menu) throws Exception {
+        resultActions.andExpect(jsonPath(jsonPath + ".date").exists())
+                .andExpect(jsonPath(jsonPath + ".date", equalTo(menu.id().date().toString())))
+                .andExpect(jsonPath(jsonPath + ".type").exists())
+                .andExpect(jsonPath(jsonPath + ".type", equalTo(menu.id().type().name())))
+                .andExpect(jsonPath(jsonPath + ".recipe").doesNotExist())
+                // TODO remove those assertions when implementing menu detail service
+                .andExpect(jsonPath(jsonPath + "._links.self").exists())
+                .andExpect(jsonPath(jsonPath + "._links.recipe").exists())
+                .andExpect(jsonPath(jsonPath + "._links.recipe.href", endsWith(menu.recipe().toString())));
+    }
+
+    @TestConfiguration
+    public static class FixedClockTestConfiguration {
+
+        @Bean
+        public Clock clock() {
+            return Clock.fixed(LocalDate.parse("2017-01-01").atStartOfDay().toInstant(ZoneOffset.UTC),
+                    ZoneId.systemDefault());
+        }
+
     }
 
 }

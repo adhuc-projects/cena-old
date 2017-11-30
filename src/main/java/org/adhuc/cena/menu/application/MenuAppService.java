@@ -15,7 +15,11 @@
  */
 package org.adhuc.cena.menu.application;
 
+import java.util.List;
+
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
+import org.adhuc.cena.menu.domain.model.menu.Menu;
+import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 
 /**
  * An application service for menus.
@@ -26,6 +30,16 @@ import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
  * @since 0.1.0
  */
 public interface MenuAppService {
+
+    /**
+     * Gets the menus for the specified parameters.
+     *
+     * @param query
+     *            the query to get menus.
+     *
+     * @return the menus.
+     */
+    List<Menu> getMenus(MenusQuery query);
 
     /**
      * Generates menus.

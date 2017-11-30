@@ -62,4 +62,9 @@ public class MenusGenerationStepDefinitions {
         menusGenerationServiceClient.assertMenusSuccessfullyGenerated();
     }
 
+    @Then("^the number of meals in the list is (\\d+)$")
+    public void exactNumberOfMealsInMenusList(int mealsCount) {
+        menusGenerationServiceClient.assertExactNumberOfMealsInMenusList(mealsCount);
+    }
+
 }

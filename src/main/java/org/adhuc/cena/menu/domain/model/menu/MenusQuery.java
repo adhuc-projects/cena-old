@@ -13,40 +13,36 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.menu;
+package org.adhuc.cena.menu.domain.model.menu;
 
-import org.springframework.hateoas.ResourceSupport;
+import static org.springframework.util.Assert.isTrue;
+import static org.springframework.util.Assert.notNull;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.time.LocalDate;
 
-import org.adhuc.cena.menu.domain.model.menu.Menu;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Value;
+import lombok.experimental.Accessors;
 
 /**
- * A REST resource encapsulating menu information.
+ * A query to get menus.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class MenuResource extends ResourceSupport {
+@Value
+@Accessors(fluent = true)
+public class MenusQuery {
 
-    @JsonUnwrapped
-    private final Menu menu;
+    private final int       days;
+    private final LocalDate startDate;
 
-    /**
-     * Creates a menu resource encapsulating the menu information.
-     *
-     * @param menu
-     *            the menu information.
-     */
-    public MenuResource(final Menu menu) {
-        this.menu = menu;
+    public MenusQuery(int days, LocalDate startDate) {
+        isTrue(days > 0, "Cannot get menus with negative days value");
+        notNull(startDate, "Cannot get menus with invalid start date");
+        this.days = days;
+        this.startDate = startDate;
     }
 
 }

@@ -13,40 +13,27 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.menu;
+package org.adhuc.cena.menu.configuration;
 
-import org.springframework.hateoas.ResourceSupport;
+import java.time.Clock;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import org.adhuc.cena.menu.domain.model.menu.Menu;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * A REST resource encapsulating menu information.
+ * A configuration to initialize clock for production code.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class MenuResource extends ResourceSupport {
+@Configuration
+public class ClockConfiguration {
 
-    @JsonUnwrapped
-    private final Menu menu;
-
-    /**
-     * Creates a menu resource encapsulating the menu information.
-     *
-     * @param menu
-     *            the menu information.
-     */
-    public MenuResource(final Menu menu) {
-        this.menu = menu;
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 
 }

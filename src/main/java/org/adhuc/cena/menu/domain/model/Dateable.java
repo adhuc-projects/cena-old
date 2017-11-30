@@ -13,40 +13,42 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.port.adapter.rest.menu;
+package org.adhuc.cena.menu.domain.model;
 
-import org.springframework.hateoas.ResourceSupport;
-
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import org.adhuc.cena.menu.domain.model.menu.Menu;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.time.LocalDate;
 
 /**
- * A REST resource encapsulating menu information.
+ * A dateable element.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class MenuResource extends ResourceSupport {
-
-    @JsonUnwrapped
-    private final Menu menu;
+public interface Dateable {
 
     /**
-     * Creates a menu resource encapsulating the menu information.
+     * Gets the element's date.
      *
-     * @param menu
-     *            the menu information.
+     * @return the date.
      */
-    public MenuResource(final Menu menu) {
-        this.menu = menu;
+    LocalDate date();
+
+    /**
+     * Indicates whether the element's date is between the specified dates. Between corresponds to equal or after lower
+     * date, and equal or before upper date.
+     *
+     * @param lowerDate
+     *            the lower limit date.
+     *
+     * @param upperDate
+     *            the upper limit date.
+     *
+     * @return {@code true} if element's date is between dates.
+     */
+    default boolean isBetween(LocalDate lowerDate, LocalDate upperDate) {
+        return (date().isEqual(lowerDate) || date().isAfter(lowerDate))
+                && (date().isEqual(upperDate) || date().isBefore(upperDate));
     }
 
 }
