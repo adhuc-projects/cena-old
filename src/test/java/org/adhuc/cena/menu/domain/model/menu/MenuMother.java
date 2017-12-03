@@ -38,6 +38,10 @@ public class MenuMother {
     public static final LocalDate     MENU_2017_01_02_START_DATE  = LocalDate.parse("2017-01-02");
     public static final MealFrequency MENU_2017_01_02_FREQUENCY   = MealFrequency.WEEK_WORKING_DAYS;
 
+    public static final int           MENU_2017_01_03_DAYS        = 2;
+    public static final LocalDate     MENU_2017_01_03_START_DATE  = LocalDate.parse("2017-01-03");
+    public static final MealFrequency MENU_2017_01_03_FREQUENCY   = MealFrequency.TWICE_A_DAY;
+
     public static final int           MENU_2017_01_01_DAYS        = 7;
     public static final LocalDate     MENU_2017_01_01_START_DATE  = LocalDate.parse("2017-01-01");
     public static final MealFrequency MENU_2017_01_01_FREQUENCY   = MealFrequency.TWICE_A_DAY;
@@ -192,7 +196,11 @@ public class MenuMother {
         return new GenerateMenus(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY);
     }
 
-    public static GenerateMenus generateMenus10DaysAt20170101TwiceADay() {
+    public static GenerateMenus generateMenus2DaysAt20170103TwiceADay() {
+        return new GenerateMenus(MENU_2017_01_03_DAYS, MENU_2017_01_03_START_DATE, MENU_2017_01_03_FREQUENCY);
+    }
+
+    public static GenerateMenus generateMenus7DaysAt20170101TwiceADay() {
         return new GenerateMenus(MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE, MENU_2017_01_01_FREQUENCY);
     }
 

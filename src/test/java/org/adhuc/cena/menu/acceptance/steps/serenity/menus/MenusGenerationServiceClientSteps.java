@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.assertj.core.api.SoftAssertions;
+
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
@@ -106,6 +108,17 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
             assertThat(menu.date()).isEqualTo(date);
             assertThat(menu.type()).isEqualTo(mealType);
         });
+    }
+
+    @Step("Assert menus do not have redundant recipe")
+    public void assertMenusDoNotHaveRedundantRecipe() {
+        SoftAssertions softly = new SoftAssertions();
+        menus.stream().forEach(m -> {
+            softly.assertThat(
+                    menus.stream().filter(m2 -> !m.equals(m2)).filter(m2 -> m.getRecipeUrl().equals(m2.getRecipeUrl())))
+                    .as("Menu %s should have unique recipe", m).isEmpty();
+        });
+        softly.assertAll();
     }
 
     @Step("Get menu list from {0}")

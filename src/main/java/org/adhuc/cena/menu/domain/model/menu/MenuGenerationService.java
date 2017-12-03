@@ -15,17 +15,10 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import static org.springframework.util.Assert.notEmpty;
-
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import org.adhuc.cena.menu.domain.model.recipe.Recipe;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 /**
  * A service dedicated to the menus generation.
@@ -39,15 +32,16 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 public class MenuGenerationService {
 
     private MenuRepository                  menuRepository;
-    private RecipeRepository                recipeRepository;
     private MealFrequencyIterationGenerator mealFrequencyIterationGenerator;
+    private MenuRecipeDefinerStrategy       menuRecipeDefinerStrategy;
 
     @Autowired
-    public MenuGenerationService(MenuRepository menuRepository, RecipeRepository recipeRepository,
-            MealFrequencyIterationGenerator mealFrequencyIterationGenerator) {
+    public MenuGenerationService(MenuRepository menuRepository,
+            MealFrequencyIterationGenerator mealFrequencyIterationGenerator,
+            MenuRecipeDefinerStrategy menuRecipeDefinerStrategy) {
         this.menuRepository = menuRepository;
-        this.recipeRepository = recipeRepository;
         this.mealFrequencyIterationGenerator = mealFrequencyIterationGenerator;
+        this.menuRecipeDefinerStrategy = menuRecipeDefinerStrategy;
     }
 
     /**
@@ -57,15 +51,9 @@ public class MenuGenerationService {
      *            the menu generation command.
      */
     public void generateMenus(GenerateMenus command) {
-        RecipeId recipeId = determineRecipeId();
         Set<MenuId> mealIterations = mealFrequencyIterationGenerator.generateIterations(command);
-        mealIterations.stream().map(id -> new Menu(id, recipeId)).forEach(menu -> menuRepository.save(menu));
-    }
-
-    private RecipeId determineRecipeId() {
-        List<Recipe> recipes = recipeRepository.findAll();
-        notEmpty(recipes, "Cannot generate menus without recipes");
-        return recipes.get(0).id();
+        mealIterations.stream().map(id -> new Menu(id, menuRecipeDefinerStrategy.defineRecipeForMenu(id, command)))
+                .forEach(menu -> menuRepository.save(menu));
     }
 
 }

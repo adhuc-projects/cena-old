@@ -19,7 +19,7 @@ import static org.springframework.util.Assert.notNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
 
@@ -49,7 +49,7 @@ public class CompositeMealFrequencyIterationGenerator implements MealFrequencyIt
     }
 
     @Override
-    public Set<MenuId> generateIterations(GenerateMenus command) {
+    public TreeSet<MenuId> generateIterations(GenerateMenus command) {
         MealFrequencyIterationGenerator generator = generators.get(command.frequency());
         notNull(generator, "Could not find generator for meal frequency " + command.frequency());
         return generator.generateIterations(command);

@@ -39,7 +39,7 @@ import lombok.experimental.Accessors;
 @Value
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class MenuId implements Identity, Dateable {
+public class MenuId implements Identity, Dateable, Comparable<MenuId> {
 
     @NonNull
     private LocalDate date;
@@ -60,6 +60,15 @@ public class MenuId implements Identity, Dateable {
         notNull(type, "meal type");
         this.date = date;
         this.type = type;
+    }
+
+    @Override
+    public int compareTo(MenuId o) {
+        int compareDate = date.compareTo(o.date);
+        if (compareDate == 0) {
+            return type.compareTo(o.type);
+        }
+        return compareDate;
     }
 
     private void notNull(Object value, String name) {

@@ -89,7 +89,7 @@ public class GenerateMenusTest {
     @Test
     @DisplayName("is composed of days, start date and frequency, with days higher or equal to 1")
     public void generateMenus10DaysAt20170101TwiceADay() {
-        GenerateMenus command = MenuMother.generateMenus10DaysAt20170101TwiceADay();
+        GenerateMenus command = MenuMother.generateMenus7DaysAt20170101TwiceADay();
         assertThat(command.days()).isEqualTo(MENU_2017_01_01_DAYS);
         assertThat(command.startDate()).isEqualTo(MENU_2017_01_01_START_DATE);
         assertThat(command.frequency()).isEqualTo(MENU_2017_01_01_FREQUENCY);

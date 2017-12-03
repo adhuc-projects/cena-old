@@ -16,8 +16,8 @@
 package org.adhuc.cena.menu.domain.model.menu.frequency;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
@@ -36,8 +36,8 @@ import org.adhuc.cena.menu.domain.model.menu.MenuId;
 public abstract class AbstractMealFrequencyIterationGenerator implements MealFrequencyIterationGenerator {
 
     @Override
-    public Set<MenuId> generateIterations(GenerateMenus command) {
-        Set<MenuId> menuIds = new HashSet<>();
+    public TreeSet<MenuId> generateIterations(GenerateMenus command) {
+        TreeSet<MenuId> menuIds = new TreeSet<>();
         for (int daysIncrement = 0; daysIncrement < command.days(); daysIncrement++) {
             LocalDate date = command.startDate().plusDays(daysIncrement);
             menuIds.addAll(generateIterations(date));

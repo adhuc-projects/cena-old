@@ -15,12 +15,18 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.menus;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.hateoas.Link;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.adhuc.cena.menu.acceptance.support.resource.HateoasHalClientResourceSupport;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 
 import lombok.AccessLevel;
@@ -45,9 +51,15 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MenuValue {
+public class MenuValue extends HateoasHalClientResourceSupport {
 
     private final LocalDate date;
     private final MealType  type;
+
+    public String getRecipeUrl() {
+        Optional<Link> link = links().stream().filter(l -> l.getRel().equals("recipe")).findFirst();
+        assertThat(link).as("Cannot get recipe link for menu " + this).isPresent();
+        return link.get().getHref();
+    }
 
 }

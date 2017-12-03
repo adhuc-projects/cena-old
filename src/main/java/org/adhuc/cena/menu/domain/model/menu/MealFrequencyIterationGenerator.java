@@ -15,7 +15,8 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import java.util.Set;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  * A menus iterations generator based on meal frequency.
@@ -35,6 +36,35 @@ public interface MealFrequencyIterationGenerator {
      *
      * @return the menu identities corresponding to the iterations.
      */
-    Set<MenuId> generateIterations(GenerateMenus command);
+    TreeSet<MenuId> generateIterations(GenerateMenus command);
+
+    /**
+     * Determines which iteration the specified menu corresponds to.
+     *
+     * @param menuId
+     *            the menu identity.
+     *
+     * @param command
+     *            the command.
+     *
+     * @return the iteration for the menu.
+     */
+    default int determineIteration(MenuId menuId, GenerateMenus command) {
+        Iterator<MenuId> iterations = generateIterations(command).iterator();
+        int iterationIndex = 1;
+        while (iterations.hasNext()) {
+            MenuId iteration = iterations.next();
+            int comparison = iteration.compareTo(menuId);
+            if (comparison > 0) {
+                break;
+            } else if (comparison < 0) {
+                iterationIndex++;
+            } else {
+                return iterationIndex;
+            }
+        }
+        throw new IllegalArgumentException("Cannot determine iteration for menu " + menuId
+                + " that does not correspond to any iteration based on command " + command);
+    }
 
 }

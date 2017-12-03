@@ -16,27 +16,36 @@
 package org.adhuc.cena.menu.domain.model.menu;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_03_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_04_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_04_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus2DaysAt20170103TwiceADay;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.QUICHE_LORRAINE_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CANTAL_PIE_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.menu.frequency.CompositeMealFrequencyIterationGenerator;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryMenuRepository;
-import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeRepository;
 
 /**
  * The {@link MenuGenerationService} test class.
@@ -52,71 +61,70 @@ import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeReposit
 public class MenuGenerationServiceTest {
 
     private MenuRepository                  menuRepository;
-    private RecipeRepository                recipeRepository;
     private MealFrequencyIterationGenerator mealFrequencyIterationGenerator;
+    private MenuRecipeDefinerStrategy       menuRecipeDefinerStrategy;
     private MenuGenerationService           service;
 
     @BeforeEach
     public void setUp() {
         menuRepository = new InMemoryMenuRepository();
-        recipeRepository = new InMemoryRecipeRepository();
         mealFrequencyIterationGenerator = new CompositeMealFrequencyIterationGenerator();
-        service = new MenuGenerationService(menuRepository, recipeRepository, mealFrequencyIterationGenerator);
+        menuRecipeDefinerStrategy = mock(MenuRecipeDefinerStrategy.class);
+        service = new MenuGenerationService(menuRepository, mealFrequencyIterationGenerator, menuRecipeDefinerStrategy);
+
+        when(menuRecipeDefinerStrategy.defineRecipeForMenu(any(), any())).thenReturn(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
+                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CANTAL_PIE_ID, QUICHE_LORRAINE_ID);
     }
 
-    @DisplayName("throws IllegalArgumentException while generating menus without recipe")
-    public void generateMenusWithoutRecipe() {
-        assertThrows(IllegalArgumentException.class,
-                () -> service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays()));
+    @Test
+    @DisplayName("generating one menu for one day saves the menu for the requested meal")
+    public void generateMenusForOneDaySaveMenuForRequestedMeal() {
+        assumeFalse(menuRepository.findOne(DINNER_2017_01_02_ID).isPresent());
+        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+
+        Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
+        assertThat(menu).isNotEmpty();
+        assertThat(menu.get().recipe()).isNotNull();
     }
 
-    @Nested
-    @DisplayName("with recipes")
-    public class WithRecipes {
+    @Test
+    @DisplayName("generating one menu for dinner does not generate menu for lunch")
+    public void generateMenusDinnerDoesNotGenerateLunch() {
+        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
 
-        @BeforeEach
-        public void setUp() {
-            recipeRepository.save(tomatoCucumberMozzaSalad());
-        }
+        assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isEmpty();
+    }
 
-        @Test
-        @DisplayName("generating one menu for one day saves the menu for the requested meal")
-        public void generateMenusForOneDaySaveMenuForRequestedMeal() {
-            assumeFalse(menuRepository.findOne(DINNER_2017_01_02_ID).isPresent());
-            service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+    @Test
+    @DisplayName("generating one menu for dinner does not change menu for lunch")
+    public void generateMenusDinnerDoesNotChangeLunch() {
+        Menu lunch = lunch20170102();
+        menuRepository.save(lunch);
+        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
 
-            Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-            assertThat(menu).isNotEmpty();
-            assertThat(menu.get().recipe()).isNotNull();
-        }
+        assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().containsSame(lunch);
+    }
 
-        @Test
-        @DisplayName("generating one menu for dinner does not generate menu for lunch")
-        public void generateMenusDinnerDoesNotGenerateLunch() {
-            service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+    @Test
+    @DisplayName("generating one menu for one day generates the menu with recipe")
+    public void generateMenusForOneDayMenuHasRecipe() {
+        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
 
-            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isEmpty();
-        }
+        Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
+        assertThat(menu.get().recipe()).isNotNull();
+    }
 
-        @Test
-        @DisplayName("generating one menu for dinner does not change menu for lunch")
-        public void generateMenusDinnerDoesNotChangeLunch() {
-            Menu lunch = lunch20170102();
-            menuRepository.save(lunch);
-            service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+    @Test
+    @DisplayName("generating menus for multiple days generates the menus with different recipes")
+    public void generateMenusForMultipleDaysMenusHaveDifferentRecipes() {
+        service.generateMenus(generateMenus2DaysAt20170103TwiceADay());
 
-            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().containsSame(lunch);
-        }
-
-        @Test
-        @DisplayName("generating one menu for one day generates the menu with recipe")
-        public void generateMenusForOneDayMenuHasRecipe() {
-            service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
-
-            Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-            assertThat(menu.get().recipe()).isNotNull();
-        }
-
+        Menu lunch20170103 = menuRepository.findOneNotNull(LUNCH_2017_01_03_ID);
+        Menu dinner20170103 = menuRepository.findOneNotNull(DINNER_2017_01_03_ID);
+        Menu lunch20170104 = menuRepository.findOneNotNull(LUNCH_2017_01_04_ID);
+        Menu dinner20170104 = menuRepository.findOneNotNull(DINNER_2017_01_04_ID);
+        assertThat(Arrays.asList(lunch20170103, dinner20170103, lunch20170104, dinner20170104).stream()
+                .map(m -> m.recipe()).collect(Collectors.toSet())).hasSize(4);
     }
 
 }

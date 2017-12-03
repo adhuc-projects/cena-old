@@ -72,4 +72,9 @@ public class MenusGenerationStepDefinitions {
         menusGenerationServiceClient.assertMealsDistributionCorrespondToSpecifications();
     }
 
+    @Then("^no meal has redundant recipe$")
+    public void menusWithNoRedundantRecipe() {
+        menusGenerationServiceClient.assertMenusDoNotHaveRedundantRecipe();
+    }
+
 }

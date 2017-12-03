@@ -19,7 +19,7 @@ import static org.springframework.util.Assert.notNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("in-memory")
 public class InMemoryRecipeRepository implements RecipeRepository {
 
-    private Map<RecipeId, Recipe> recipes = new HashMap<>();
+    private Map<RecipeId, Recipe> recipes = new LinkedHashMap<>();
 
     @Override
     public List<Recipe> findAll() {

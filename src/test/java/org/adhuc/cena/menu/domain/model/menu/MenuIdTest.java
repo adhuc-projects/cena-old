@@ -19,7 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_DATE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_MEAL_TYPE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_01_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_ID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -58,6 +62,36 @@ public class MenuIdTest {
         final MenuId createdId = new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE);
         assertThat(createdId.date()).isEqualTo(DINNER_2017_01_02_DATE);
         assertThat(createdId.type()).isEqualTo(DINNER_2017_01_02_MEAL_TYPE);
+    }
+
+    @Test
+    @DisplayName("compares to itself")
+    public void compareSameMenuId() {
+        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_02_ID)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("compares to menu from the previous day")
+    public void compareMenuFromPreviousDay() {
+        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_01_ID)).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("compares to menu from the next day")
+    public void compareMenuFromNextDay() {
+        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_03_ID)).isLessThan(0);
+    }
+
+    @Test
+    @DisplayName("compares to menu from the same day, previous meal")
+    public void compareMenuFromSameDayFreviousMeal() {
+        assertThat(DINNER_2017_01_02_ID.compareTo(LUNCH_2017_01_02_ID)).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("compares to menu from the same day, next meal")
+    public void compareMenuFromSameDayNextMeal() {
+        assertThat(LUNCH_2017_01_02_ID.compareTo(DINNER_2017_01_02_ID)).isLessThan(0);
     }
 
 }
