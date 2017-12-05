@@ -17,6 +17,12 @@ package org.adhuc.cena.menu.acceptance.support.authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.springframework.util.CollectionUtils;
+
 import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthenticationMother.AcceptanceAuthentication;
 
 import io.restassured.specification.RequestSpecification;
@@ -158,8 +164,18 @@ public class RestAuthenticationProvider {
             decorated.getCore().body("");
             decorated.getCore().removeCookies();
             decorated.getCore().removeHeaders();
+            cleanParams(decorated.getCore().getRequestParams(), p -> decorated.getCore().removeParam(p));
+            cleanParams(decorated.getCore().getFormParams(), p -> decorated.getCore().removeFormParam(p));
+            cleanParams(decorated.getCore().getPathParams(), p -> decorated.getCore().removePathParam(p));
+            cleanParams(decorated.getCore().getQueryParams(), p -> decorated.getCore().removeQueryParam(p));
         }
         return specification.auth().none();
+    }
+
+    private void cleanParams(Map<String, String> params, Consumer<? super String> cleanMethod) {
+        if (!CollectionUtils.isEmpty(params)) {
+            new ArrayList<>(params.keySet()).forEach(cleanMethod);
+        }
     }
 
 }

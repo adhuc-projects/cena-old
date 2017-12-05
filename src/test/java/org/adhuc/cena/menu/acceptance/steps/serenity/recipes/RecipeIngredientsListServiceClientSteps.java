@@ -62,7 +62,12 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     @Step("Add ingredient {1} to recipe {0} as recipe author")
     public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient) {
-        addIngredientToRecipe(recipe, ingredient, false, restWithAuth(recipe.author()));
+        addIngredientToRecipeAsRecipeAuthor(recipe, ingredient, false);
+    }
+
+    @Step("Add ingredient {1} to recipe {0} as recipe author (main = {2})")
+    public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient, boolean main) {
+        addIngredientToRecipe(recipe, ingredient, main, restWithAuth(recipe.author()));
     }
 
     @Step("Assert ingredient has been successfully added to recipe")

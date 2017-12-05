@@ -20,10 +20,13 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import org.springframework.util.CollectionUtils;
+
 import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
@@ -40,7 +43,9 @@ import net.thucydides.core.annotations.Steps;
 public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClientSteps {
 
     @Steps
-    private RecipeDetailServiceClientSteps recipeDetailServiceClient;
+    private RecipeDetailServiceClientSteps          recipeDetailServiceClient;
+    @Steps
+    private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
     @Step("Create the recipe {0}")
     public void createRecipe(RecipeValue recipe) {
@@ -72,8 +77,14 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
 
     private void createRecipe(RecipeValue recipe, RequestSpecification rest) {
         String recipesResourceUrl = getRecipesResourceUrl(rest);
-        rest.header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(new CreateRecipeRequest(recipe.name(), recipe.content()))
-                .post(recipesResourceUrl).andReturn();
+        Response response = rest.header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .body(new CreateRecipeRequest(recipe.name(), recipe.content())).post(recipesResourceUrl).andReturn();
+        if (!CollectionUtils.isEmpty(recipe.ingredients())) {
+            recipe.ingredients().stream().forEach(i -> {
+                RecipeValue r = recipeDetailServiceClient.getRecipeFromUrl(response.then().extract().header(LOCATION));
+                recipeIngredientsListServiceClient.addIngredientToRecipeAsRecipeAuthor(r, i, i.isMainIngredient());
+            });
+        }
     }
 
 }

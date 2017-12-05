@@ -17,12 +17,15 @@ package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.hateoas.Link;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -45,8 +48,8 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ToString(exclude = { "id", "content", "author" }, includeFieldNames = false, callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = { "ingredients" })
+@ToString(exclude = { "id", "content", "author", "ingredients" }, includeFieldNames = false, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 @Accessors(fluent = true)
@@ -54,10 +57,12 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecipeValue extends HateoasHalClientResourceSupport {
     @JsonProperty("id")
-    private String       id;
-    private final String name;
-    private final String content;
-    private String       author;
+    private String                      id;
+    private final String                name;
+    private final String                content;
+    private String                      author;
+    @JsonIgnore
+    private List<RecipeIngredientValue> ingredients = new ArrayList<>();
 
     public boolean exists() {
         return id != null;
