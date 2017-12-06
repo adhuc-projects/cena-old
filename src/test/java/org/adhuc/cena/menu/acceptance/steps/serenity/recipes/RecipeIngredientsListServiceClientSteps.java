@@ -27,6 +27,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
@@ -51,23 +52,23 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
     }
 
     @Step("Add main ingredient to recipe")
-    public void addMainIngredientToRecipe() {
-        addIngredientToRecipe(recipe(), ingredientListServiceClient.ingredient(), true);
+    public Response addMainIngredientToRecipe() {
+        return addIngredientToRecipe(recipe(), ingredientListServiceClient.ingredient(), true);
     }
 
     @Step("Add ingredient {1} to recipe {0} (main = {2})")
-    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main) {
-        addIngredientToRecipe(recipe, ingredient, main, rest());
+    private Response addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main) {
+        return addIngredientToRecipe(recipe, ingredient, main, rest());
     }
 
     @Step("Add ingredient {1} to recipe {0} as recipe author")
-    public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient) {
-        addIngredientToRecipeAsRecipeAuthor(recipe, ingredient, false);
+    public Response addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient) {
+        return addIngredientToRecipeAsRecipeAuthor(recipe, ingredient, false);
     }
 
     @Step("Add ingredient {1} to recipe {0} as recipe author (main = {2})")
-    public void addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient, boolean main) {
-        addIngredientToRecipe(recipe, ingredient, main, restWithAuth(recipe.author()));
+    public Response addIngredientToRecipeAsRecipeAuthor(RecipeValue recipe, IngredientValue ingredient, boolean main) {
+        return addIngredientToRecipe(recipe, ingredient, main, restWithAuth(recipe.author()));
     }
 
     @Step("Assert ingredient has been successfully added to recipe")
@@ -96,14 +97,14 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
     }
 
     @Step("Assume ingredient {1} can be found in recipe {0}'s ingredients list")
-    private void assumeIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+    public void assumeIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
         if (!isIngredientInRecipeIngredientsList(recipe, ingredient)) {
             addIngredientToRecipeAsRecipeAuthor(recipe, ingredient);
         }
     }
 
     @Step("Assume ingredient {1} cannot be found in recipe {0}'s ingredients list")
-    private void assumeIngredientNotInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
+    public void assumeIngredientNotInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {
         // TODO remove ingredient from recipe's ingredient
         assumeFalse(isIngredientInRecipeIngredientsList(recipe, ingredient));
     }
@@ -140,12 +141,12 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
         assertThat(ingredient.isMainIngredient()).isFalse();
     }
 
-    private void addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main,
+    private Response addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main,
             RequestSpecification rest) {
         final String recipeIngredientsResourceUrl =
                 recipe.exists() ? recipe.getIngredientsListUrl() : determineUnknownRecipeIngredientsResourceUrl();
         String ingredientId = ingredient.id() != null ? ingredient.id() : IngredientId.generate().toString();
-        rest.param("main", main).put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
+        return rest.param("main", main).put(recipeIngredientsResourceUrl + "/" + ingredientId).andReturn();
     }
 
     private boolean isIngredientInRecipeIngredientsList(RecipeValue recipe, IngredientValue ingredient) {

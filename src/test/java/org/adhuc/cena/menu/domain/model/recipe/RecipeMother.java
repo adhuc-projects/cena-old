@@ -454,7 +454,7 @@ public class RecipeMother {
     }
 
     public static List<RecipeIngredientId> lasagneIngredients() {
-        return Arrays.asList(aubergineInMoussaka(), mincedMuttonInMoussaka(), tomatoInMoussaka());
+        return Arrays.asList(pastaInLasagne(), tomatoInLasagne(), mincedBeefInLasagne(), carrotInLasagne());
     }
 
     public static Recipe duckBreastFilletWithTurnips() {

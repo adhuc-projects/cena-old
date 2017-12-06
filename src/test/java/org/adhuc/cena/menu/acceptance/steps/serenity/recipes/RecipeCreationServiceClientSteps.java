@@ -22,6 +22,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.springframework.util.CollectionUtils;
 
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientValue;
 import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
@@ -44,6 +46,8 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
 
     @Steps
     private RecipeDetailServiceClientSteps          recipeDetailServiceClient;
+    @Steps
+    private IngredientListServiceClientSteps        ingredientListServiceClient;
     @Steps
     private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
@@ -82,7 +86,10 @@ public class RecipeCreationServiceClientSteps extends AbstractRecipeServiceClien
         if (!CollectionUtils.isEmpty(recipe.ingredients())) {
             recipe.ingredients().stream().forEach(i -> {
                 RecipeValue r = recipeDetailServiceClient.getRecipeFromUrl(response.then().extract().header(LOCATION));
-                recipeIngredientsListServiceClient.addIngredientToRecipeAsRecipeAuthor(r, i, i.isMainIngredient());
+                IngredientValue ingredient = ingredientListServiceClient.assumeIngredientInIngredientsList(i);
+                Response addIngredientResponse = recipeIngredientsListServiceClient
+                        .addIngredientToRecipeAsRecipeAuthor(r, ingredient, i.isMainIngredient());
+                assertNoContent(addIngredientResponse.then());
             });
         }
     }
