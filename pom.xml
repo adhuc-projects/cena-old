@@ -261,6 +261,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
+          <systemPropertyVariables>
+            <logback.configurationFile>${basedir}/src/test/resources/logback-test.xml</logback.configurationFile>
+          </systemPropertyVariables>
           <skipTests>${test.acceptance.functional.skip}</skipTests>
           <includes>
             <include>**/*AcceptanceTest.java</include>
@@ -346,6 +349,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
@@ -370,11 +377,11 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
-      <dependency>
-        <groupId>com.github.sbrannen</groupId>
-        <artifactId>spring-test-junit5</artifactId>
-        <scope>test</scope>
-      </dependency>
+    <dependency>
+      <groupId>com.github.sbrannen</groupId>
+      <artifactId>spring-test-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.springframework.restdocs</groupId>
       <artifactId>spring-restdocs-mockmvc</artifactId>
@@ -408,6 +415,11 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
         <version>${junit.jupiter.version}</version>
       </dependency>
       <dependency>
