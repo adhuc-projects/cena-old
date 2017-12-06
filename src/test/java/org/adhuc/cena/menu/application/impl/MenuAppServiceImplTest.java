@@ -72,9 +72,8 @@ public class MenuAppServiceImplTest {
     @DisplayName("gets menus starting from 2017-01-03 for 3 days")
     public void getMenusFrom20170103For3Days() {
         allMenus().stream().forEach(m -> menuRepository.save(m));
-        assertThat(service.getMenus(new MenusQuery(3, LocalDate.parse("2017-01-03")))).containsExactlyInAnyOrder(
-                lunch20170103(), dinner20170103(), lunch20170104(), dinner20170104(), lunch20170105(),
-                dinner20170105());
+        assertThat(service.getMenus(new MenusQuery(3, LocalDate.parse("2017-01-03")))).containsExactly(lunch20170103(),
+                dinner20170103(), lunch20170104(), dinner20170104(), lunch20170105(), dinner20170105());
     }
 
     @Test

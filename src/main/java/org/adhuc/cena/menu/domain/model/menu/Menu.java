@@ -43,7 +43,7 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class Menu extends BasicEntity<MenuId> {
+public class Menu extends BasicEntity<MenuId> implements Comparable<Menu> {
 
     @NonNull
     @JsonIgnore
@@ -62,6 +62,11 @@ public class Menu extends BasicEntity<MenuId> {
         super(id);
         notNull(recipe, "Cannot create menu without recipe");
         this.recipe = recipe;
+    }
+
+    @Override
+    public int compareTo(Menu o) {
+        return id().compareTo(o.id());
     }
 
 }

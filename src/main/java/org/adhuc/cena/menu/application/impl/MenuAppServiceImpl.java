@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.application.impl;
 
 import static org.springframework.util.Assert.notNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,10 @@ public class MenuAppServiceImpl implements MenuAppService {
 
     @Override
     public List<Menu> getMenus(MenusQuery query) {
-        return menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
+        List<Menu> menus =
+                menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
+        Collections.sort(menus);
+        return menus;
     }
 
     @Override

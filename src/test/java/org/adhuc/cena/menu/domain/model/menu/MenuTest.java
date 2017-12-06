@@ -20,12 +20,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_RECIPE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170101;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170101;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
+
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * The {@link Menu} test class.
@@ -65,6 +73,27 @@ public class MenuTest {
             assertThat(menu.recipe()).isEqualTo(DINNER_2017_01_02_RECIPE);
         }
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("comparableMenus")
+    @DisplayName("compared with other")
+    public void compareMenus(Menu m1, Menu m2, int result) {
+        if (result < 0) {
+            assertThat(m1.compareTo(m2)).isLessThan(0);
+        } else if (result > 0) {
+            assertThat(m1.compareTo(m2)).isGreaterThan(0);
+        } else {
+            assertThat(m1.compareTo(m2)).isEqualTo(0);
+        }
+    }
+
+    static Stream<Arguments> comparableMenus() {
+        return Stream.of(Arguments.of(lunch20170101(), lunch20170101(), 0),
+                Arguments.of(dinner20170101(), dinner20170101(), 0),
+                Arguments.of(lunch20170101(), dinner20170101(), -1), Arguments.of(lunch20170101(), lunch20170102(), -1),
+                Arguments.of(dinner20170101(), lunch20170102(), -1), Arguments.of(lunch20170102(), lunch20170101(), 1),
+                Arguments.of(dinner20170102(), lunch20170101(), 1));
     }
 
 }
