@@ -21,12 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
+import org.adhuc.cena.menu.domain.model.menu.Menu;
+import org.adhuc.cena.menu.domain.model.menu.MenuGenerationState;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 import org.adhuc.cena.menu.domain.model.menu.MenuRecipeDefinerStrategy;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
-import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 /**
@@ -52,14 +52,14 @@ public class DumbMenuRecipeDefinerStrategy implements MenuRecipeDefinerStrategy 
     }
 
     @Override
-    public RecipeId defineRecipeForMenu(MenuId menuId, GenerateMenus command) {
-        int iteration = mealFrequencyIterationGenerator.determineIteration(menuId, command);
+    public MenuGenerationState defineRecipeForMenu(MenuId menuId, MenuGenerationState state) {
+        int iteration = mealFrequencyIterationGenerator.determineIteration(menuId, state.command());
         List<Recipe> recipes = recipeRepository.findAll();
         if (CollectionUtils.isEmpty(recipes) || recipes.size() < iteration) {
             throw new IllegalStateException("Cannot generate menu " + menuId
                     + " : there is no recipe left to be used (requiring at least " + iteration + " recipes)");
         }
-        return recipes.get(iteration - 1).id();
+        return state.addMenu(new Menu(menuId, recipes.get(iteration - 1).id()));
     }
 
 }

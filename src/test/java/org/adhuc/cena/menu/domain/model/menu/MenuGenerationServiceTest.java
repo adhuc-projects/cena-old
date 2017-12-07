@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -71,60 +72,97 @@ public class MenuGenerationServiceTest {
         mealFrequencyIterationGenerator = new CompositeMealFrequencyIterationGenerator();
         menuRecipeDefinerStrategy = mock(MenuRecipeDefinerStrategy.class);
         service = new MenuGenerationService(menuRepository, mealFrequencyIterationGenerator, menuRecipeDefinerStrategy);
-
-        when(menuRecipeDefinerStrategy.defineRecipeForMenu(any(), any())).thenReturn(TOMATO_CUCUMBER_MOZZA_SALAD_ID,
-                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CANTAL_PIE_ID, QUICHE_LORRAINE_ID);
     }
 
-    @Test
-    @DisplayName("generating one menu for one day saves the menu for the requested meal")
-    public void generateMenusForOneDaySaveMenuForRequestedMeal() {
-        assumeFalse(menuRepository.findOne(DINNER_2017_01_02_ID).isPresent());
-        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+    @Nested
+    @DisplayName("generating one menu for one day")
+    public class Generate1MenuFor1Day {
 
-        Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-        assertThat(menu).isNotEmpty();
-        assertThat(menu.get().recipe()).isNotNull();
+        private GenerateMenus command;
+
+        @BeforeEach
+        public void setUp() {
+            command = generateMenus1DayAt20170102WeekWorkingDays();
+
+            MenuGenerationState state = new MenuGenerationState(command);
+            when(menuRecipeDefinerStrategy.defineRecipeForMenu(any(), any()))
+                    .thenReturn(state.addMenu(new Menu(DINNER_2017_01_02_ID, TOMATO_CUCUMBER_MOZZA_SALAD_ID)));
+        }
+
+        @Test
+        @DisplayName("saves the menu for the requested meal")
+        public void generateMenusForOneDaySaveMenuForRequestedMeal() {
+            assumeFalse(menuRepository.findOne(DINNER_2017_01_02_ID).isPresent());
+            service.generateMenus(command);
+
+            Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
+            assertThat(menu).isNotEmpty();
+            assertThat(menu.get().recipe()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("does not generate menu for lunch")
+        public void generateMenusDinnerDoesNotGenerateLunch() {
+            service.generateMenus(command);
+
+            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isEmpty();
+        }
+
+        @Test
+        @DisplayName("does not change menu for lunch")
+        public void generateMenusDinnerDoesNotChangeLunch() {
+            Menu lunch = lunch20170102();
+            menuRepository.save(lunch);
+            service.generateMenus(command);
+
+            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().containsSame(lunch);
+        }
+
+        @Test
+        @DisplayName("generates the menu with recipe")
+        public void generateMenusForOneDayMenuHasRecipe() {
+            service.generateMenus(command);
+
+            Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
+            assertThat(menu.get().recipe()).isNotNull();
+        }
+
     }
 
-    @Test
-    @DisplayName("generating one menu for dinner does not generate menu for lunch")
-    public void generateMenusDinnerDoesNotGenerateLunch() {
-        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+    @Nested
+    @DisplayName("generating menus for multiple days")
+    public class GenerateMenusForMultipleDays {
 
-        assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isEmpty();
-    }
+        private GenerateMenus command;
 
-    @Test
-    @DisplayName("generating one menu for dinner does not change menu for lunch")
-    public void generateMenusDinnerDoesNotChangeLunch() {
-        Menu lunch = lunch20170102();
-        menuRepository.save(lunch);
-        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+        @BeforeEach
+        public void setUp() {
+            command = generateMenus2DaysAt20170103TwiceADay();
 
-        assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().containsSame(lunch);
-    }
+            MenuGenerationState originalState = new MenuGenerationState(command);
+            MenuGenerationState state1 =
+                    originalState.addMenu(new Menu(LUNCH_2017_01_03_ID, TOMATO_CUCUMBER_MOZZA_SALAD_ID));
+            MenuGenerationState state2 =
+                    state1.addMenu(new Menu(DINNER_2017_01_03_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID));
+            MenuGenerationState state3 = state2.addMenu(new Menu(LUNCH_2017_01_04_ID, TOMATO_CANTAL_PIE_ID));
+            MenuGenerationState state4 = state3.addMenu(new Menu(DINNER_2017_01_04_ID, QUICHE_LORRAINE_ID));
+            when(menuRecipeDefinerStrategy.defineRecipeForMenu(any(), any())).thenReturn(state1, state2, state3,
+                    state4);
+        }
 
-    @Test
-    @DisplayName("generating one menu for one day generates the menu with recipe")
-    public void generateMenusForOneDayMenuHasRecipe() {
-        service.generateMenus(generateMenus1DayAt20170102WeekWorkingDays());
+        @Test
+        @DisplayName("generates the menus with different recipes")
+        public void generateMenusForMultipleDaysMenusHaveDifferentRecipes() {
+            service.generateMenus(command);
 
-        Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-        assertThat(menu.get().recipe()).isNotNull();
-    }
+            Menu lunch20170103 = menuRepository.findOneNotNull(LUNCH_2017_01_03_ID);
+            Menu dinner20170103 = menuRepository.findOneNotNull(DINNER_2017_01_03_ID);
+            Menu lunch20170104 = menuRepository.findOneNotNull(LUNCH_2017_01_04_ID);
+            Menu dinner20170104 = menuRepository.findOneNotNull(DINNER_2017_01_04_ID);
+            assertThat(Arrays.asList(lunch20170103, dinner20170103, lunch20170104, dinner20170104).stream()
+                    .map(m -> m.recipe()).collect(Collectors.toSet())).hasSize(4);
+        }
 
-    @Test
-    @DisplayName("generating menus for multiple days generates the menus with different recipes")
-    public void generateMenusForMultipleDaysMenusHaveDifferentRecipes() {
-        service.generateMenus(generateMenus2DaysAt20170103TwiceADay());
-
-        Menu lunch20170103 = menuRepository.findOneNotNull(LUNCH_2017_01_03_ID);
-        Menu dinner20170103 = menuRepository.findOneNotNull(DINNER_2017_01_03_ID);
-        Menu lunch20170104 = menuRepository.findOneNotNull(LUNCH_2017_01_04_ID);
-        Menu dinner20170104 = menuRepository.findOneNotNull(DINNER_2017_01_04_ID);
-        assertThat(Arrays.asList(lunch20170103, dinner20170103, lunch20170104, dinner20170104).stream()
-                .map(m -> m.recipe()).collect(Collectors.toSet())).hasSize(4);
     }
 
 }

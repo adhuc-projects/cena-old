@@ -52,8 +52,11 @@ public class MenuGenerationService {
      */
     public void generateMenus(GenerateMenus command) {
         Set<MenuId> mealIterations = mealFrequencyIterationGenerator.generateIterations(command);
-        mealIterations.stream().map(id -> new Menu(id, menuRecipeDefinerStrategy.defineRecipeForMenu(id, command)))
-                .forEach(menu -> menuRepository.save(menu));
+        MenuGenerationState state = new MenuGenerationState(command);
+        for (MenuId id : mealIterations) {
+            state = menuRecipeDefinerStrategy.defineRecipeForMenu(id, state);
+        }
+        state.menus().forEach(menu -> menuRepository.save(menu));
     }
 
 }

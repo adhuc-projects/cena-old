@@ -204,4 +204,14 @@ public class MenuMother {
         return new GenerateMenus(MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE, MENU_2017_01_01_FREQUENCY);
     }
 
+    public static MenuGenerationState menuGeneration2DaysAt20170103TwiceADayCurrentState() {
+        return new MenuGenerationState(generateMenus2DaysAt20170103TwiceADay()).addMenu(lunch20170103())
+                .addMenu(dinner20170103());
+    }
+
+    public static MenuGenerationState menuGeneration7DaysAt20170101TwiceADayCurrentState() {
+        return new MenuGenerationState(generateMenus7DaysAt20170101TwiceADay()).addMenu(lunch20170101())
+                .addMenu(dinner20170101()).addMenu(lunch20170102());
+    }
+
 }

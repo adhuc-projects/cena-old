@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
-
 /**
  * A menu recipe definer strategy, determining the recipe to be applied for a menu.
  *
@@ -33,11 +31,11 @@ public interface MenuRecipeDefinerStrategy {
      * @param menuId
      *            the menu identity.
      *
-     * @param command
-     *            the menu generation command.
+     * @param state
+     *            the current menu generation state.
      *
-     * @return the recipe to be applied for the menu.
+     * @return the new menu generation state.
      */
-    RecipeId defineRecipeForMenu(MenuId menuId, GenerateMenus command);
+    MenuGenerationState defineRecipeForMenu(MenuId menuId, MenuGenerationState state);
 
 }

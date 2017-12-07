@@ -22,6 +22,10 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_07
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_01_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus7DaysAt20170101TwiceADay;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.menuGeneration7DaysAt20170101TwiceADayCurrentState;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.LASAGNE_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CANTAL_PIE_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.chiliConCarne;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieur;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckBreastFilletWithTurnips;
@@ -50,6 +54,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
+import org.adhuc.cena.menu.domain.model.menu.Menu;
+import org.adhuc.cena.menu.domain.model.menu.MenuGenerationState;
 import org.adhuc.cena.menu.domain.model.menu.frequency.CompositeMealFrequencyIterationGenerator;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
@@ -81,8 +87,8 @@ public class DumbMenuRecipeDefinerStrategyTest {
     @Test
     @DisplayName("cannot define recipe for menu with no existing recipe")
     public void defineRecipeForMenuNoDefinedRecipe() {
-        assertThrows(IllegalStateException.class,
-                () -> strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID, generateMenus7DaysAt20170101TwiceADay()));
+        assertThrows(IllegalStateException.class, () -> strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID,
+                new MenuGenerationState(generateMenus7DaysAt20170101TwiceADay())));
     }
 
     @Nested
@@ -101,20 +107,26 @@ public class DumbMenuRecipeDefinerStrategyTest {
 
         @Test
         public void defineRecipeForMenuFirstMenuInGeneration() {
-            assertThat(strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID, generateMenus7DaysAt20170101TwiceADay()))
-                    .isEqualTo(tomatoCucumberMozzaSalad().id());
+            assertThat(strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID,
+                    menuGeneration7DaysAt20170101TwiceADayCurrentState()))
+                            .isEqualTo(menuGeneration7DaysAt20170101TwiceADayCurrentState()
+                                    .addMenu(new Menu(LUNCH_2017_01_01_ID, TOMATO_CUCUMBER_MOZZA_SALAD_ID)));
         }
 
         @Test
         public void defineRecipeForMenuThirdMenuInGeneration() {
-            assertThat(strategy.defineRecipeForMenu(LUNCH_2017_01_02_ID, generateMenus7DaysAt20170101TwiceADay()))
-                    .isEqualTo(tomatoCantalPie().id());
+            assertThat(strategy.defineRecipeForMenu(LUNCH_2017_01_02_ID,
+                    menuGeneration7DaysAt20170101TwiceADayCurrentState()))
+                            .isEqualTo(menuGeneration7DaysAt20170101TwiceADayCurrentState()
+                                    .addMenu(new Menu(LUNCH_2017_01_02_ID, TOMATO_CANTAL_PIE_ID)));
         }
 
         @Test
         public void defineRecipeForMenuLastMenuInGeneration() {
-            assertThat(strategy.defineRecipeForMenu(DINNER_2017_01_07_ID, generateMenus7DaysAt20170101TwiceADay()))
-                    .isEqualTo(lasagne().id());
+            assertThat(strategy.defineRecipeForMenu(DINNER_2017_01_07_ID,
+                    menuGeneration7DaysAt20170101TwiceADayCurrentState()))
+                            .isEqualTo(menuGeneration7DaysAt20170101TwiceADayCurrentState()
+                                    .addMenu(new Menu(DINNER_2017_01_07_ID, LASAGNE_ID)));
         }
 
     }
@@ -133,8 +145,8 @@ public class DumbMenuRecipeDefinerStrategyTest {
         @Test
         @DisplayName("cannot define recipe for menu requiring one more recipe")
         public void defineRecipeForMenuThirdMenuInGenerationNotEnoughRecipes() {
-            assertThrows(IllegalStateException.class,
-                    () -> strategy.defineRecipeForMenu(LUNCH_2017_01_02_ID, generateMenus7DaysAt20170101TwiceADay()));
+            assertThrows(IllegalStateException.class, () -> strategy.defineRecipeForMenu(LUNCH_2017_01_02_ID,
+                    menuGeneration7DaysAt20170101TwiceADayCurrentState()));
         }
 
     }
