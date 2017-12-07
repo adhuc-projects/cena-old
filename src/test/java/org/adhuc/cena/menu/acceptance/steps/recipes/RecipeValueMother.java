@@ -16,40 +16,24 @@
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.ingredient;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.chiliConCarne;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.chiliConCarneIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieur;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieurIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckBreastFilletWithTurnips;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckBreastFilletWithTurnipsIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckParmentier;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckParmentierIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.gazpacho;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.gazpachoIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagne;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagneIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.leeksWithHamAndBechamelSauce;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.leeksWithHamAndBechamelSauceIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.moussaka;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.moussakaIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.norvegianSalad;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.norvegianSaladIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.omelette;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.omeletteIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.poachedEggsSalad;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.poachedEggsSaladIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.quicheLorraine;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.quicheLorraineIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.raclette;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.racletteIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.sauerkraut;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.sauerkrautIngredients;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPie;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPieIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.chiliConCarneWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieurWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckBreastFilletWithTurnipsWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckParmentierWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.gazpachoWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagneWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.leeksWithHamAndBechamelSauceWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.moussakaWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.norvegianSaladWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.omeletteWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.poachedEggsSaladWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.quicheLorraineWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.racletteWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.sauerkrautWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPieWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.watercressSoup;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.watercressSoupIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.watercressSoupWithIngredients;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +46,6 @@ import java.util.stream.Collectors;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeValue;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
-import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 /**
  * An object mother to create testing elements related to {@link RecipeValue}s.
@@ -80,23 +63,13 @@ public class RecipeValueMother {
     private static final Map<String, RecipeValue> ALL_RECIPES      = new HashMap<>();
 
     static {
-        List<RecipeValue> existingRecipes = new ArrayList<>();
-        existingRecipes.add(convert(tomatoCantalPie(), tomatoCantalPieIngredients()));
-        existingRecipes.add(convert(quicheLorraine(), quicheLorraineIngredients()));
-        existingRecipes.add(convert(watercressSoup(), watercressSoupIngredients()));
-        existingRecipes.add(convert(gazpacho(), gazpachoIngredients()));
-        existingRecipes.add(convert(poachedEggsSalad(), poachedEggsSaladIngredients()));
-        existingRecipes.add(convert(norvegianSalad(), norvegianSaladIngredients()));
-        existingRecipes.add(convert(omelette(), omeletteIngredients()));
-        existingRecipes.add(convert(chiliConCarne(), chiliConCarneIngredients()));
-        existingRecipes.add(convert(sauerkraut(), sauerkrautIngredients()));
-        existingRecipes.add(convert(leeksWithHamAndBechamelSauce(), leeksWithHamAndBechamelSauceIngredients()));
-        existingRecipes.add(convert(moussaka(), moussakaIngredients()));
-        existingRecipes.add(convert(lasagne(), lasagneIngredients()));
-        existingRecipes.add(convert(duckBreastFilletWithTurnips(), duckBreastFilletWithTurnipsIngredients()));
-        existingRecipes.add(convert(croqueMonsieur(), croqueMonsieurIngredients()));
-        existingRecipes.add(convert(raclette(), racletteIngredients()));
-        existingRecipes.add(convert(duckParmentier(), duckParmentierIngredients()));
+        List<RecipeValue> existingRecipes = convertAll(tomatoCantalPieWithIngredients(),
+                quicheLorraineWithIngredients(), watercressSoupWithIngredients(), gazpachoWithIngredients(),
+                poachedEggsSaladWithIngredients(), norvegianSaladWithIngredients(), omeletteWithIngredients(),
+                chiliConCarneWithIngredients(), sauerkrautWithIngredients(),
+                leeksWithHamAndBechamelSauceWithIngredients(), moussakaWithIngredients(), lasagneWithIngredients(),
+                duckBreastFilletWithTurnipsWithIngredients(), croqueMonsieurWithIngredients(),
+                racletteWithIngredients(), duckParmentierWithIngredients());
         addAllRecipes(existingRecipes, EXISTING_RECIPES);
         addAllRecipes(existingRecipes, ALL_RECIPES);
 
@@ -117,12 +90,8 @@ public class RecipeValueMother {
     }
 
     private static RecipeValue convert(Recipe recipe) {
-        return new RecipeValue(recipe.name(), recipe.content());
-    }
-
-    private static RecipeValue convert(Recipe recipe, List<RecipeIngredientId> ingredientIds) {
-        RecipeValue recipeValue = convert(recipe);
-        ingredientIds.forEach(i -> recipeValue.ingredients()
+        RecipeValue recipeValue = new RecipeValue(recipe.name(), recipe.content());
+        recipe.ingredients().stream().forEach(i -> recipeValue.ingredients()
                 .add(new RecipeIngredientValue(ingredient(i.ingredientId()).get().name(), i.isMainIngredient())));
         return recipeValue;
     }

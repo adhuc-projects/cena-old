@@ -27,7 +27,10 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSaladIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSaladWithIngredients;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -247,4 +250,30 @@ public class RecipeTest {
 
     }
 
+    @Nested
+    @DisplayName("tomato, cucumber and mozzarella salad with ingredients")
+    class TomatoCucumberMozzaWithIngredients {
+
+        private Recipe recipe = tomatoCucumberMozzaSaladWithIngredients();
+
+        @Test
+        @DisplayName("contains id, name, content and ingredients used during creation")
+        public void recipeWithValidValues() {
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+                softly.assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
+                softly.assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+                softly.assertThat(recipe.ingredients()).containsAll(tomatoCucumberMozzaSaladIngredients());
+            });
+
+        }
+
+        @Test
+        @DisplayName("has an unmodifiable ingredients list")
+        public void recipeWithUnmodifiableIngredients() {
+            assertThrows(UnsupportedOperationException.class,
+                    () -> recipe.ingredients().add(new RecipeIngredientId(IngredientId.generate(), false)));
+        }
+
+    }
 }

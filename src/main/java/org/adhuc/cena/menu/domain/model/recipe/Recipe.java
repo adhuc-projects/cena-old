@@ -21,6 +21,7 @@ import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,15 +78,19 @@ public class Recipe extends BasicEntity<RecipeId> {
      * @param content
      *            the recipe content.
      */
-    public Recipe(RecipeId id, String name, String content, RecipeAuthor author) {
+    public Recipe(@NonNull RecipeId id, @NonNull String name, @NonNull String content, @NonNull RecipeAuthor author) {
+        this(id, name, content, author, Collections.emptyList());
+    }
+
+    protected Recipe(@NonNull RecipeId id, @NonNull String name, @NonNull String content, @NonNull RecipeAuthor author,
+            @NonNull Collection<RecipeIngredientId> ingredients) {
         super(id);
         hasText(name, "Cannot create recipe with invalid name");
         hasText(content, "Cannot create recipe with invalid content");
-        notNull(author, "Cannot create recipe with invalid author");
         this.name = name;
         this.content = content;
         this.author = author;
-        ingredients = new HashSet<>();
+        this.ingredients = new HashSet<>(ingredients);
     }
 
     /**

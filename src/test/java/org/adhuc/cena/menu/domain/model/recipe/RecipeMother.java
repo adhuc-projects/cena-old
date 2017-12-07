@@ -27,6 +27,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CROUT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.DUCK_BREAST_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.EGG_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.FETA_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.FRANKFURTER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.GREEN_PEPPER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.HAM_ID;
@@ -40,6 +41,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MINCE
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MINCED_MUTTON_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MOZZARELLA_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MUSTARD_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.OLIVE_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.PASTA_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.POTATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.RED_PEPPER_ID;
@@ -171,25 +173,40 @@ public class RecipeMother {
                 TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
     }
 
-    public static Recipe tomatoCucumberMozzaSalad() {
-        return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
-                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
-    }
-
-    public static AddIngredientToRecipe addCucumberToTomatoCucumberMozzaSalad() {
-        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID, true);
+    public static RecipeIngredientId tomatoInTomatoCucumberMozzaSalad() {
+        return new RecipeIngredientId(TOMATO_ID, true);
     }
 
     public static RecipeIngredientId cucumberInTomatoCucumberMozzaSalad() {
         return new RecipeIngredientId(CUCUMBER_ID, true);
     }
 
-    public static AddIngredientToRecipe addMozzaToTomatoCucumberMozzaSalad() {
-        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, MOZZARELLA_ID, false);
+    public static AddIngredientToRecipe addCucumberToTomatoCucumberMozzaSalad() {
+        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID, true);
     }
 
     public static RecipeIngredientId mozzaInTomatoCucumberMozzaSalad() {
         return new RecipeIngredientId(MOZZARELLA_ID, false);
+    }
+
+    public static AddIngredientToRecipe addMozzaToTomatoCucumberMozzaSalad() {
+        return new AddIngredientToRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, MOZZARELLA_ID, false);
+    }
+
+    public static List<RecipeIngredientId> tomatoCucumberMozzaSaladIngredients() {
+        return Arrays.asList(tomatoInTomatoCucumberMozzaSalad(), cucumberInTomatoCucumberMozzaSalad(),
+                mozzaInTomatoCucumberMozzaSalad());
+    }
+
+    public static Recipe tomatoCucumberMozzaSalad() {
+        return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
+    }
+
+    public static Recipe tomatoCucumberMozzaSaladWithIngredients() {
+        return new Recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
+                TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR,
+                tomatoCucumberMozzaSaladIngredients());
     }
 
     public static CreateRecipe createTomatoCucumberOliveFetaSalad() {
@@ -197,18 +214,36 @@ public class RecipeMother {
                 TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
     }
 
+    public static RecipeIngredientId tomatoInTomatoCucumberOliveFetaSalad() {
+        return new RecipeIngredientId(TOMATO_ID, true);
+    }
+
+    public static RecipeIngredientId cucumberInTomatoCucumberOliveFetaSalad() {
+        return new RecipeIngredientId(CUCUMBER_ID, true);
+    }
+
+    public static RecipeIngredientId oliveInTomatoCucumberOliveFetaSalad() {
+        return new RecipeIngredientId(OLIVE_ID, false);
+    }
+
+    public static RecipeIngredientId fetaInTomatoCucumberOliveFetaSalad() {
+        return new RecipeIngredientId(FETA_ID, false);
+    }
+
+    public static List<RecipeIngredientId> tomatoCucumberOliveFetaSaladIngredients() {
+        return Arrays.asList(tomatoInTomatoCucumberOliveFetaSalad(), cucumberInTomatoCucumberOliveFetaSalad(),
+                oliveInTomatoCucumberOliveFetaSalad(), fetaInTomatoCucumberOliveFetaSalad());
+    }
+
     public static Recipe tomatoCucumberOliveFetaSalad() {
         return new Recipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
                 TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR);
     }
 
-    public static Recipe tomatoCantalPie() {
-        return new Recipe(TOMATO_CANTAL_PIE_ID, TOMATO_CANTAL_PIE_NAME, TOMATO_CANTAL_PIE_CONTENT,
-                TOMATO_CANTAL_PIE_AUTHOR);
-    }
-
-    public static AddIngredientToRecipe addMustardToTomatoCantalPie() {
-        return new AddIngredientToRecipe(TOMATO_CANTAL_PIE_ID, MUSTARD_ID, false);
+    public static Recipe tomatoCucumberOliveFetaSaladWithIngredients() {
+        return new Recipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME,
+                TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT, TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR,
+                tomatoCucumberOliveFetaSaladIngredients());
     }
 
     public static RecipeIngredientId tomatoInTomatoCantalPie() {
@@ -227,13 +262,23 @@ public class RecipeMother {
         return new RecipeIngredientId(MUSTARD_ID, false);
     }
 
+    public static AddIngredientToRecipe addMustardToTomatoCantalPie() {
+        return new AddIngredientToRecipe(TOMATO_CANTAL_PIE_ID, MUSTARD_ID, false);
+    }
+
     public static List<RecipeIngredientId> tomatoCantalPieIngredients() {
         return Arrays.asList(tomatoInTomatoCantalPie(), cantalInTomatoCantalPie(), shortcrustInTomatoCantalPie(),
                 mustardInTomatoCantalPie());
     }
 
-    public static Recipe quicheLorraine() {
-        return new Recipe(QUICHE_LORRAINE_ID, QUICHE_LORRAINE_NAME, QUICHE_LORRAINE_CONTENT, QUICHE_LORRAINE_AUTHOR);
+    public static Recipe tomatoCantalPie() {
+        return new Recipe(TOMATO_CANTAL_PIE_ID, TOMATO_CANTAL_PIE_NAME, TOMATO_CANTAL_PIE_CONTENT,
+                TOMATO_CANTAL_PIE_AUTHOR);
+    }
+
+    public static Recipe tomatoCantalPieWithIngredients() {
+        return new Recipe(TOMATO_CANTAL_PIE_ID, TOMATO_CANTAL_PIE_NAME, TOMATO_CANTAL_PIE_CONTENT,
+                TOMATO_CANTAL_PIE_AUTHOR, tomatoCantalPieIngredients());
     }
 
     public static RecipeIngredientId shortcrustInQuicheLorraine() {
@@ -257,8 +302,13 @@ public class RecipeMother {
                 lardonsInQuicheLorraine());
     }
 
-    public static Recipe watercressSoup() {
-        return new Recipe(WATERCRESS_SOUP_ID, WATERCRESS_SOUP_NAME, WATERCRESS_SOUP_CONTENT, WATERCRESS_SOUP_AUTHOR);
+    public static Recipe quicheLorraine() {
+        return new Recipe(QUICHE_LORRAINE_ID, QUICHE_LORRAINE_NAME, QUICHE_LORRAINE_CONTENT, QUICHE_LORRAINE_AUTHOR);
+    }
+
+    public static Recipe quicheLorraineWithIngredients() {
+        return new Recipe(QUICHE_LORRAINE_ID, QUICHE_LORRAINE_NAME, QUICHE_LORRAINE_CONTENT, QUICHE_LORRAINE_AUTHOR,
+                quicheLorraineIngredients());
     }
 
     public static RecipeIngredientId watercressInWatercressSoup() {
@@ -273,8 +323,13 @@ public class RecipeMother {
         return Arrays.asList(watercressInWatercressSoup(), potatoInWatercressSoup());
     }
 
-    public static Recipe gazpacho() {
-        return new Recipe(GAZPACHO_ID, GAZPACHO_NAME, GAZPACHO_CONTENT, GAZPACHO_AUTHOR);
+    public static Recipe watercressSoup() {
+        return new Recipe(WATERCRESS_SOUP_ID, WATERCRESS_SOUP_NAME, WATERCRESS_SOUP_CONTENT, WATERCRESS_SOUP_AUTHOR);
+    }
+
+    public static Recipe watercressSoupWithIngredients() {
+        return new Recipe(WATERCRESS_SOUP_ID, WATERCRESS_SOUP_NAME, WATERCRESS_SOUP_CONTENT, WATERCRESS_SOUP_AUTHOR,
+                watercressSoupIngredients());
     }
 
     public static RecipeIngredientId tomatoInGazpacho() {
@@ -293,9 +348,12 @@ public class RecipeMother {
         return Arrays.asList(tomatoInGazpacho(), greenPepperInGazpacho(), cucumberInGazpacho());
     }
 
-    public static Recipe poachedEggsSalad() {
-        return new Recipe(POACHED_EGGS_SALAD_ID, POACHED_EGGS_SALAD_NAME, POACHED_EGGS_SALAD_CONTENT,
-                POACHED_EGGS_SALAD_AUTHOR);
+    public static Recipe gazpacho() {
+        return new Recipe(GAZPACHO_ID, GAZPACHO_NAME, GAZPACHO_CONTENT, GAZPACHO_AUTHOR);
+    }
+
+    public static Recipe gazpachoWithIngredients() {
+        return new Recipe(GAZPACHO_ID, GAZPACHO_NAME, GAZPACHO_CONTENT, GAZPACHO_AUTHOR, gazpachoIngredients());
     }
 
     public static RecipeIngredientId eggInPoachedEggsSalad() {
@@ -314,8 +372,14 @@ public class RecipeMother {
         return Arrays.asList(eggInPoachedEggsSalad(), lambLettuceInPoachedEggsSalad(), croutonInPoachedEggsSalad());
     }
 
-    public static Recipe norvegianSalad() {
-        return new Recipe(NORVEGIAN_SALAD_ID, NORVEGIAN_SALAD_NAME, NORVEGIAN_SALAD_CONTENT, NORVEGIAN_SALAD_AUTHOR);
+    public static Recipe poachedEggsSalad() {
+        return new Recipe(POACHED_EGGS_SALAD_ID, POACHED_EGGS_SALAD_NAME, POACHED_EGGS_SALAD_CONTENT,
+                POACHED_EGGS_SALAD_AUTHOR);
+    }
+
+    public static Recipe poachedEggsSaladWithIngredients() {
+        return new Recipe(POACHED_EGGS_SALAD_ID, POACHED_EGGS_SALAD_NAME, POACHED_EGGS_SALAD_CONTENT,
+                POACHED_EGGS_SALAD_AUTHOR, poachedEggsSaladIngredients());
     }
 
     public static RecipeIngredientId salmonInNorvegianSalad() {
@@ -334,8 +398,13 @@ public class RecipeMother {
         return Arrays.asList(salmonInNorvegianSalad(), cucumberInNorvegianSalad(), eggInNorvegianSalad());
     }
 
-    public static Recipe omelette() {
-        return new Recipe(OMELETTE_ID, OMELETTE_NAME, OMELETTE_CONTENT, OMELETTE_AUTHOR);
+    public static Recipe norvegianSalad() {
+        return new Recipe(NORVEGIAN_SALAD_ID, NORVEGIAN_SALAD_NAME, NORVEGIAN_SALAD_CONTENT, NORVEGIAN_SALAD_AUTHOR);
+    }
+
+    public static Recipe norvegianSaladWithIngredients() {
+        return new Recipe(NORVEGIAN_SALAD_ID, NORVEGIAN_SALAD_NAME, NORVEGIAN_SALAD_CONTENT, NORVEGIAN_SALAD_AUTHOR,
+                norvegianSaladIngredients());
     }
 
     public static RecipeIngredientId eggInOmelette() {
@@ -346,8 +415,12 @@ public class RecipeMother {
         return Arrays.asList(eggInOmelette());
     }
 
-    public static Recipe chiliConCarne() {
-        return new Recipe(CHILI_CON_CARNE_ID, CHILI_CON_CARNE_NAME, CHILI_CON_CARNE_CONTENT, CHILI_CON_CARNE_AUTHOR);
+    public static Recipe omelette() {
+        return new Recipe(OMELETTE_ID, OMELETTE_NAME, OMELETTE_CONTENT, OMELETTE_AUTHOR);
+    }
+
+    public static Recipe omeletteWithIngredients() {
+        return new Recipe(OMELETTE_ID, OMELETTE_NAME, OMELETTE_CONTENT, OMELETTE_AUTHOR, omeletteIngredients());
     }
 
     public static RecipeIngredientId kidneyBeanInChiliConCarne() {
@@ -371,8 +444,13 @@ public class RecipeMother {
                 redPepperInChiliConCarne());
     }
 
-    public static Recipe sauerkraut() {
-        return new Recipe(SAUERKRAUT_ID, SAUERKRAUT_NAME, SAUERKRAUT_CONTENT, SAUERKRAUT_AUTHOR);
+    public static Recipe chiliConCarne() {
+        return new Recipe(CHILI_CON_CARNE_ID, CHILI_CON_CARNE_NAME, CHILI_CON_CARNE_CONTENT, CHILI_CON_CARNE_AUTHOR);
+    }
+
+    public static Recipe chiliConCarneWithIngredients() {
+        return new Recipe(CHILI_CON_CARNE_ID, CHILI_CON_CARNE_NAME, CHILI_CON_CARNE_CONTENT, CHILI_CON_CARNE_AUTHOR,
+                chiliConCarneIngredients());
     }
 
     public static RecipeIngredientId sauerkrautInSauerkraut() {
@@ -391,9 +469,13 @@ public class RecipeMother {
         return Arrays.asList(sauerkrautInSauerkraut(), lardonsInSauerkraut(), frankfurterInSauerkraut());
     }
 
-    public static Recipe leeksWithHamAndBechamelSauce() {
-        return new Recipe(LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_NAME,
-                LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_CONTENT, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_AUTHOR);
+    public static Recipe sauerkraut() {
+        return new Recipe(SAUERKRAUT_ID, SAUERKRAUT_NAME, SAUERKRAUT_CONTENT, SAUERKRAUT_AUTHOR);
+    }
+
+    public static Recipe sauerkrautWithIngredients() {
+        return new Recipe(SAUERKRAUT_ID, SAUERKRAUT_NAME, SAUERKRAUT_CONTENT, SAUERKRAUT_AUTHOR,
+                sauerkrautIngredients());
     }
 
     public static RecipeIngredientId leekInLeeksWithHamAndBechamelSauce() {
@@ -413,8 +495,15 @@ public class RecipeMother {
                 bechamelInLeeksWithHamAndBechamelSauce());
     }
 
-    public static Recipe moussaka() {
-        return new Recipe(MOUSSAKA_ID, MOUSSAKA_NAME, MOUSSAKA_CONTENT, MOUSSAKA_AUTHOR);
+    public static Recipe leeksWithHamAndBechamelSauce() {
+        return new Recipe(LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_NAME,
+                LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_CONTENT, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_AUTHOR);
+    }
+
+    public static Recipe leeksWithHamAndBechamelSauceWithIngredients() {
+        return new Recipe(LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_NAME,
+                LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_CONTENT, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_AUTHOR,
+                leeksWithHamAndBechamelSauceIngredients());
     }
 
     public static RecipeIngredientId aubergineInMoussaka() {
@@ -433,8 +522,12 @@ public class RecipeMother {
         return Arrays.asList(aubergineInMoussaka(), mincedMuttonInMoussaka(), tomatoInMoussaka());
     }
 
-    public static Recipe lasagne() {
-        return new Recipe(LASAGNE_ID, LASAGNE_NAME, LASAGNE_CONTENT, LASAGNE_AUTHOR);
+    public static Recipe moussaka() {
+        return new Recipe(MOUSSAKA_ID, MOUSSAKA_NAME, MOUSSAKA_CONTENT, MOUSSAKA_AUTHOR);
+    }
+
+    public static Recipe moussakaWithIngredients() {
+        return new Recipe(MOUSSAKA_ID, MOUSSAKA_NAME, MOUSSAKA_CONTENT, MOUSSAKA_AUTHOR, moussakaIngredients());
     }
 
     public static RecipeIngredientId pastaInLasagne() {
@@ -457,9 +550,12 @@ public class RecipeMother {
         return Arrays.asList(pastaInLasagne(), tomatoInLasagne(), mincedBeefInLasagne(), carrotInLasagne());
     }
 
-    public static Recipe duckBreastFilletWithTurnips() {
-        return new Recipe(DUCK_BREAST_FILLET_WITH_TURNIPS_ID, DUCK_BREAST_FILLET_WITH_TURNIPS_NAME,
-                DUCK_BREAST_FILLET_WITH_TURNIPS_CONTENT, DUCK_BREAST_FILLET_WITH_TURNIPS_AUTHOR);
+    public static Recipe lasagne() {
+        return new Recipe(LASAGNE_ID, LASAGNE_NAME, LASAGNE_CONTENT, LASAGNE_AUTHOR);
+    }
+
+    public static Recipe lasagneWithIngredients() {
+        return new Recipe(LASAGNE_ID, LASAGNE_NAME, LASAGNE_CONTENT, LASAGNE_AUTHOR, lasagneIngredients());
     }
 
     public static RecipeIngredientId duckBreastInDuckBreastFilletWithTurnips() {
@@ -479,8 +575,15 @@ public class RecipeMother {
                 honeyInDuckBreastFilletWithTurnips());
     }
 
-    public static Recipe croqueMonsieur() {
-        return new Recipe(CROQUE_MONSIEUR_ID, CROQUE_MONSIEUR_NAME, CROQUE_MONSIEUR_CONTENT, CROQUE_MONSIEUR_AUTHOR);
+    public static Recipe duckBreastFilletWithTurnips() {
+        return new Recipe(DUCK_BREAST_FILLET_WITH_TURNIPS_ID, DUCK_BREAST_FILLET_WITH_TURNIPS_NAME,
+                DUCK_BREAST_FILLET_WITH_TURNIPS_CONTENT, DUCK_BREAST_FILLET_WITH_TURNIPS_AUTHOR);
+    }
+
+    public static Recipe duckBreastFilletWithTurnipsWithIngredients() {
+        return new Recipe(DUCK_BREAST_FILLET_WITH_TURNIPS_ID, DUCK_BREAST_FILLET_WITH_TURNIPS_NAME,
+                DUCK_BREAST_FILLET_WITH_TURNIPS_CONTENT, DUCK_BREAST_FILLET_WITH_TURNIPS_AUTHOR,
+                duckBreastFilletWithTurnipsIngredients());
     }
 
     public static RecipeIngredientId breadInCroqueMonsieur() {
@@ -499,8 +602,13 @@ public class RecipeMother {
         return Arrays.asList(breadInCroqueMonsieur(), hamInCroqueMonsieur(), cheeseInCroqueMonsieur());
     }
 
-    public static Recipe raclette() {
-        return new Recipe(RACLETTE_ID, RACLETTE_NAME, RACLETTE_CONTENT, RACLETTE_AUTHOR);
+    public static Recipe croqueMonsieur() {
+        return new Recipe(CROQUE_MONSIEUR_ID, CROQUE_MONSIEUR_NAME, CROQUE_MONSIEUR_CONTENT, CROQUE_MONSIEUR_AUTHOR);
+    }
+
+    public static Recipe croqueMonsieurWithIngredients() {
+        return new Recipe(CROQUE_MONSIEUR_ID, CROQUE_MONSIEUR_NAME, CROQUE_MONSIEUR_CONTENT, CROQUE_MONSIEUR_AUTHOR,
+                croqueMonsieurIngredients());
     }
 
     public static RecipeIngredientId cheeseInRaclette() {
@@ -519,8 +627,12 @@ public class RecipeMother {
         return Arrays.asList(cheeseInRaclette(), potatoInRaclette(), baconInRaclette());
     }
 
-    public static Recipe duckParmentier() {
-        return new Recipe(DUCK_PARMENTIER_ID, DUCK_PARMENTIER_NAME, DUCK_PARMENTIER_CONTENT, DUCK_PARMENTIER_AUTHOR);
+    public static Recipe raclette() {
+        return new Recipe(RACLETTE_ID, RACLETTE_NAME, RACLETTE_CONTENT, RACLETTE_AUTHOR);
+    }
+
+    public static Recipe racletteWithIngredients() {
+        return new Recipe(RACLETTE_ID, RACLETTE_NAME, RACLETTE_CONTENT, RACLETTE_AUTHOR, racletteIngredients());
     }
 
     public static RecipeIngredientId confitOfLegDuckInDuckParmentier() {
@@ -537,6 +649,15 @@ public class RecipeMother {
 
     public static List<RecipeIngredientId> duckParmentierIngredients() {
         return Arrays.asList(confitOfLegDuckInDuckParmentier(), potatoInDuckParmentier(), milkInDuckParmentier());
+    }
+
+    public static Recipe duckParmentier() {
+        return new Recipe(DUCK_PARMENTIER_ID, DUCK_PARMENTIER_NAME, DUCK_PARMENTIER_CONTENT, DUCK_PARMENTIER_AUTHOR);
+    }
+
+    public static Recipe duckParmentierWithIngredients() {
+        return new Recipe(DUCK_PARMENTIER_ID, DUCK_PARMENTIER_NAME, DUCK_PARMENTIER_CONTENT, DUCK_PARMENTIER_AUTHOR,
+                duckParmentierIngredients());
     }
 
 }
