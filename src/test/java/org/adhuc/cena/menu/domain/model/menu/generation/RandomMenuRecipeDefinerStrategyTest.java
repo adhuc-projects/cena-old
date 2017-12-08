@@ -30,9 +30,11 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_04_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus2DaysAt20170103TwiceADay;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus7DaysAt20170101TwiceADay;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.CAESAR_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.DUCK_BREAST_FILLET_WITH_TURNIPS_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.DUCK_PARMENTIER_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.GAZPACHO_ID;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.JAPANESE_TUNA_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.LASAGNE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.MOUSSAKA_ID;
@@ -192,7 +194,7 @@ public class RandomMenuRecipeDefinerStrategyTest {
                         "Recipe %s is either sauerkraut, leeks with ham and bechamel sauce, moussaka or duck parmentier",
                         recipeRepository.findOneNotNull(nextState.menu(LUNCH_2017_01_04_ID).get().recipe()))
                         .isIn(Arrays.asList(SAUERKRAUT_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID, MOUSSAKA_ID,
-                                DUCK_PARMENTIER_ID));
+                                DUCK_PARMENTIER_ID, CAESAR_SALAD_ID, JAPANESE_TUNA_ID));
             });
 
             return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
