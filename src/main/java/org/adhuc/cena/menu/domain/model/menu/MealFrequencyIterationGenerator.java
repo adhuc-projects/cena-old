@@ -18,6 +18,8 @@ package org.adhuc.cena.menu.domain.model.menu;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import lombok.NonNull;
+
 /**
  * A menus iterations generator based on meal frequency.
  *
@@ -49,7 +51,7 @@ public interface MealFrequencyIterationGenerator {
      *
      * @return the iteration for the menu.
      */
-    default int determineIteration(MenuId menuId, GenerateMenus command) {
+    default int determineIteration(@NonNull MenuId menuId, @NonNull GenerateMenus command) {
         Iterator<MenuId> iterations = generateIterations(command).iterator();
         int iterationIndex = 1;
         while (iterations.hasNext()) {

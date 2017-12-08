@@ -16,8 +16,8 @@
 package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.springframework.util.Assert.hasText;
-import static org.springframework.util.Assert.notNull;
 
+import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
@@ -53,11 +53,10 @@ public class CreateRecipe {
      * @param recipeAuthor
      *            the recipe author.
      */
-    public CreateRecipe(RecipeId recipeId, String recipeName, String recipeContent, RecipeAuthor recipeAuthor) {
-        notNull(recipeId, "Cannot create recipe creation command with invalid recipe identity");
+    public CreateRecipe(@NonNull RecipeId recipeId, @NonNull String recipeName, @NonNull String recipeContent,
+            @NonNull RecipeAuthor recipeAuthor) {
         hasText(recipeName, "Cannot create recipe creation command with invalid recipe name");
         hasText(recipeContent, "Cannot create recipe creation command with invalid recipe content");
-        notNull(recipeAuthor, "Cannot create recipe creation command with invalid recipe author");
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.recipeContent = recipeContent;

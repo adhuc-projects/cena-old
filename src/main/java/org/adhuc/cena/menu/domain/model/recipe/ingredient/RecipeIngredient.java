@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.domain.model.recipe.ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 
+import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
@@ -33,8 +34,11 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class RecipeIngredient {
 
-    private RecipeId           recipeId;
-    private RecipeIngredientId id;
-    private Ingredient         ingredient;
+    @NonNull
+    private final RecipeId           recipeId;
+    @NonNull
+    private final RecipeIngredientId id;
+    @NonNull
+    private final Ingredient         ingredient;
 
 }

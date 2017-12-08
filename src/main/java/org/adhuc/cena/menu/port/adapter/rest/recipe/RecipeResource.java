@@ -23,6 +23,7 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 /**
  * A REST resource encapsulating recipe information.
@@ -36,17 +37,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class RecipeResource extends ResourceSupport {
 
+    @NonNull
     @JsonUnwrapped
     private final Recipe recipe;
-
-    /**
-     * Creates a recipe resource encapsulating the recipe information.
-     *
-     * @param recipe
-     *            the recipe information.
-     */
-    public RecipeResource(final Recipe recipe) {
-        this.recipe = recipe;
-    }
 
 }

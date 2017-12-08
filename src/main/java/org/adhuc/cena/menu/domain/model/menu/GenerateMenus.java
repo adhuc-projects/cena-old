@@ -16,7 +16,6 @@
 package org.adhuc.cena.menu.domain.model.menu;
 
 import static org.springframework.util.Assert.isTrue;
-import static org.springframework.util.Assert.notNull;
 
 import java.time.LocalDate;
 
@@ -41,16 +40,12 @@ public class GenerateMenus {
             "Cannot generate menus for more than " + MAX_MENUS_GENERATION_DAYS + " days";
 
     private int                 days;
-    @NonNull
     private LocalDate           startDate;
-    @NonNull
     private MealFrequency       frequency;
 
-    public GenerateMenus(int days, LocalDate startDate, MealFrequency frequency) {
+    public GenerateMenus(int days, @NonNull LocalDate startDate, @NonNull MealFrequency frequency) {
         isTrue(days >= 1, "Cannot generate menus for negative days count");
         isTrue(days <= MAX_MENUS_GENERATION_DAYS, MAX_MENUS_GENERATION_DAYS_MESSAGE);
-        notNull(startDate, "Cannot generate menus from invalid start date");
-        notNull(frequency, "Cannot generate menus with invalid frequency");
         this.days = days;
         this.startDate = startDate;
         this.frequency = frequency;

@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
@@ -41,6 +42,18 @@ public class DateableTest {
         }
 
     };
+
+    @Test
+    @DisplayName("throws IllegalArgumentException when calling isBetween with null before day")
+    public void isBetweenNullDayBefore() {
+        assertThrows(IllegalArgumentException.class, () -> dateable.isBetween(null, LocalDate.parse("2017-01-03")));
+    }
+
+    @Test
+    @DisplayName("throws IllegalArgumentException when calling isBetween with null after day")
+    public void isBetweenNullDayAfter() {
+        assertThrows(IllegalArgumentException.class, () -> dateable.isBetween(LocalDate.parse("2017-01-01"), null));
+    }
 
     @Test
     @DisplayName("is between 2017-01-01 and 2017-01-03")

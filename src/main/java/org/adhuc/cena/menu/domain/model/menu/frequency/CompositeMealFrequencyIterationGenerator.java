@@ -28,6 +28,8 @@ import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 
+import lombok.NonNull;
+
 /**
  * A {@link MealFrequencyIterationGenerator} implementation, composed of a dedicated implementation for each meal
  * frequency.
@@ -49,7 +51,7 @@ public class CompositeMealFrequencyIterationGenerator implements MealFrequencyIt
     }
 
     @Override
-    public TreeSet<MenuId> generateIterations(GenerateMenus command) {
+    public TreeSet<MenuId> generateIterations(@NonNull GenerateMenus command) {
         MealFrequencyIterationGenerator generator = generators.get(command.frequency());
         notNull(generator, "Could not find generator for meal frequency " + command.frequency());
         return generator.generateIterations(command);

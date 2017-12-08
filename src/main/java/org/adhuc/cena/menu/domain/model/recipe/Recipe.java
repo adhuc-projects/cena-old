@@ -18,7 +18,6 @@ package org.adhuc.cena.menu.domain.model.recipe;
 import static java.util.Collections.unmodifiableCollection;
 
 import static org.springframework.util.Assert.hasText;
-import static org.springframework.util.Assert.notNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -57,11 +56,8 @@ import lombok.experimental.Accessors;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class Recipe extends BasicEntity<RecipeId> {
 
-    @NonNull
     private String                        name;
-    @NonNull
     private String                        content;
-    @NonNull
     private final RecipeAuthor            author;
     @JsonIgnore
     private final Set<RecipeIngredientId> ingredients;
@@ -85,10 +81,8 @@ public class Recipe extends BasicEntity<RecipeId> {
     protected Recipe(@NonNull RecipeId id, @NonNull String name, @NonNull String content, @NonNull RecipeAuthor author,
             @NonNull Collection<RecipeIngredientId> ingredients) {
         super(id);
-        hasText(name, "Cannot create recipe with invalid name");
-        hasText(content, "Cannot create recipe with invalid content");
-        this.name = name;
-        this.content = content;
+        name(name);
+        content(content);
         this.author = author;
         this.ingredients = new HashSet<>(ingredients);
     }
@@ -99,8 +93,8 @@ public class Recipe extends BasicEntity<RecipeId> {
      * @param name
      *            the new recipe name.
      */
-    public Recipe name(String name) {
-        hasText(name, "Cannot change name with invalid value");
+    public Recipe name(@NonNull String name) {
+        hasText(name, "Cannot set name with invalid value");
         this.name = name;
         return this;
     }
@@ -111,8 +105,8 @@ public class Recipe extends BasicEntity<RecipeId> {
      * @param content
      *            the new recipe content.
      */
-    public Recipe content(String content) {
-        hasText(content, "Cannot change content with invalid value");
+    public Recipe content(@NonNull String content) {
+        hasText(content, "Cannot set content with invalid value");
         this.content = content;
         return this;
     }
@@ -137,7 +131,7 @@ public class Recipe extends BasicEntity<RecipeId> {
      * @throws IngredientNotLinkedToRecipeException
      *             if the ingredient is not linked to the recipe.
      */
-    public RecipeIngredientId ingredient(IngredientId ingredientId) {
+    public RecipeIngredientId ingredient(@NonNull IngredientId ingredientId) {
         Optional<RecipeIngredientId> ingredient =
                 ingredients.stream().filter(i -> i.ingredientId().equals(ingredientId)).findFirst();
         if (ingredient.isPresent()) {
@@ -154,8 +148,7 @@ public class Recipe extends BasicEntity<RecipeId> {
      *
      * @return {@code true} if the ingredients list changed, {@code false} otherwise.
      */
-    public boolean addIngredient(RecipeIngredientId ingredient) {
-        notNull(ingredient, "Cannot add invalid ingredient to recipe");
+    public boolean addIngredient(@NonNull RecipeIngredientId ingredient) {
         Optional<RecipeIngredientId> existingIngredient =
                 ingredients.stream().filter(i -> i.ingredientId().equals(ingredient.ingredientId())).findFirst();
         boolean changedOrUnknown =

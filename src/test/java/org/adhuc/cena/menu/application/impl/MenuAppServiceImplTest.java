@@ -69,6 +69,12 @@ public class MenuAppServiceImplTest {
     }
 
     @Test
+    @DisplayName("throws a IllegalArgumentException when getting menus from a null query")
+    public void getMenusNullQuery() {
+        assertThrows(IllegalArgumentException.class, () -> service.getMenus(null));
+    }
+
+    @Test
     @DisplayName("gets menus starting from 2017-01-03 for 3 days")
     public void getMenusFrom20170103For3Days() {
         allMenus().stream().forEach(m -> menuRepository.save(m));
@@ -78,7 +84,7 @@ public class MenuAppServiceImplTest {
 
     @Test
     @DisplayName("throws a IllegalArgumentException when generating menus from a null command")
-    public void generateMenusThrowsIllegalArgumentExceptionNullCommand() {
+    public void generateMenusNullCommand() {
         assertThrows(IllegalArgumentException.class, () -> service.generateMenus(null));
     }
 

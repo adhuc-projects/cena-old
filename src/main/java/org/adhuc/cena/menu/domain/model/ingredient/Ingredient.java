@@ -55,10 +55,9 @@ public class Ingredient extends BasicEntity<IngredientId> {
      * @param name
      *            the ingredient name.
      */
-    public Ingredient(final IngredientId id, final String name) {
+    public Ingredient(@NonNull IngredientId id, @NonNull String name) {
         super(id);
-        hasText(name, "Cannot create ingredient with invalid name");
-        this.name = name;
+        name(name);
     }
 
     /**
@@ -67,8 +66,8 @@ public class Ingredient extends BasicEntity<IngredientId> {
      * @param name
      *            the new ingredient name.
      */
-    public Ingredient name(String name) {
-        hasText(name, "Cannot change name with invalid value");
+    public Ingredient name(@NonNull String name) {
+        hasText(name, "Cannot set ingredient name with invalid value");
         this.name = name;
         return this;
     }

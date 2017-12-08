@@ -42,10 +42,8 @@ import lombok.experimental.Accessors;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class MenuId implements Identity, Dateable, Comparable<MenuId> {
 
-    @NonNull
-    private LocalDate date;
-    @NonNull
-    private MealType  type;
+    private final LocalDate date;
+    private final MealType  type;
 
     /**
      * Creates a menu identity based on the specified date and meal type.
@@ -64,12 +62,9 @@ public class MenuId implements Identity, Dateable, Comparable<MenuId> {
     }
 
     @Override
-    public int compareTo(MenuId o) {
+    public int compareTo(@NonNull MenuId o) {
         int compareDate = date.compareTo(o.date);
-        if (compareDate == 0) {
-            return type.compareTo(o.type);
-        }
-        return compareDate;
+        return compareDate == 0 ? type.compareTo(o.type) : compareDate;
     }
 
     /**
@@ -81,7 +76,7 @@ public class MenuId implements Identity, Dateable, Comparable<MenuId> {
      *
      * @return {@code true} if the other menu is within a consecutive day, {@code false} otherwise.
      */
-    public boolean isConsecutiveMenu(MenuId other) {
+    public boolean isConsecutiveMenu(@NonNull MenuId other) {
         return Duration.between(date.atStartOfDay(), other.date.atStartOfDay()).abs().toDays() <= 1;
     }
 

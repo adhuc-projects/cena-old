@@ -17,6 +17,8 @@ package org.adhuc.cena.menu.domain.model;
 
 import java.time.LocalDate;
 
+import lombok.NonNull;
+
 /**
  * A dateable element.
  *
@@ -46,7 +48,7 @@ public interface Dateable {
      *
      * @return {@code true} if element's date is between dates.
      */
-    default boolean isBetween(LocalDate lowerDate, LocalDate upperDate) {
+    default boolean isBetween(@NonNull LocalDate lowerDate, @NonNull LocalDate upperDate) {
         return (date().isEqual(lowerDate) || date().isAfter(lowerDate))
                 && (date().isEqual(upperDate) || date().isBefore(upperDate));
     }

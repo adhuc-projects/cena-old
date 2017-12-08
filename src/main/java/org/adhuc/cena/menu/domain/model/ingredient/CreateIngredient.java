@@ -16,8 +16,8 @@
 package org.adhuc.cena.menu.domain.model.ingredient;
 
 import static org.springframework.util.Assert.hasText;
-import static org.springframework.util.Assert.notNull;
 
+import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
@@ -45,8 +45,7 @@ public class CreateIngredient {
      * @param ingredientName
      *            the ingredient name.
      */
-    public CreateIngredient(final IngredientId ingredientId, final String ingredientName) {
-        notNull(ingredientId, "Cannot create ingredient creation command with invalid ingredient identity");
+    public CreateIngredient(@NonNull IngredientId ingredientId, @NonNull String ingredientName) {
         hasText(ingredientName, "Cannot create ingredient creation command with invalid ingredient name");
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;

@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +33,7 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -58,7 +57,7 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public List<Recipe> findByMainIngredientsNotIn(Collection<IngredientId> ingredientIds) {
+    public List<Recipe> findByMainIngredientsNotIn(@NonNull Collection<IngredientId> ingredientIds) {
         return recipes.values().stream()
                 .filter(r -> CollectionUtils.intersection(r.ingredients().stream().filter(i -> i.isMainIngredient())
                         .map(i -> i.ingredientId()).collect(Collectors.toList()), ingredientIds).isEmpty())
@@ -66,13 +65,12 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public Optional<Recipe> findOne(RecipeId recipeId) {
+    public Optional<Recipe> findOne(@NonNull RecipeId recipeId) {
         return Optional.ofNullable(recipes.get(recipeId));
     }
 
     @Override
-    public <I extends Recipe> I save(I recipe) {
-        notNull(recipe, "Cannot save null recipe");
+    public <I extends Recipe> I save(@NonNull I recipe) {
         log.debug("Save recipe {}", recipe);
         recipes.put(recipe.id(), recipe);
         return recipe;

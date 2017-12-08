@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.NonNull;
+
 /**
  * A HAL resource, providing convenient methods to embed resources as defined in the HAL specification.
  *
@@ -60,10 +62,10 @@ public abstract class HalResource extends ResourceSupport {
      *
      * @param resource
      *            the embedded resource.
-     * 
+     *
      * @return this.
      */
-    public HalResource embedResource(final String relationship, final Object resource) {
+    public HalResource embedResource(@NonNull String relationship, @NonNull Object resource) {
         embedded.put(relationship, resource);
         return this;
     }
@@ -78,10 +80,10 @@ public abstract class HalResource extends ResourceSupport {
      *            the method parameters to use for self reference.
      *
      * @return the resource.
-     * 
+     *
      * @return this.
      */
-    public HalResource withSelfRef(final Method method, final Object... parameters) {
+    public HalResource withSelfRef(@NonNull Method method, @NonNull Object... parameters) {
         this.add(linkTo(method, parameters).withSelfRel());
         return this;
     }

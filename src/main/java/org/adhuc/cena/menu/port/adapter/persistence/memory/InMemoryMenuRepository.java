@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +31,7 @@ import org.adhuc.cena.menu.domain.model.menu.Menu;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -56,18 +55,17 @@ public class InMemoryMenuRepository implements MenuRepository {
     }
 
     @Override
-    public List<Menu> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+    public List<Menu> findByDateBetween(@NonNull LocalDate startDate, @NonNull LocalDate endDate) {
         return menus.values().stream().filter(m -> m.id().isBetween(startDate, endDate)).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Menu> findOne(MenuId menuId) {
+    public Optional<Menu> findOne(@NonNull MenuId menuId) {
         return Optional.ofNullable(menus.get(menuId));
     }
 
     @Override
-    public <I extends Menu> I save(I menu) {
-        notNull(menu, "Cannot save null menu");
+    public <I extends Menu> I save(@NonNull I menu) {
         log.debug("Save menu {}", menu);
         menus.put(menu.id(), menu);
         return menu;

@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,6 +35,8 @@ import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditionService;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
+import lombok.NonNull;
+
 /**
  * A {@link RecipeIngredientAppService} implementation.
  *
@@ -52,15 +52,15 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     private RecipeRepository                recipeRepository;
     private IngredientRepository            ingredientRepository;
 
-    public RecipeIngredientAppServiceImpl(RecipeIngredientAdditionService recipeIngredientAdditionService,
-            RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
+    public RecipeIngredientAppServiceImpl(@NonNull RecipeIngredientAdditionService recipeIngredientAdditionService,
+            @NonNull RecipeRepository recipeRepository, @NonNull IngredientRepository ingredientRepository) {
         this.recipeIngredientAdditionService = recipeIngredientAdditionService;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
     }
 
     @Override
-    public List<RecipeIngredient> getRecipeIngredients(RecipeId recipeId) {
+    public List<RecipeIngredient> getRecipeIngredients(@NonNull RecipeId recipeId) {
         Recipe recipe = recipeRepository.findOneNotNull(recipeId);
         List<IngredientId> ingredientIds =
                 recipe.ingredients().stream().map(i -> i.ingredientId()).collect(Collectors.toList());
@@ -72,7 +72,7 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     }
 
     @Override
-    public RecipeIngredient getRecipeIngredient(RecipeId recipeId, IngredientId ingredientId) {
+    public RecipeIngredient getRecipeIngredient(@NonNull RecipeId recipeId, @NonNull IngredientId ingredientId) {
         Recipe recipe = recipeRepository.findOneNotNull(recipeId);
         Ingredient ingredient = ingredientRepository.findOneNotNull(ingredientId);
         RecipeIngredientId recipeIngredientId = recipe.ingredient(ingredientId);
@@ -81,8 +81,7 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
 
     @Override
     @PreAuthorize("isAuthenticated() && @recipeEditionAuthorizationService.isAuthor(#command.recipeId(), principal)")
-    public void addIngredientToRecipe(AddIngredientToRecipe command) {
-        notNull(command, "Cannot add ingredient to recipe from invalid command");
+    public void addIngredientToRecipe(@NonNull AddIngredientToRecipe command) {
         recipeIngredientAdditionService.addIngredientToRecipe(command);
     }
 

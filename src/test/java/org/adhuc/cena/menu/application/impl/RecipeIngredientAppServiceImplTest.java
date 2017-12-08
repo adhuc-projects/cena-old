@@ -74,6 +74,25 @@ public class RecipeIngredientAppServiceImplTest {
     }
 
     @Test
+    @DisplayName("get ingredients from null recipe identity")
+    public void getIngredientsFromNullRecipeId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getRecipeIngredients(null));
+    }
+
+    @Test
+    @DisplayName("get ingredient from null recipe identity")
+    public void getIngredientFromNullRecipeId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getRecipeIngredient(null, CUCUMBER_ID));
+    }
+
+    @Test
+    @DisplayName("get ingredient from recipe with null ingredient identity")
+    public void getIngredientNullIngredientId() {
+        assertThrows(IllegalArgumentException.class,
+                () -> service.getRecipeIngredient(TOMATO_CUCUMBER_MOZZA_SALAD_ID, null));
+    }
+
+    @Test
     @DisplayName("get ingredient from unknown recipe")
     public void getIngredientFromUnknownRecipe() {
         assertThrows(EntityNotFoundException.class,

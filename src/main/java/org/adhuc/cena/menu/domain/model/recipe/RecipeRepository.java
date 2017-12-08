@@ -22,6 +22,8 @@ import java.util.Optional;
 import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
+import lombok.NonNull;
+
 /**
  * A {@link Recipe} repository.
  *
@@ -70,7 +72,7 @@ public interface RecipeRepository {
      * @throws EntityNotFoundException
      *             if no recipe could be found for identity.
      */
-    default Recipe findOneNotNull(RecipeId recipeId) {
+    default Recipe findOneNotNull(@NonNull RecipeId recipeId) {
         Optional<Recipe> recipe = findOne(recipeId);
         if (recipe.isPresent()) {
             return recipe.get();

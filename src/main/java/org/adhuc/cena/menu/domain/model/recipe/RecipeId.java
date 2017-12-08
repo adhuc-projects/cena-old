@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.adhuc.cena.menu.domain.model.UuidIdentity;
 
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.Value;
 
 /**
@@ -40,11 +41,11 @@ public class RecipeId extends UuidIdentity {
      * @param id
      *            the identity value.
      */
-    public RecipeId(final String id) {
+    public RecipeId(@NonNull String id) {
         this(parseUUID(Recipe.class, id));
     }
 
-    private RecipeId(final UUID id) {
+    private RecipeId(UUID id) {
         super(id);
     }
 

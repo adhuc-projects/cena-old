@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +26,7 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -44,7 +43,7 @@ public class RecipeAppServiceImpl implements RecipeAppService {
 
     private RecipeRepository recipeRepository;
 
-    public RecipeAppServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeAppServiceImpl(@NonNull RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
@@ -54,15 +53,13 @@ public class RecipeAppServiceImpl implements RecipeAppService {
     }
 
     @Override
-    public Recipe getRecipe(RecipeId recipeId) {
-        notNull(recipeId, "Cannot get recipe from invalid identity");
+    public Recipe getRecipe(@NonNull RecipeId recipeId) {
         return recipeRepository.findOneNotNull(recipeId);
     }
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public void createRecipe(CreateRecipe command) {
-        notNull(command, "Cannot create recipe from invalid command");
+    public void createRecipe(@NonNull CreateRecipe command) {
         log.info("Create recipe from command {}", command);
         recipeRepository.save(
                 new Recipe(command.recipeId(), command.recipeName(), command.recipeContent(), command.recipeAuthor()));

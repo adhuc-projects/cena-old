@@ -15,10 +15,10 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
-import static org.springframework.util.Assert.notNull;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import lombok.NonNull;
 
 /**
  * A service providing convenient methods to validate authorization to edit recipes.
@@ -35,7 +35,7 @@ public class RecipeEditionAuthorizationService {
 
     private RecipeRepository recipeRepository;
 
-    public RecipeEditionAuthorizationService(RecipeRepository recipeRepository) {
+    public RecipeEditionAuthorizationService(@NonNull RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
@@ -50,14 +50,12 @@ public class RecipeEditionAuthorizationService {
      *
      * @return {@code true} if the user corresponds to the author of the recipe, {@code false} otherwise.
      */
-    public boolean isAuthor(RecipeId recipeId, UserDetails user) {
-        notNull(recipeId, "Cannot validate that user is author of recipe with invalid identity");
-        notNull(user, "Cannot validate that invalid user is author of recipe");
+    public boolean isAuthor(@NonNull RecipeId recipeId, @NonNull UserDetails user) {
         Recipe recipe = recipeRepository.findOneNotNull(recipeId);
         return isAuthor(recipe.author(), user);
     }
 
-    private boolean isAuthor(RecipeAuthor author, UserDetails user) {
+    private boolean isAuthor(@NonNull RecipeAuthor author, @NonNull UserDetails user) {
         return author.name().equals(user.getUsername());
     }
 

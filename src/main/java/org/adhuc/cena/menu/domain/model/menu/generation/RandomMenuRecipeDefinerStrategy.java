@@ -31,6 +31,7 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,12 +49,12 @@ public class RandomMenuRecipeDefinerStrategy implements MenuRecipeDefinerStrateg
 
     private RecipeRepository recipeRepository;
 
-    public RandomMenuRecipeDefinerStrategy(RecipeRepository recipeRepository) {
+    public RandomMenuRecipeDefinerStrategy(@NonNull RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    public MenuGenerationState defineRecipeForMenu(MenuId menuId, MenuGenerationState state) {
+    public MenuGenerationState defineRecipeForMenu(@NonNull MenuId menuId, @NonNull MenuGenerationState state) {
         List<IngredientId> notUsableIngredients =
                 mainIngredientsWithinConsecutiveDaysMenus(consecutiveDaysMenus(menuId, state.menus()));
         log.trace("Ingredients {} are not usable to generate menu {}", notUsableIngredients, menuId);

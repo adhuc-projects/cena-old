@@ -15,14 +15,14 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe.ingredient;
 
-import static org.springframework.util.Assert.notNull;
-
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+
+import lombok.NonNull;
 
 /**
  * A domain service responsible for adding ingredients to recipes.
@@ -38,8 +38,8 @@ public class RecipeIngredientAdditionService {
     private RecipeRepository     recipeRepository;
     private IngredientRepository ingredientRepository;
 
-    public RecipeIngredientAdditionService(RecipeRepository recipeRepository,
-            IngredientRepository ingredientRepository) {
+    public RecipeIngredientAdditionService(@NonNull RecipeRepository recipeRepository,
+            @NonNull IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
     }
@@ -50,8 +50,7 @@ public class RecipeIngredientAdditionService {
      * @param command
      *            the ingredient addition to recipe command.
      */
-    public void addIngredientToRecipe(AddIngredientToRecipe command) {
-        notNull(command, "Cannot add ingredient to recipe from invalid command");
+    public void addIngredientToRecipe(@NonNull AddIngredientToRecipe command) {
         Recipe recipe = recipeRepository.findOneNotNull(command.recipeId());
         Ingredient ingredient = ingredientRepository.findOneNotNull(command.ingredientId());
         recipe.addIngredient(new RecipeIngredientId(ingredient.id(), command.isMainIngredient()));

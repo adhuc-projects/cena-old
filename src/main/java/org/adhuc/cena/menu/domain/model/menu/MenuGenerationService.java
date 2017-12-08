@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import lombok.NonNull;
+
 /**
  * A service dedicated to the menus generation.
  *
@@ -34,9 +36,9 @@ public class MenuGenerationService {
     private MealFrequencyIterationGenerator mealFrequencyIterationGenerator;
     private MenuRecipeDefinerStrategy       menuRecipeDefinerStrategy;
 
-    public MenuGenerationService(MenuRepository menuRepository,
-            MealFrequencyIterationGenerator mealFrequencyIterationGenerator,
-            MenuRecipeDefinerStrategy menuRecipeDefinerStrategy) {
+    public MenuGenerationService(@NonNull MenuRepository menuRepository,
+            @NonNull MealFrequencyIterationGenerator mealFrequencyIterationGenerator,
+            @NonNull MenuRecipeDefinerStrategy menuRecipeDefinerStrategy) {
         this.menuRepository = menuRepository;
         this.mealFrequencyIterationGenerator = mealFrequencyIterationGenerator;
         this.menuRecipeDefinerStrategy = menuRecipeDefinerStrategy;
@@ -48,7 +50,7 @@ public class MenuGenerationService {
      * @param command
      *            the menu generation command.
      */
-    public void generateMenus(GenerateMenus command) {
+    public void generateMenus(@NonNull GenerateMenus command) {
         Set<MenuId> mealIterations = mealFrequencyIterationGenerator.generateIterations(command);
         MenuGenerationState state = new MenuGenerationState(command);
         for (MenuId id : mealIterations) {

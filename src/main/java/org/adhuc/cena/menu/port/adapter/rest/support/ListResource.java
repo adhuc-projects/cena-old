@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.springframework.hateoas.ResourceSupport;
 
+import lombok.NonNull;
+
 /**
  * A resource representing a list of embedded resources.
  *
@@ -39,7 +41,7 @@ public class ListResource<R extends ResourceSupport> extends HalResource {
      * @param embeddedResources
      *            the embedded resources.
      */
-    public ListResource(final List<R> embeddedResources) {
+    public ListResource(@NonNull List<R> embeddedResources) {
         this(embeddedResources, EMBEDDED_RESOURCES_RELATIONSHIP);
     }
 
@@ -52,19 +54,19 @@ public class ListResource<R extends ResourceSupport> extends HalResource {
      * @param relationship
      *            the relationship name.
      */
-    public ListResource(final List<R> embeddedResources, String relationship) {
+    public ListResource(@NonNull List<R> embeddedResources, String relationship) {
         embedResource(relationship, embeddedResources);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ListResource<R> embedResource(final String relationship, final Object resource) {
+    public ListResource<R> embedResource(@NonNull String relationship, @NonNull Object resource) {
         return (ListResource<R>) super.embedResource(relationship, resource);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ListResource<R> withSelfRef(final Method method, final Object... parameters) {
+    public ListResource<R> withSelfRef(@NonNull Method method, @NonNull Object... parameters) {
         return (ListResource<R>) super.withSelfRef(method, parameters);
     }
 

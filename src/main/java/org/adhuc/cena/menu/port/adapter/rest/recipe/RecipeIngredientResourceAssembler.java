@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
 
+import lombok.NonNull;
+
 /**
  * A {@link org.springframework.hateoas.ResourceAssembler ResourceAssembler} implementation allowing building
  * {@link RecipeIngredientResource}s.
@@ -43,7 +45,7 @@ public class RecipeIngredientResourceAssembler
     }
 
     @Override
-    public RecipeIngredientResource toResource(RecipeIngredient recipeIngredient) {
+    public RecipeIngredientResource toResource(@NonNull RecipeIngredient recipeIngredient) {
         RecipeIngredientResource resource = createResourceWithId(recipeIngredient.ingredient().id().toString(),
                 recipeIngredient, recipeIngredient.recipeId().toString());
         resource.add(linkTo(RecipeIngredientsController.class, recipeIngredient.recipeId().toString()).withRel("list"));

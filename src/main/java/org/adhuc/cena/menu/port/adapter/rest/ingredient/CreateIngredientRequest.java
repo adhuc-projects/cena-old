@@ -23,6 +23,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  * A request to create an ingredient.
@@ -48,7 +49,7 @@ public class CreateIngredientRequest {
      *
      * @return the ingredient creation command.
      */
-    public CreateIngredient toCommand(IngredientId identity) {
+    public CreateIngredient toCommand(@NonNull IngredientId identity) {
         return new CreateIngredient(identity, name);
     }
 

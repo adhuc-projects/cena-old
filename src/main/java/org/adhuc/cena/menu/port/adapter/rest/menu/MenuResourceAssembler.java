@@ -24,6 +24,8 @@ import org.adhuc.cena.menu.domain.model.menu.Menu;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeController;
 
+import lombok.NonNull;
+
 /**
  * A {@link org.springframework.hateoas.ResourceAssembler ResourceAssembler} implementation allowing building
  * {@link MenuResource}s.
@@ -44,14 +46,14 @@ public class MenuResourceAssembler extends ResourceAssemblerSupport<Menu, MenuRe
     }
 
     @Override
-    public MenuResource toResource(Menu menu) {
+    public MenuResource toResource(@NonNull Menu menu) {
         MenuResource resource = createResourceWithId(menu.id(), menu);
         resource.add(linkTo(RecipeController.class, menu.recipe().toString()).withRel("recipe"));
         return resource;
     }
 
     @Override
-    protected MenuResource instantiateResource(final Menu menu) {
+    protected MenuResource instantiateResource(@NonNull Menu menu) {
         return new MenuResource(menu);
     }
 

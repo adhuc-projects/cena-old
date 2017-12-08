@@ -24,6 +24,7 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  * A request to create a recipe
@@ -48,13 +49,13 @@ public class CreateRecipeRequest {
      *
      * @param identity
      *            the recipe identity.
-     * 
+     *
      * @param author
      *            the recipe author.
      *
      * @return the recipe creation command.
      */
-    public CreateRecipe toCommand(RecipeId identity, RecipeAuthor author) {
+    public CreateRecipe toCommand(@NonNull RecipeId identity, @NonNull RecipeAuthor author) {
         return new CreateRecipe(identity, name, content, author);
     }
 

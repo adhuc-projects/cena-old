@@ -23,6 +23,7 @@ import org.adhuc.cena.menu.domain.model.menu.Menu;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 /**
  * A REST resource encapsulating menu information.
@@ -36,17 +37,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class MenuResource extends ResourceSupport {
 
+    @NonNull
     @JsonUnwrapped
     private final Menu menu;
-
-    /**
-     * Creates a menu resource encapsulating the menu information.
-     *
-     * @param menu
-     *            the menu information.
-     */
-    public MenuResource(final Menu menu) {
-        this.menu = menu;
-    }
 
 }

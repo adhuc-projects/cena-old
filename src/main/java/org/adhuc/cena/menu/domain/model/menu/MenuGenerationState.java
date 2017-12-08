@@ -67,7 +67,7 @@ public class MenuGenerationState {
      *
      * @return the menu, or empty.
      */
-    public Optional<Menu> menu(MenuId id) {
+    public Optional<Menu> menu(@NonNull MenuId id) {
         return menus.stream().filter(m -> m.id().equals(id)).findFirst();
     }
 

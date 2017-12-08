@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +27,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,7 +44,7 @@ public class IngredientAppServiceImpl implements IngredientAppService {
 
     private IngredientRepository ingredientRepository;
 
-    public IngredientAppServiceImpl(IngredientRepository ingredientRepository) {
+    public IngredientAppServiceImpl(@NonNull IngredientRepository ingredientRepository) {
         this.ingredientRepository = ingredientRepository;
     }
 
@@ -55,21 +54,19 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     }
 
     @Override
-    public Ingredient getIngredient(IngredientId ingredientId) {
-        notNull(ingredientId, "Cannot get ingredient from invalid identity");
+    public Ingredient getIngredient(@NonNull IngredientId ingredientId) {
         return ingredientRepository.findOneNotNull(ingredientId);
     }
 
     @Override
     @PreAuthorize("hasRole('INGREDIENT_MANAGER')")
-    public void createIngredient(CreateIngredient command) {
-        notNull(command, "Cannot create ingredient from invalid command");
+    public void createIngredient(@NonNull CreateIngredient command) {
         log.info("Create ingredient from command {}", command);
         ensureIngredientNameNotUsed(command.ingredientName());
         ingredientRepository.save(new Ingredient(command.ingredientId(), command.ingredientName()));
     }
 
-    private void ensureIngredientNameNotUsed(final String ingredientName) {
+    private void ensureIngredientNameNotUsed(@NonNull String ingredientName) {
         if (ingredientRepository.findOneByName(ingredientName).isPresent()) {
             log.debug("Cannot create ingredient with already used name {}", ingredientName);
             throw new IngredientNameAlreadyUsedException(ingredientName);

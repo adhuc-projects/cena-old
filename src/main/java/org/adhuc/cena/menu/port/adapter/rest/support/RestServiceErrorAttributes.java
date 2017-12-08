@@ -40,8 +40,7 @@ import org.adhuc.cena.menu.exception.ExceptionCode;
 public class RestServiceErrorAttributes extends DefaultErrorAttributes {
 
     @Override
-    public Map<String, Object> getErrorAttributes(final RequestAttributes requestAttributes,
-            final boolean includeStackTrace) {
+    public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
         final Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
         // Explicitly remove "exception" attribute
         errorAttributes.remove("exception");
@@ -49,8 +48,7 @@ public class RestServiceErrorAttributes extends DefaultErrorAttributes {
         return errorAttributes;
     }
 
-    private void addExceptionCode(final Map<String, Object> errorAttributes,
-            final RequestAttributes requestAttributes) {
+    private void addExceptionCode(Map<String, Object> errorAttributes, RequestAttributes requestAttributes) {
         Throwable error = getError(requestAttributes);
         if (error != null) {
             while (ServletException.class.isAssignableFrom(error.getClass()) && error.getCause() != null) {
@@ -60,7 +58,7 @@ public class RestServiceErrorAttributes extends DefaultErrorAttributes {
         }
     }
 
-    private void addExceptionCode(final Map<String, Object> errorAttributes, final Throwable error) {
+    private void addExceptionCode(Map<String, Object> errorAttributes, Throwable error) {
         ExceptionCode exceptionCode = ExceptionCode.INTERNAL_ERROR;
         if (CenaException.class.isAssignableFrom(error.getClass())) {
             final CenaException cenaException = (CenaException) error;

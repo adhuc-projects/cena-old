@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +26,8 @@ import org.adhuc.cena.menu.domain.model.menu.Menu;
 import org.adhuc.cena.menu.domain.model.menu.MenuGenerationService;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
 import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
+
+import lombok.NonNull;
 
 /**
  * A {@link MenuAppService} implementation.
@@ -43,13 +43,14 @@ public class MenuAppServiceImpl implements MenuAppService {
     private MenuRepository        menuRepository;
     private MenuGenerationService menuGenerationService;
 
-    public MenuAppServiceImpl(MenuRepository menuRepository, MenuGenerationService menuGenerationService) {
+    public MenuAppServiceImpl(@NonNull MenuRepository menuRepository,
+            @NonNull MenuGenerationService menuGenerationService) {
         this.menuRepository = menuRepository;
         this.menuGenerationService = menuGenerationService;
     }
 
     @Override
-    public List<Menu> getMenus(MenusQuery query) {
+    public List<Menu> getMenus(@NonNull MenusQuery query) {
         List<Menu> menus =
                 menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
         Collections.sort(menus);
@@ -57,8 +58,7 @@ public class MenuAppServiceImpl implements MenuAppService {
     }
 
     @Override
-    public void generateMenus(GenerateMenus command) {
-        notNull(command, "Cannot generate menus from invalid command");
+    public void generateMenus(@NonNull GenerateMenus command) {
         menuGenerationService.generateMenus(command);
     }
 

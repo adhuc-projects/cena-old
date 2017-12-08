@@ -21,6 +21,8 @@ import java.util.Optional;
 
 import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 
+import lombok.NonNull;
+
 /**
  * A {@link Menu} repository.
  *
@@ -72,7 +74,7 @@ public interface MenuRepository {
      * @throws EntityNotFoundException
      *             if no menu could be found for identity.
      */
-    default Menu findOneNotNull(MenuId menuId) {
+    default Menu findOneNotNull(@NonNull MenuId menuId) {
         Optional<Menu> menu = findOne(menuId);
         if (menu.isPresent()) {
             return menu.get();

@@ -27,6 +27,8 @@ import java.util.Set;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 
+import lombok.NonNull;
+
 /**
  * A {@link org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator MealFrequencyIterationGenerator}
  * implementation for {@link org.adhuc.cena.menu.domain.model.menu.MealFrequency#WEEK_WORKING_DAYS WEEK_WORKING_DAYS}
@@ -42,7 +44,7 @@ public class WeekWorkingDaysMealFrequencyIterationGenerator extends AbstractMeal
     private static Set<DayOfWeek> WEEK_END_DAYS = new HashSet<>(Arrays.asList(SATURDAY, SUNDAY));
 
     @Override
-    protected Set<MenuId> generateIterations(LocalDate date) {
+    protected Set<MenuId> generateIterations(@NonNull LocalDate date) {
         Set<MenuId> iterations = new HashSet<>();
         if (WEEK_END_DAYS.contains(date.getDayOfWeek())) {
             iterations.add(new MenuId(date, MealType.LUNCH));

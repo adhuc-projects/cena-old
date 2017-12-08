@@ -58,7 +58,7 @@ public class Menu extends BasicEntity<MenuId> implements Comparable<Menu> {
      * @param recipe
      *            the recipe served during the meal.
      */
-    public Menu(MenuId id, RecipeId recipe) {
+    public Menu(@NonNull MenuId id, @NonNull RecipeId recipe) {
         super(id);
         notNull(recipe, "Cannot create menu without recipe");
         this.recipe = recipe;

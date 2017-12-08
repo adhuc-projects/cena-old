@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
+import lombok.NonNull;
+
 /**
  * A {@link org.springframework.hateoas.ResourceAssembler ResourceAssembler} implementation allowing building
  * {@link IngredientResource}s.
@@ -40,12 +42,12 @@ public class IngredientResourceAssembler extends ResourceAssemblerSupport<Ingred
     }
 
     @Override
-    public IngredientResource toResource(final Ingredient ingredient) {
+    public IngredientResource toResource(@NonNull Ingredient ingredient) {
         return createResourceWithId(ingredient.id().toString(), ingredient);
     }
 
     @Override
-    protected IngredientResource instantiateResource(final Ingredient ingredient) {
+    protected IngredientResource instantiateResource(Ingredient ingredient) {
         return new IngredientResource(ingredient);
     }
 
