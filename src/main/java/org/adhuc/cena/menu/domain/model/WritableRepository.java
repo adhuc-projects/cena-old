@@ -15,14 +15,11 @@
  */
 package org.adhuc.cena.menu.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import lombok.Data;
-import lombok.NonNull;
-import lombok.experimental.Accessors;
-
 /**
- * An abstract entity definition, containing the entity identity.
+ * A writable repository of entities.
+ *
+ * @param <E>
+ *            the entity type.
  *
  * @param <I>
  *            the identity type.
@@ -32,12 +29,16 @@ import lombok.experimental.Accessors;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Data
-@Accessors(fluent = true)
-public abstract class BasicEntity<I extends Identity> implements Entity<I> {
+public interface WritableRepository<E extends Entity<I>, I extends Identity> extends Repository<E, I> {
 
-    @NonNull
-    @JsonUnwrapped
-    private final I id;
+    /**
+     * Saves the specified entity.
+     *
+     * @param entity
+     *            the entity to save.
+     *
+     * @return the saved entity.
+     */
+    <S extends E> S save(S entity);
 
 }

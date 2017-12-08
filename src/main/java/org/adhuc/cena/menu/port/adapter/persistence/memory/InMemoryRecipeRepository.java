@@ -52,6 +52,11 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     private Map<RecipeId, Recipe> recipes = new LinkedHashMap<>();
 
     @Override
+    public Class<Recipe> entityType() {
+        return Recipe.class;
+    }
+
+    @Override
     public List<Recipe> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(recipes.values()));
     }

@@ -17,11 +17,8 @@ package org.adhuc.cena.menu.domain.model.menu;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
-
-import lombok.NonNull;
+import org.adhuc.cena.menu.domain.model.WritableRepository;
 
 /**
  * A {@link Menu} repository.
@@ -31,14 +28,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface MenuRepository {
-
-    /**
-     * Finds all the menus.
-     *
-     * @return all the menus.
-     */
-    List<Menu> findAll();
+public interface MenuRepository extends WritableRepository<Menu, MenuId> {
 
     /**
      * Finds the menus whose date is between the specified dates.
@@ -52,44 +42,5 @@ public interface MenuRepository {
      * @return the menus whose date is between dates.
      */
     List<Menu> findByDateBetween(LocalDate startDate, LocalDate endDate);
-
-    /**
-     * Finds the menu corresponding to the specified identity.
-     *
-     * @param menuId
-     *            the menu identity.
-     *
-     * @return the menu if existing, empty otherwise.
-     */
-    Optional<Menu> findOne(MenuId menuId);
-
-    /**
-     * Finds the menu corresponding to the specified identity.
-     *
-     * @param menuId
-     *            the menu identity.
-     *
-     * @return the menu if existing.
-     *
-     * @throws EntityNotFoundException
-     *             if no menu could be found for identity.
-     */
-    default Menu findOneNotNull(@NonNull MenuId menuId) {
-        Optional<Menu> menu = findOne(menuId);
-        if (menu.isPresent()) {
-            return menu.get();
-        }
-        throw new EntityNotFoundException(Menu.class, menuId);
-    }
-
-    /**
-     * Saves the specified menu.
-     *
-     * @param menu
-     *            the menu to save.
-     *
-     * @return the saved menu.
-     */
-    <I extends Menu> I save(I menu);
 
 }

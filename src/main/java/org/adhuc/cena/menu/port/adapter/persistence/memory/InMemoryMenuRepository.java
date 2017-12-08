@@ -50,6 +50,11 @@ public class InMemoryMenuRepository implements MenuRepository {
     private Map<MenuId, Menu> menus = new HashMap<>();
 
     @Override
+    public Class<Menu> entityType() {
+        return Menu.class;
+    }
+
+    @Override
     public List<Menu> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(menus.values()));
     }

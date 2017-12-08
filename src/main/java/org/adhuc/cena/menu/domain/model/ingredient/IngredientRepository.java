@@ -19,9 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
-
-import lombok.NonNull;
+import org.adhuc.cena.menu.domain.model.WritableRepository;
 
 /**
  * An {@link Ingredient} repository.
@@ -31,14 +29,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface IngredientRepository {
-
-    /**
-     * Finds all the ingredients.
-     *
-     * @return all the ingredients.
-     */
-    List<Ingredient> findAll();
+public interface IngredientRepository extends WritableRepository<Ingredient, IngredientId> {
 
     /**
      * Finds all the ingredients corresponding to the specified identities.
@@ -51,35 +42,6 @@ public interface IngredientRepository {
     List<Ingredient> findAll(Collection<IngredientId> ingredientIds);
 
     /**
-     * Finds the ingredient corresponding to the specified identity.
-     *
-     * @param ingredientId
-     *            the ingredient identity.
-     *
-     * @return the ingredient if existing, empty otherwise.
-     */
-    Optional<Ingredient> findOne(IngredientId ingredientId);
-
-    /**
-     * Finds the ingredient corresponding to the specified identity.
-     *
-     * @param ingredientId
-     *            the ingredient identity.
-     *
-     * @return the ingredient if existing.
-     *
-     * @throws EntityNotFoundException
-     *             if no ingredient could be found for identity.
-     */
-    default Ingredient findOneNotNull(@NonNull IngredientId ingredientId) {
-        Optional<Ingredient> ingredient = findOne(ingredientId);
-        if (ingredient.isPresent()) {
-            return ingredient.get();
-        }
-        throw new EntityNotFoundException(Ingredient.class, ingredientId);
-    }
-
-    /**
      * Finds the ingredient corresponding to the specified name.
      *
      * @param ingredientName
@@ -88,15 +50,5 @@ public interface IngredientRepository {
      * @return the ingredient if existing, empty otherwise.
      */
     Optional<Ingredient> findOneByName(String ingredientName);
-
-    /**
-     * Saves the specified ingredient.
-     *
-     * @param ingredient
-     *            the ingredient to save.
-     *
-     * @return the saved ingredient.
-     */
-    <I extends Ingredient> I save(I ingredient);
 
 }

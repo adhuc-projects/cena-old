@@ -52,6 +52,11 @@ public class InMemoryIngredientRepository implements IngredientRepository {
     private Map<IngredientId, Ingredient> ingredients = new HashMap<>();
 
     @Override
+    public Class<Ingredient> entityType() {
+        return Ingredient.class;
+    }
+
+    @Override
     public List<Ingredient> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(ingredients.values()));
     }

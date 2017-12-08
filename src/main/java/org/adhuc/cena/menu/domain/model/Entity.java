@@ -18,7 +18,7 @@ package org.adhuc.cena.menu.domain.model;
 /**
  * An entity definition.
  *
- * @param <ID>
+ * @param <I>
  *            the identity type.
  *
  * @author Alexandre Carbenay
@@ -26,13 +26,13 @@ package org.adhuc.cena.menu.domain.model;
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface Entity<ID> {
+public interface Entity<I extends Identity> {
 
     /**
      * Gets the entity identity.
      *
      * @return the entity identity.
      */
-    ID id();
+    I id();
 
 }

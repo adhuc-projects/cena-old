@@ -17,12 +17,9 @@ package org.adhuc.cena.menu.domain.model.recipe;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+import org.adhuc.cena.menu.domain.model.WritableRepository;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
-
-import lombok.NonNull;
 
 /**
  * A {@link Recipe} repository.
@@ -32,14 +29,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface RecipeRepository {
-
-    /**
-     * Finds all the recipes.
-     *
-     * @return all the recipes.
-     */
-    List<Recipe> findAll();
+public interface RecipeRepository extends WritableRepository<Recipe, RecipeId> {
 
     /**
      * Finds all the recipes that do not use one of the specified ingredients as a main ingredient.
@@ -50,44 +40,5 @@ public interface RecipeRepository {
      * @return the recipes that do not use one of the ingredients as main ingredient.
      */
     List<Recipe> findByMainIngredientsNotIn(Collection<IngredientId> ingredientIds);
-
-    /**
-     * Finds the recipe corresponding to the specified identity.
-     *
-     * @param recipeId
-     *            the recipe identity.
-     *
-     * @return the recipe if existing, empty otherwise.
-     */
-    Optional<Recipe> findOne(RecipeId recipeId);
-
-    /**
-     * Finds the recipe corresponding to the specified identity.
-     *
-     * @param recipeId
-     *            the recipe identity.
-     *
-     * @return the recipe if existing.
-     *
-     * @throws EntityNotFoundException
-     *             if no recipe could be found for identity.
-     */
-    default Recipe findOneNotNull(@NonNull RecipeId recipeId) {
-        Optional<Recipe> recipe = findOne(recipeId);
-        if (recipe.isPresent()) {
-            return recipe.get();
-        }
-        throw new EntityNotFoundException(Recipe.class, recipeId);
-    }
-
-    /**
-     * Saves the specified recipe.
-     *
-     * @param recipe
-     *            the recipe to save.
-     *
-     * @return the saved recipe.
-     */
-    <I extends Recipe> I save(I recipe);
 
 }
