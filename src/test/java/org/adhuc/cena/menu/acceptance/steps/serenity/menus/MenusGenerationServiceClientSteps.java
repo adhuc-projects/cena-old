@@ -30,10 +30,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.assertj.core.api.SoftAssertions;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeDetailServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientValue;
+import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientsListServiceClientSteps;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
@@ -41,6 +47,7 @@ import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest.GenerateM
 
 import io.restassured.specification.RequestSpecification;
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.Steps;
 
 /**
  * The menus generation rest-service client steps definition.
@@ -53,10 +60,15 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public class MenusGenerationServiceClientSteps extends AbstractServiceClientSteps {
 
-    private static final List<DayOfWeek> WEEK_END_DAYS  = Arrays.asList(SATURDAY, SUNDAY);
+    private static final List<DayOfWeek>            WEEK_END_DAYS  = Arrays.asList(SATURDAY, SUNDAY);
 
-    private GenerateMenusRequestBuilder  requestBuilder = GenerateMenusRequest.builder();
-    private List<MenuValue>              menus;
+    @Steps
+    private RecipeDetailServiceClientSteps          recipeDetailServiceClient;
+    @Steps
+    private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
+
+    private GenerateMenusRequestBuilder             requestBuilder = GenerateMenusRequest.builder();
+    private List<MenuValue>                         menus;
 
     @Step("Specify menus generation days count as {0}")
     public void setMenusGenerationDays(int days) {
@@ -111,14 +123,31 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
     }
 
     @Step("Assert menus do not have redundant recipe")
-    public void assertMenusDoNotHaveRedundantRecipe() {
+    public void assertMenusHaveNoRedundantRecipe() {
         SoftAssertions softly = new SoftAssertions();
-        menus.stream().forEach(m -> {
-            softly.assertThat(
-                    menus.stream().filter(m2 -> !m.equals(m2)).filter(m2 -> m.getRecipeUrl().equals(m2.getRecipeUrl())))
-                    .as("Menu %s should have unique recipe", m).isEmpty();
-        });
+        menus.stream().forEach(m -> prepareAssertionMenuHaveNoRedundantRecipe(m, softly));
         softly.assertAll();
+    }
+
+    @Step("Prepare assertion : menu {0} does not have redundant recipe with other menus")
+    public void prepareAssertionMenuHaveNoRedundantRecipe(MenuValue menu, SoftAssertions softly) {
+        softly.assertThat(menus.stream().filter(m2 -> !menu.equals(m2))
+                .filter(m2 -> menu.getRecipeUrl().equals(m2.getRecipeUrl())))
+                .as("Menu %s should have unique recipe", menu).isEmpty();
+    }
+
+    @Step("Assert menus do not use same main recipe ingredients within consecutive days")
+    public void assertMenusUseNotSameMainIngredientsConsecutiveDays() {
+        SoftAssertions softly = new SoftAssertions();
+        menus.stream().forEach(m -> prepareAssertionMenuUseNotSameMainIngredientsConsecutiveDays(m, softly));
+        softly.assertAll();
+    }
+
+    @Step("Prepare assertion : menu {0} does not use same main recipe ingredients within consecutive days")
+    public void prepareAssertionMenuUseNotSameMainIngredientsConsecutiveDays(MenuValue menu, SoftAssertions softly) {
+        menus.stream().filter(m2 -> !menu.equals(m2) && menu.isConsecutiveDay(m2))
+                .forEach(m2 -> softly.assertThat(compareMenusRecipeMainIngredients(menu, m2))
+                        .as("Menu %s should not use same main ingredients as %s", menu, m2).isEmpty());
     }
 
     @Step("Get menu list from {0}")
@@ -147,6 +176,17 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
 
     private boolean expectDinner(LocalDate date, GenerateMenusRequest request) {
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Collection<RecipeIngredientValue> compareMenusRecipeMainIngredients(MenuValue m1, MenuValue m2) {
+        return CollectionUtils.intersection(getMenuRecipeMainIngredients(m1), getMenuRecipeMainIngredients(m2));
+    }
+
+    private List<RecipeIngredientValue> getMenuRecipeMainIngredients(MenuValue menu) {
+        return Stream.of(recipeDetailServiceClient.getRecipeFromUrl(menu.getRecipeUrl()))
+                .map(recipe -> recipeIngredientsListServiceClient.getIngredientsFromRecipe(recipe))
+                .flatMap(l -> l.stream()).filter(i -> i.isMainIngredient()).collect(Collectors.toList());
     }
 
 }

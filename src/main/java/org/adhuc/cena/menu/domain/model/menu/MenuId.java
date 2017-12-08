@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -69,6 +70,19 @@ public class MenuId implements Identity, Dateable, Comparable<MenuId> {
             return type.compareTo(o.type);
         }
         return compareDate;
+    }
+
+    /**
+     * Indicates whether the specified menu is within a consecutive day. A menu is considered as consecutive if its date
+     * is the same, or a day before or after this menu date.
+     *
+     * @param other
+     *            the other menu identity.
+     *
+     * @return {@code true} if the other menu is within a consecutive day, {@code false} otherwise.
+     */
+    public boolean isConsecutiveMenu(MenuId other) {
+        return Duration.between(date.atStartOfDay(), other.date.atStartOfDay()).abs().toDays() <= 1;
     }
 
     private void notNull(Object value, String name) {

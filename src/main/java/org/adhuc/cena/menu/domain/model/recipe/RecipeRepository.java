@@ -15,10 +15,12 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 
 /**
  * A {@link Recipe} repository.
@@ -36,6 +38,16 @@ public interface RecipeRepository {
      * @return all the recipes.
      */
     List<Recipe> findAll();
+
+    /**
+     * Finds all the recipes that do not use one of the specified ingredients as a main ingredient.
+     *
+     * @param ingredientIds
+     *            the banned main ingredient identities.
+     *
+     * @return the recipes that do not use one of the ingredients as main ingredient.
+     */
+    List<Recipe> findByMainIngredientsNotIn(Collection<IngredientId> ingredientIds);
 
     /**
      * Finds the recipe corresponding to the specified identity.

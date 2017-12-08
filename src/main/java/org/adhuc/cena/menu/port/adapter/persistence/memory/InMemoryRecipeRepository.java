@@ -18,15 +18,19 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
@@ -51,6 +55,14 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     @Override
     public List<Recipe> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(recipes.values()));
+    }
+
+    @Override
+    public List<Recipe> findByMainIngredientsNotIn(Collection<IngredientId> ingredientIds) {
+        return recipes.values().stream()
+                .filter(r -> CollectionUtils.intersection(r.ingredients().stream().filter(i -> i.isMainIngredient())
+                        .map(i -> i.ingredientId()).collect(Collectors.toList()), ingredientIds).isEmpty())
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.ASPARAGUS_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.AUBERGINE_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.BACON_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.BECHAMEL_ID;
@@ -22,6 +23,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.BREAD
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CANTAL_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CARROT_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CHEESE_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CHICKEN_BREAST_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CONFIT_OF_DUCK_LEG_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CROUTON_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
@@ -36,6 +38,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.KIDNE
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.LAMB_LETTUCE_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.LARDONS_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.LEEK_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.LETTUCE_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MILK_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MINCED_BEEF_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MINCED_MUTTON_ID;
@@ -48,6 +51,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.RED_P
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.SALMON_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.SHORTCRUST_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TUNA_FILLET_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TURNIP_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.WATERCRESS_ID;
 
@@ -167,6 +171,16 @@ public class RecipeMother {
     public static final String       DUCK_PARMENTIER_NAME                      = "Duck parmentier";
     public static final String       DUCK_PARMENTIER_CONTENT                   = "Duck parmentier recipe content";
     public static final RecipeAuthor DUCK_PARMENTIER_AUTHOR                    = new RecipeAuthor("authenticated-user");
+
+    public static final RecipeId     CAESAR_SALAD_ID                           = RecipeId.generate();
+    public static final String       CAESAR_SALAD_NAME                         = "Caesar salad";
+    public static final String       CAESAR_SALAD_CONTENT                      = "Caesar salad recipe content";
+    public static final RecipeAuthor CAESAR_SALAD_AUTHOR                       = new RecipeAuthor("authenticated-user");
+
+    public static final RecipeId     JAPANESE_TUNA_ID                          = RecipeId.generate();
+    public static final String       JAPANESE_TUNA_NAME                        = "Japanese tuna";
+    public static final String       JAPANESE_TUNA_CONTENT                     = "Japanese tuna recipe content";
+    public static final RecipeAuthor JAPANESE_TUNA_AUTHOR                      = new RecipeAuthor("authenticated-user");
 
     public static CreateRecipe createTomatoCucumberMozzaSalad() {
         return new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,
@@ -658,6 +672,59 @@ public class RecipeMother {
     public static Recipe duckParmentierWithIngredients() {
         return new Recipe(DUCK_PARMENTIER_ID, DUCK_PARMENTIER_NAME, DUCK_PARMENTIER_CONTENT, DUCK_PARMENTIER_AUTHOR,
                 duckParmentierIngredients());
+    }
+
+    public static RecipeIngredientId chickenBreastInCaesarSalad() {
+        return new RecipeIngredientId(CHICKEN_BREAST_ID, true);
+    }
+
+    public static RecipeIngredientId lettuceInCaesarSalad() {
+        return new RecipeIngredientId(LETTUCE_ID, true);
+    }
+
+    public static List<RecipeIngredientId> caesarSaladIngredients() {
+        return Arrays.asList(chickenBreastInCaesarSalad(), lettuceInCaesarSalad());
+    }
+
+    public static Recipe caesarSalad() {
+        return new Recipe(CAESAR_SALAD_ID, CAESAR_SALAD_NAME, CAESAR_SALAD_CONTENT, CAESAR_SALAD_AUTHOR);
+    }
+
+    public static Recipe caesarSaladWithIngredients() {
+        return new Recipe(CAESAR_SALAD_ID, CAESAR_SALAD_NAME, CAESAR_SALAD_CONTENT, CAESAR_SALAD_AUTHOR,
+                caesarSaladIngredients());
+    }
+
+    public static RecipeIngredientId tunaFilletInJapaneseTuna() {
+        return new RecipeIngredientId(TUNA_FILLET_ID, true);
+    }
+
+    public static RecipeIngredientId asparagusInJapaneseTuna() {
+        return new RecipeIngredientId(ASPARAGUS_ID, true);
+    }
+
+    public static List<RecipeIngredientId> japaneseTunaIngredients() {
+        return Arrays.asList(tunaFilletInJapaneseTuna(), asparagusInJapaneseTuna());
+    }
+
+    public static Recipe japaneseTuna() {
+        return new Recipe(JAPANESE_TUNA_ID, JAPANESE_TUNA_NAME, JAPANESE_TUNA_CONTENT, JAPANESE_TUNA_AUTHOR);
+    }
+
+    public static Recipe japaneseTunaWithIngredients() {
+        return new Recipe(JAPANESE_TUNA_ID, JAPANESE_TUNA_NAME, JAPANESE_TUNA_CONTENT, JAPANESE_TUNA_AUTHOR,
+                japaneseTunaIngredients());
+    }
+
+    public static List<Recipe> allRecipesWithIngredients() {
+        return Arrays.asList(tomatoCucumberMozzaSaladWithIngredients(), tomatoCucumberOliveFetaSaladWithIngredients(),
+                tomatoCantalPieWithIngredients(), quicheLorraineWithIngredients(), watercressSoupWithIngredients(),
+                gazpachoWithIngredients(), poachedEggsSaladWithIngredients(), norvegianSaladWithIngredients(),
+                omeletteWithIngredients(), chiliConCarneWithIngredients(), sauerkrautWithIngredients(),
+                leeksWithHamAndBechamelSauceWithIngredients(), moussakaWithIngredients(), lasagneWithIngredients(),
+                duckBreastFilletWithTurnipsWithIngredients(), croqueMonsieurWithIngredients(),
+                racletteWithIngredients(), duckParmentierWithIngredients(), caesarSaladWithIngredients(),
+                japaneseTunaWithIngredients());
     }
 
 }

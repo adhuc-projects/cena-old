@@ -20,6 +20,7 @@ import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.springframework.http.HttpStatus.OK;
 
+import java.util.List;
 import java.util.Optional;
 
 import io.restassured.path.json.JsonPath;
@@ -78,6 +79,12 @@ public class IngredientListServiceClientSteps extends AbstractIngredientServiceC
     @Step("Assert ingredient {0} is not in ingredients list")
     public void assertIngredientNotInIngredientsList(final IngredientValue ingredient) {
         assertThat(isIngredientInIngredientsList(ingredient)).isFalse();
+    }
+
+    @Step("Get ingredients from url {0}")
+    public <I extends IngredientValue> List<I> getIngredients(String url, Class<I> clazz) {
+        JsonPath jsonPath = rest().get(url).then().statusCode(OK.value()).extract().jsonPath();
+        return jsonPath.getList("_embedded.data", clazz);
     }
 
     private boolean isIngredientInIngredientsList(final IngredientValue ingredient) {

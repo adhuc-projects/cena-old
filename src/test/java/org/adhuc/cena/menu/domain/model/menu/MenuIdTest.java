@@ -18,16 +18,23 @@ package org.adhuc.cena.menu.domain.model.menu;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_01_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_MEAL_TYPE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_03_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_01_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_ID;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
 
@@ -64,34 +71,50 @@ public class MenuIdTest {
         assertThat(createdId.type()).isEqualTo(DINNER_2017_01_02_MEAL_TYPE);
     }
 
-    @Test
-    @DisplayName("compares to itself")
-    public void compareSameMenuId() {
-        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_02_ID)).isEqualTo(0);
+    @ParameterizedTest
+    @MethodSource("comparableMenuIds")
+    @DisplayName("compared with other")
+    public void compareMenuIds(MenuId m1, MenuId m2, int result) {
+        if (result < 0) {
+            assertThat(m1.compareTo(m2)).isLessThan(0);
+        } else if (result > 0) {
+            assertThat(m1.compareTo(m2)).isGreaterThan(0);
+        } else {
+            assertThat(m1.compareTo(m2)).isEqualTo(0);
+        }
     }
 
-    @Test
-    @DisplayName("compares to menu from the previous day")
-    public void compareMenuFromPreviousDay() {
-        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_01_ID)).isGreaterThan(0);
+    static Stream<Arguments> comparableMenuIds() {
+        return Stream.of(Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_01_ID, 0),
+                Arguments.of(DINNER_2017_01_01_ID, DINNER_2017_01_01_ID, 0),
+                Arguments.of(LUNCH_2017_01_01_ID, DINNER_2017_01_01_ID, -1),
+                Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_02_ID, -1),
+                Arguments.of(DINNER_2017_01_01_ID, LUNCH_2017_01_02_ID, -1),
+                Arguments.of(LUNCH_2017_01_02_ID, LUNCH_2017_01_01_ID, 1),
+                Arguments.of(DINNER_2017_01_02_ID, LUNCH_2017_01_01_ID, 1));
     }
 
-    @Test
-    @DisplayName("compares to menu from the next day")
-    public void compareMenuFromNextDay() {
-        assertThat(LUNCH_2017_01_02_ID.compareTo(LUNCH_2017_01_03_ID)).isLessThan(0);
+    @ParameterizedTest
+    @MethodSource("consecutiveMenuIds")
+    @DisplayName("consecutive menu ids")
+    public void compareMenuIds(MenuId m1, MenuId m2, boolean consecutive) {
+        assertThat(m1.isConsecutiveMenu(m2)).isEqualTo(consecutive);
     }
 
-    @Test
-    @DisplayName("compares to menu from the same day, previous meal")
-    public void compareMenuFromSameDayFreviousMeal() {
-        assertThat(DINNER_2017_01_02_ID.compareTo(LUNCH_2017_01_02_ID)).isGreaterThan(0);
-    }
-
-    @Test
-    @DisplayName("compares to menu from the same day, next meal")
-    public void compareMenuFromSameDayNextMeal() {
-        assertThat(LUNCH_2017_01_02_ID.compareTo(DINNER_2017_01_02_ID)).isLessThan(0);
+    static Stream<Arguments> consecutiveMenuIds() {
+        return Stream.of(Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_01_ID, true),
+                Arguments.of(DINNER_2017_01_01_ID, DINNER_2017_01_01_ID, true),
+                Arguments.of(LUNCH_2017_01_01_ID, DINNER_2017_01_01_ID, true),
+                Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_02_ID, true),
+                Arguments.of(DINNER_2017_01_01_ID, LUNCH_2017_01_02_ID, true),
+                Arguments.of(LUNCH_2017_01_02_ID, LUNCH_2017_01_01_ID, true),
+                Arguments.of(DINNER_2017_01_02_ID, LUNCH_2017_01_01_ID, true),
+                Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_03_ID, false),
+                Arguments.of(LUNCH_2017_01_03_ID, LUNCH_2017_01_01_ID, false),
+                Arguments.of(LUNCH_2017_01_01_ID, DINNER_2017_01_03_ID, false),
+                Arguments.of(DINNER_2017_01_03_ID, LUNCH_2017_01_01_ID, false),
+                Arguments.of(DINNER_2017_01_01_ID, LUNCH_2017_01_03_ID, false),
+                Arguments.of(LUNCH_2017_01_03_ID, DINNER_2017_01_01_ID, false));
     }
 
 }

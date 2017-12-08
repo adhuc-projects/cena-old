@@ -16,11 +16,13 @@
 package org.adhuc.cena.menu.acceptance.steps.recipes;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.ingredient;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.caesarSaladWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.chiliConCarneWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieurWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckBreastFilletWithTurnipsWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.duckParmentierWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.gazpachoWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.japaneseTunaWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagneWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.leeksWithHamAndBechamelSauceWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.moussakaWithIngredients;
@@ -37,7 +39,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.watercressSou
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,17 +61,18 @@ import org.adhuc.cena.menu.domain.model.recipe.Recipe;
  */
 public class RecipeValueMother {
 
-    private static final Map<String, RecipeValue> EXISTING_RECIPES = new HashMap<>();
-    private static final Map<String, RecipeValue> ALL_RECIPES      = new HashMap<>();
+    private static final Map<String, RecipeValue> EXISTING_RECIPES = new LinkedHashMap<>();
+    private static final Map<String, RecipeValue> ALL_RECIPES      = new LinkedHashMap<>();
 
     static {
-        List<RecipeValue> existingRecipes = convertAll(tomatoCantalPieWithIngredients(),
-                quicheLorraineWithIngredients(), watercressSoupWithIngredients(), gazpachoWithIngredients(),
-                poachedEggsSaladWithIngredients(), norvegianSaladWithIngredients(), omeletteWithIngredients(),
-                chiliConCarneWithIngredients(), sauerkrautWithIngredients(),
-                leeksWithHamAndBechamelSauceWithIngredients(), moussakaWithIngredients(), lasagneWithIngredients(),
-                duckBreastFilletWithTurnipsWithIngredients(), croqueMonsieurWithIngredients(),
-                racletteWithIngredients(), duckParmentierWithIngredients());
+        List<RecipeValue> existingRecipes =
+                convertAll(tomatoCantalPieWithIngredients(), watercressSoupWithIngredients(),
+                        poachedEggsSaladWithIngredients(), sauerkrautWithIngredients(), quicheLorraineWithIngredients(),
+                        chiliConCarneWithIngredients(), leeksWithHamAndBechamelSauceWithIngredients(),
+                        duckBreastFilletWithTurnipsWithIngredients(), racletteWithIngredients(),
+                        gazpachoWithIngredients(), norvegianSaladWithIngredients(), omeletteWithIngredients(),
+                        moussakaWithIngredients(), lasagneWithIngredients(), croqueMonsieurWithIngredients(),
+                        duckParmentierWithIngredients(), caesarSaladWithIngredients(), japaneseTunaWithIngredients());
         addAllRecipes(existingRecipes, EXISTING_RECIPES);
         addAllRecipes(existingRecipes, ALL_RECIPES);
 

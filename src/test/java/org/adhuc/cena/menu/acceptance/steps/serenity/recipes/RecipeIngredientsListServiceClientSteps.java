@@ -19,6 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeFalse;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.ingredients.IngredientListServiceClientSteps;
@@ -29,6 +32,7 @@ import org.adhuc.cena.menu.exception.ExceptionCode;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
@@ -42,6 +46,8 @@ import net.thucydides.core.annotations.Steps;
  */
 @SuppressWarnings("serial")
 public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServiceClientSteps {
+
+    private static final String              RECIPES_INGREDIENTS_SESSION_KEY = "recipesIngredients";
 
     @Steps
     private IngredientListServiceClientSteps ingredientListServiceClient;
@@ -141,6 +147,13 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
         assertThat(ingredient.isMainIngredient()).isFalse();
     }
 
+    @Step("Get ingredients for recipe {0}")
+    public List<RecipeIngredientValue> getIngredientsFromRecipe(RecipeValue recipe) {
+        return recipeIngredients(recipe.id())
+                .orElseGet(() -> storeRecipeIngredients(recipe.id(), ingredientListServiceClient
+                        .getIngredients(recipe.getIngredientsListUrl(), RecipeIngredientValue.class)));
+    }
+
     private Response addIngredientToRecipe(RecipeValue recipe, IngredientValue ingredient, boolean main,
             RequestSpecification rest) {
         final String recipeIngredientsResourceUrl =
@@ -162,6 +175,24 @@ public class RecipeIngredientsListServiceClientSteps extends AbstractRecipeServi
 
     private String determineUnknownRecipeIngredientsResourceUrl() {
         return getRecipesResourceUrl() + "/" + RecipeId.generate() + "/ingredients";
+    }
+
+    private Map<String, List<RecipeIngredientValue>> recipesIngredients() {
+        Map<String, List<RecipeIngredientValue>> recipesIngredients =
+                Serenity.sessionVariableCalled(RECIPES_INGREDIENTS_SESSION_KEY);
+        return Optional.ofNullable(recipesIngredients).orElse(new HashMap<>());
+    }
+
+    private Optional<List<RecipeIngredientValue>> recipeIngredients(String recipeId) {
+        return Optional.ofNullable(recipesIngredients().get(recipeId));
+    }
+
+    private List<RecipeIngredientValue> storeRecipeIngredients(String recipeId,
+            List<RecipeIngredientValue> recipeIngredients) {
+        Map<String, List<RecipeIngredientValue>> recipesIngredients = recipesIngredients();
+        recipesIngredients.put(recipeId, recipeIngredients);
+        Serenity.setSessionVariable(RECIPES_INGREDIENTS_SESSION_KEY).to(recipesIngredients);
+        return recipeIngredients;
     }
 
 }

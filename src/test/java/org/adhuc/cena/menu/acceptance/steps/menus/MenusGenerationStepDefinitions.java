@@ -74,7 +74,12 @@ public class MenusGenerationStepDefinitions {
 
     @Then("^no meal has redundant recipe$")
     public void menusWithNoRedundantRecipe() {
-        menusGenerationServiceClient.assertMenusDoNotHaveRedundantRecipe();
+        menusGenerationServiceClient.assertMenusHaveNoRedundantRecipe();
+    }
+
+    @Then("^no meal has the same main ingredients as the previous nor next day$")
+    public void menusWithNoMainRecipeIngredientWithinConsecutiveDays() {
+        menusGenerationServiceClient.assertMenusUseNotSameMainIngredientsConsecutiveDays();
     }
 
 }

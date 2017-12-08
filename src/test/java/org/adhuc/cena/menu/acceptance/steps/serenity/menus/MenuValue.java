@@ -17,6 +17,7 @@ package org.adhuc.cena.menu.acceptance.steps.serenity.menus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ import org.adhuc.cena.menu.domain.model.menu.MealType;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -45,6 +47,7 @@ import lombok.experimental.Accessors;
  * @since 0.1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ToString(includeFieldNames = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @RequiredArgsConstructor
@@ -60,6 +63,10 @@ public class MenuValue extends HateoasHalClientResourceSupport {
         Optional<Link> link = links().stream().filter(l -> l.getRel().equals("recipe")).findFirst();
         assertThat(link).as("Cannot get recipe link for menu " + this).isPresent();
         return link.get().getHref();
+    }
+
+    public boolean isConsecutiveDay(MenuValue other) {
+        return Duration.between(date.atStartOfDay(), other.date.atStartOfDay()).abs().toDays() <= 1;
     }
 
 }

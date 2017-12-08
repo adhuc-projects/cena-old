@@ -18,12 +18,21 @@ package org.adhuc.cena.menu.domain.model.menu;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.menuGeneration2DaysAt20170103TwiceADayCurrentState;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.allRecipesWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieur;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagne;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.omelette;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.raclette;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +69,12 @@ public class MenuGenerationStateTest {
         }
 
         @Test
+        @DisplayName("cannot be add null menu")
+        public void addNullMenu() {
+            assertThrows(IllegalArgumentException.class, () -> state.addMenu(null));
+        }
+
+        @Test
         @DisplayName("has no menu after initialization")
         public void hasNoMenuAfterInitialization() {
             assertThat(state.menus()).isNotNull().isEmpty();
@@ -81,6 +96,25 @@ public class MenuGenerationStateTest {
             });
         }
 
+        @Test
+        @DisplayName("cannot filter null recipes list")
+        public void filterAlreadyUsedRecipesNullList() {
+            assertThrows(IllegalArgumentException.class, () -> state.filterAlreadyUsedRecipes(null));
+        }
+
+        @Test
+        @DisplayName("filter already used recipes from empty list")
+        public void filterAlreadyUsedRecipesEmptyList() {
+            assertThat(state.filterAlreadyUsedRecipes(Collections.emptyList())).isEmpty();
+        }
+
+        @Test
+        @DisplayName("filter already used recipes returns all recipes")
+        public void filterAlreadyUsedRecipes() {
+            assertThat(state.filterAlreadyUsedRecipes(allRecipesWithIngredients()))
+                    .containsExactlyElementsOf(allRecipesWithIngredients());
+        }
+
     }
 
     @Nested
@@ -95,7 +129,19 @@ public class MenuGenerationStateTest {
         }
 
         @Test
-        @DisplayName("has no menu after initialization")
+        @DisplayName("returns empty from unknown id")
+        public void getMenuUnknown() {
+            assertThat(state.menu(LUNCH_2017_01_02_ID)).isNotPresent();
+        }
+
+        @Test
+        @DisplayName("returns known menu from id")
+        public void getMenuKnown() {
+            assertThat(state.menu(lunch20170103().id())).isPresent().contains(lunch20170103());
+        }
+
+        @Test
+        @DisplayName("has menus after initialization")
         public void hasNoMenuAfterInitialization() {
             assertThat(state.menus()).isNotNull().isNotEmpty().contains(lunch20170103(), dinner20170103());
         }
@@ -115,6 +161,20 @@ public class MenuGenerationStateTest {
                 softly.assertThat(state.command()).isEqualTo(originalState.command());
                 softly.assertThat(state.menus()).containsExactlyElementsOf(originalState.menus());
             });
+        }
+
+        @Test
+        @DisplayName("filter already used recipes from recipes list containing only used recipes returns empty list")
+        public void filterAlreadyUsedRecipesAll() {
+            assertThat(state.filterAlreadyUsedRecipes(Arrays.asList(raclette(), croqueMonsieur()))).isEmpty();
+        }
+
+        @Test
+        @DisplayName("filter already used recipes from recipes list containing a subset of used recipes returns the filtered list")
+        public void filterAlreadyUsedRecipesSubset() {
+            assertThat(
+                    state.filterAlreadyUsedRecipes(Arrays.asList(raclette(), croqueMonsieur(), omelette(), lasagne())))
+                            .containsExactlyInAnyOrder(omelette(), lasagne());
         }
 
     }

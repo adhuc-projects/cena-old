@@ -18,13 +18,22 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.AUBERGINE_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.MOZZARELLA_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.POTATO_ID;
+import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.moussakaWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSalad;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSaladWithIngredients;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberOliveFetaSaladWithIngredients;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -88,14 +97,14 @@ public class InMemoryRecipeRepositoryTest {
 
         @BeforeEach
         public void setUp() {
-            repository.save(tomatoCucumberMozzaSalad());
+            repository.save(tomatoCucumberMozzaSaladWithIngredients());
         }
 
         @Test
         @DisplayName("returns a recipes list containing saved recipe")
         public void findAllAfterSaveContainsSavedRecipe() {
             assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                    .containsExactly(tomatoCucumberMozzaSalad());
+                    .containsExactly(tomatoCucumberMozzaSaladWithIngredients());
         }
 
         @Test
@@ -108,7 +117,7 @@ public class InMemoryRecipeRepositoryTest {
         @DisplayName("returns tomato, cucumber and mozzarella salad when finding by id")
         public void findOneExisting() {
             assertThat(repository.findOne(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).isPresent()
-                    .usingFieldByFieldValueComparator().contains(tomatoCucumberMozzaSalad());
+                    .usingFieldByFieldValueComparator().contains(tomatoCucumberMozzaSaladWithIngredients());
         }
 
         @Test
@@ -120,20 +129,80 @@ public class InMemoryRecipeRepositoryTest {
                             TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT, TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR));
         }
 
+        @Test
+        @DisplayName("finding recipes not using potato main ingredient returns tomato, cucumber and mozzarella salad")
+        public void findByMainIngredientsNotInPotato() {
+            assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(POTATO_ID)))
+                    .usingFieldByFieldElementComparator().containsExactly(tomatoCucumberMozzaSaladWithIngredients());
+        }
+
+        @Test
+        @DisplayName("finding recipes not using mozza main ingredient returns tomato, cucumber and mozzarella salad")
+        public void findByMainIngredientsNotInMozza() {
+            assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(MOZZARELLA_ID)))
+                    .usingFieldByFieldElementComparator().containsExactly(tomatoCucumberMozzaSaladWithIngredients());
+        }
+
+        @Test
+        @DisplayName("finding recipes not using tomato main ingredient returns empty list")
+        public void findByMainIngredientsNotInTomato() {
+            assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(TOMATO_ID))).isEmpty();
+        }
+
         @Nested
         @DisplayName("and tomato, cucumber, olive and feta salad")
         class AndTomatoCucumberOliveFetaSalad {
 
             @BeforeEach
             public void setUp() {
-                repository.save(tomatoCucumberOliveFetaSalad());
+                repository.save(tomatoCucumberOliveFetaSaladWithIngredients());
             }
 
             @Test
             @DisplayName("returns a recipes list containing all saved recipes")
             public void findAllAfterMultipleSaveContainsSavedRecipes() {
-                assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                        .containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
+                assertThat(repository.findAll()).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(
+                        tomatoCucumberMozzaSaladWithIngredients(), tomatoCucumberOliveFetaSaladWithIngredients());
+            }
+
+        }
+
+        @Nested
+        @DisplayName("and moussaka")
+        class AndMoussaka {
+
+            @BeforeEach
+            public void setUp() {
+                repository.save(moussakaWithIngredients());
+            }
+
+            @Test
+            @DisplayName("finding recipes not using potato main ingredient returns tomato, cucumber and mozzarella salad and moussaka")
+            public void findByMainIngredientsNotInPotato() {
+                assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(POTATO_ID)))
+                        .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(
+                                tomatoCucumberMozzaSaladWithIngredients(), moussakaWithIngredients());
+            }
+
+            @Test
+            @DisplayName("finding recipes not using mozza main ingredient returns tomato, cucumber and mozzarella salad and moussaka")
+            public void findByMainIngredientsNotInMozza() {
+                assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(MOZZARELLA_ID)))
+                        .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(
+                                tomatoCucumberMozzaSaladWithIngredients(), moussakaWithIngredients());
+            }
+
+            @Test
+            @DisplayName("finding recipes not using tomato main ingredient returns moussaka")
+            public void findByMainIngredientsNotInTomato() {
+                assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(TOMATO_ID)))
+                        .containsExactly(moussakaWithIngredients());
+            }
+
+            @Test
+            @DisplayName("finding recipes not using tomato or aubergine main ingredient returns empty list")
+            public void findByMainIngredientsNotInTomatoOrAubergine() {
+                assertThat(repository.findByMainIngredientsNotIn(Arrays.asList(TOMATO_ID, AUBERGINE_ID))).isEmpty();
             }
 
         }

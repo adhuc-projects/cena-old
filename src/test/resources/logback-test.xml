@@ -7,7 +7,7 @@
     </layout>
   </appender>
 
-  <logger name="org.adhuc.cena.menu" level="debug" additivity="false">
+  <logger name="org.adhuc.cena.menu" level="trace" additivity="false">
     <appender-ref ref="STDOUT" />
   </logger>
   <!-- Logging for acceptance testing -->

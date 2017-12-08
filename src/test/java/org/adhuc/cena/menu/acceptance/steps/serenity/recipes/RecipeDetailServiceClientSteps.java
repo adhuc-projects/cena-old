@@ -17,6 +17,11 @@ package org.adhuc.cena.menu.acceptance.steps.serenity.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -30,15 +35,34 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public class RecipeDetailServiceClientSteps extends AbstractRecipeServiceClientSteps {
 
+    private static final String RECIPES_SESSION_KEY = "recipes";
+
     @Step("Get recipe from {0}")
     public RecipeValue getRecipeFromUrl(String recipeDetailUrl) {
-        return rest().get(recipeDetailUrl).then().extract().as(RecipeValue.class);
+        return recipe(recipeDetailUrl).orElseGet(
+                () -> storeRecipe(recipeDetailUrl, rest().get(recipeDetailUrl).then().extract().as(RecipeValue.class)));
     }
 
     @Step("Assert recipe {1} corresponds to expected {0}")
     public void assertRecipeInfoIsEqualToExpected(RecipeValue expected, RecipeValue actual) {
         assertThat(actual.name()).isEqualTo(expected.name());
         assertThat(actual.content()).isEqualTo(expected.content());
+    }
+
+    private Map<String, RecipeValue> recipes() {
+        Map<String, RecipeValue> recipes = Serenity.sessionVariableCalled(RECIPES_SESSION_KEY);
+        return Optional.ofNullable(recipes).orElse(new HashMap<>());
+    }
+
+    private Optional<RecipeValue> recipe(String recipeDetailUrl) {
+        return Optional.ofNullable(recipes().get(recipeDetailUrl));
+    }
+
+    private RecipeValue storeRecipe(String recipeDetailUrl, RecipeValue recipe) {
+        Map<String, RecipeValue> recipes = recipes();
+        recipes.put(recipeDetailUrl, recipe);
+        Serenity.setSessionVariable(RECIPES_SESSION_KEY).to(recipes);
+        return recipe;
     }
 
 }

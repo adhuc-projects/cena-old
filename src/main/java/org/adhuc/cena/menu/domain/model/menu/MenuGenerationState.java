@@ -16,14 +16,20 @@
 package org.adhuc.cena.menu.domain.model.menu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.adhuc.cena.menu.domain.model.recipe.Recipe;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Defines the current state of the menus generation process.
@@ -33,6 +39,7 @@ import lombok.experimental.Accessors;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Accessors(fluent = true)
@@ -53,6 +60,18 @@ public class MenuGenerationState {
     }
 
     /**
+     * Returns the menu corresponding to the specified identity, if any.
+     *
+     * @param id
+     *            the menu identity.
+     *
+     * @return the menu, or empty.
+     */
+    public Optional<Menu> menu(MenuId id) {
+        return menus.stream().filter(m -> m.id().equals(id)).findFirst();
+    }
+
+    /**
      * Adds a menu to the menu generation state, and returns a new version of it.
      *
      * @param menu
@@ -60,10 +79,24 @@ public class MenuGenerationState {
      *
      * @return the new state.
      */
-    public MenuGenerationState addMenu(Menu menu) {
+    public MenuGenerationState addMenu(@NonNull Menu menu) {
+        log.debug("Add menu {} to menus generated for command {}", menu, command);
         List<Menu> menus = new ArrayList<>(this.menus);
         menus.add(menu);
         return new MenuGenerationState(command, Collections.unmodifiableList(menus));
+    }
+
+    /**
+     * Filters the specified list from recipes that are already used in generated menus.
+     *
+     * @param recipes
+     *            the recipes list to filter.
+     *
+     * @return the filtered recipes list.
+     */
+    public List<Recipe> filterAlreadyUsedRecipes(@NonNull Collection<Recipe> recipes) {
+        return recipes.stream().filter(r -> menus.stream().filter(m -> m.recipe().equals(r.id())).count() == 0)
+                .collect(Collectors.toList());
     }
 
 }

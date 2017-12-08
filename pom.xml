@@ -342,6 +342,11 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+
     <!-- Unit testings dependencies -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>

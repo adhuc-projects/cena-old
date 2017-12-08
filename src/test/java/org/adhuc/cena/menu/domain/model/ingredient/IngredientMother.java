@@ -139,6 +139,18 @@ public class IngredientMother {
     public static final IngredientId CONFIT_OF_DUCK_LEG_ID   = IngredientId.generate();
     public static final String       CONFIT_OF_DUCK_LEG_NAME = "Confit of duck leg";
 
+    public static final IngredientId CHICKEN_BREAST_ID       = IngredientId.generate();
+    public static final String       CHICKEN_BREAST_NAME     = "Chicken breast";
+
+    public static final IngredientId LETTUCE_ID              = IngredientId.generate();
+    public static final String       LETTUCE_NAME            = "Lettuce";
+
+    public static final IngredientId TUNA_FILLET_ID          = IngredientId.generate();
+    public static final String       TUNA_FILLET_NAME        = "Tuna fillet";
+
+    public static final IngredientId ASPARAGUS_ID            = IngredientId.generate();
+    public static final String       ASPARAGUS_NAME          = "Asparagus";
+
     public static CreateIngredient createTomato() {
         return new CreateIngredient(TOMATO_ID, TOMATO_NAME);
     }
@@ -291,12 +303,28 @@ public class IngredientMother {
         return new Ingredient(CONFIT_OF_DUCK_LEG_ID, CONFIT_OF_DUCK_LEG_NAME);
     }
 
+    public static Ingredient chickenBreast() {
+        return new Ingredient(CHICKEN_BREAST_ID, CHICKEN_BREAST_NAME);
+    }
+
+    public static Ingredient lettuce() {
+        return new Ingredient(LETTUCE_ID, LETTUCE_NAME);
+    }
+
+    public static Ingredient tunaFillet() {
+        return new Ingredient(TUNA_FILLET_ID, TUNA_FILLET_NAME);
+    }
+
+    public static Ingredient asparagus() {
+        return new Ingredient(ASPARAGUS_ID, ASPARAGUS_NAME);
+    }
+
     public static List<Ingredient> allIngredients() {
         return Arrays.asList(tomato(), cucumber(), potato(), mozzarella(), olive(), feta(), mustard(), cantal(),
                 shortcrust(), egg(), milk(), lardons(), watercress(), greenPepper(), lambLettuce(), crouton(), salmon(),
                 kidneyBean(), mincedBeef(), redPepper(), sauerkraut(), frankfurter(), leek(), ham(), bechamel(),
                 aubergine(), mincedMutton(), pasta(), carrot(), duckBreast(), turnip(), honey(), bread(), cheese(),
-                bacon(), confitOfDuckLeg());
+                bacon(), confitOfDuckLeg(), chickenBreast(), lettuce(), tunaFillet(), asparagus());
     }
 
     public static Optional<Ingredient> ingredient(IngredientId id) {
