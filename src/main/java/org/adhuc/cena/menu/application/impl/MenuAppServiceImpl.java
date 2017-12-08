@@ -28,6 +28,7 @@ import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
 import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A {@link MenuAppService} implementation.
@@ -37,6 +38,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 @Service
 public class MenuAppServiceImpl implements MenuAppService {
 
@@ -59,6 +61,7 @@ public class MenuAppServiceImpl implements MenuAppService {
 
     @Override
     public void generateMenus(@NonNull GenerateMenus command) {
+        log.info("Generate menus from command {}", command);
         menuGenerationService.generateMenus(command);
     }
 

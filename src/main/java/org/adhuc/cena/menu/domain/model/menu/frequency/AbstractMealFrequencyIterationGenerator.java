@@ -24,6 +24,7 @@ import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An abstract {@link MealFrequencyIterationGenerator} implementation, iterating over the days to generate menus for,
@@ -35,6 +36,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 public abstract class AbstractMealFrequencyIterationGenerator implements MealFrequencyIterationGenerator {
 
     @Override
@@ -44,6 +46,7 @@ public abstract class AbstractMealFrequencyIterationGenerator implements MealFre
             LocalDate date = command.startDate().plusDays(daysIncrement);
             menuIds.addAll(generateIterations(date));
         }
+        log.debug("Generated menu iterations {} from command {}", menuIds, command);
         return menuIds;
     }
 

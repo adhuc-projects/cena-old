@@ -36,6 +36,7 @@ import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientAdditi
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredientId;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A {@link RecipeIngredientAppService} implementation.
@@ -45,6 +46,7 @@ import lombok.NonNull;
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 @Service
 public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppService {
 
@@ -82,6 +84,7 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     @Override
     @PreAuthorize("isAuthenticated() && @recipeEditionAuthorizationService.isAuthor(#command.recipeId(), principal)")
     public void addIngredientToRecipe(@NonNull AddIngredientToRecipe command) {
+        log.info("Add ingredient to recipe from command {}", command);
         recipeIngredientAdditionService.addIngredientToRecipe(command);
     }
 
