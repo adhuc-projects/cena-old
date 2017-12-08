@@ -17,12 +17,8 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
 import static java.util.Objects.nonNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,7 +30,6 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientId;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * An in-memory {@link IngredientRepository} implementation.
@@ -44,12 +39,10 @@ import lombok.extern.slf4j.Slf4j;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Slf4j
 @Repository
 @Profile("in-memory")
-public class InMemoryIngredientRepository implements IngredientRepository {
-
-    private Map<IngredientId, Ingredient> ingredients = new HashMap<>();
+public class InMemoryIngredientRepository extends AbstractInMemoryRepository<Ingredient, IngredientId>
+        implements IngredientRepository {
 
     @Override
     public Class<Ingredient> entityType() {
@@ -57,31 +50,14 @@ public class InMemoryIngredientRepository implements IngredientRepository {
     }
 
     @Override
-    public List<Ingredient> findAll() {
-        return Collections.unmodifiableList(new ArrayList<>(ingredients.values()));
-    }
-
-    @Override
     public List<Ingredient> findAll(@NonNull Collection<IngredientId> ingredientIds) {
-        return ingredientIds.stream().map(id -> ingredients.get(id)).filter(i -> nonNull(i))
+        return ingredientIds.stream().map(id -> entities().get(id)).filter(i -> nonNull(i))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Ingredient> findOne(@NonNull IngredientId ingredientId) {
-        return Optional.ofNullable(ingredients.get(ingredientId));
-    }
-
-    @Override
     public Optional<Ingredient> findOneByName(@NonNull String ingredientName) {
-        return ingredients.values().stream().filter(i -> i.name().equals(ingredientName)).findFirst();
-    }
-
-    @Override
-    public <I extends Ingredient> I save(@NonNull I ingredient) {
-        log.debug("Save ingredient {}", ingredient);
-        ingredients.put(ingredient.id(), ingredient);
-        return ingredient;
+        return entities().values().stream().filter(i -> i.name().equals(ingredientName)).findFirst();
     }
 
 }

@@ -16,12 +16,7 @@
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
@@ -32,7 +27,6 @@ import org.adhuc.cena.menu.domain.model.menu.MenuId;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
 
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * An in-memory {@link MenuRepository} implementation.
@@ -42,12 +36,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Slf4j
 @Repository
 @Profile("in-memory")
-public class InMemoryMenuRepository implements MenuRepository {
-
-    private Map<MenuId, Menu> menus = new HashMap<>();
+public class InMemoryMenuRepository extends AbstractInMemoryRepository<Menu, MenuId> implements MenuRepository {
 
     @Override
     public Class<Menu> entityType() {
@@ -55,25 +46,9 @@ public class InMemoryMenuRepository implements MenuRepository {
     }
 
     @Override
-    public List<Menu> findAll() {
-        return Collections.unmodifiableList(new ArrayList<>(menus.values()));
-    }
-
-    @Override
     public List<Menu> findByDateBetween(@NonNull LocalDate startDate, @NonNull LocalDate endDate) {
-        return menus.values().stream().filter(m -> m.id().isBetween(startDate, endDate)).collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Menu> findOne(@NonNull MenuId menuId) {
-        return Optional.ofNullable(menus.get(menuId));
-    }
-
-    @Override
-    public <I extends Menu> I save(@NonNull I menu) {
-        log.debug("Save menu {}", menu);
-        menus.put(menu.id(), menu);
-        return menu;
+        return entities().values().stream().filter(m -> m.id().isBetween(startDate, endDate))
+                .collect(Collectors.toList());
     }
 
 }

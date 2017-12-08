@@ -15,13 +15,8 @@
  */
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -34,7 +29,6 @@ import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * An in-memory {@link RecipeRepository} implementation.
@@ -44,12 +38,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version 0.1.0
  * @since 0.1.0
  */
-@Slf4j
 @Repository
 @Profile("in-memory")
-public class InMemoryRecipeRepository implements RecipeRepository {
-
-    private Map<RecipeId, Recipe> recipes = new LinkedHashMap<>();
+public class InMemoryRecipeRepository extends AbstractInMemoryRepository<Recipe, RecipeId> implements RecipeRepository {
 
     @Override
     public Class<Recipe> entityType() {
@@ -57,28 +48,11 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public List<Recipe> findAll() {
-        return Collections.unmodifiableList(new ArrayList<>(recipes.values()));
-    }
-
-    @Override
     public List<Recipe> findByMainIngredientsNotIn(@NonNull Collection<IngredientId> ingredientIds) {
-        return recipes.values().stream()
+        return entities().values().stream()
                 .filter(r -> CollectionUtils.intersection(r.ingredients().stream().filter(i -> i.isMainIngredient())
                         .map(i -> i.ingredientId()).collect(Collectors.toList()), ingredientIds).isEmpty())
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Recipe> findOne(@NonNull RecipeId recipeId) {
-        return Optional.ofNullable(recipes.get(recipeId));
-    }
-
-    @Override
-    public <I extends Recipe> I save(@NonNull I recipe) {
-        log.debug("Save recipe {}", recipe);
-        recipes.put(recipe.id(), recipe);
-        return recipe;
     }
 
 }
