@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +45,6 @@ public class IngredientController {
     private IngredientAppService        ingredientAppService;
     private IngredientResourceAssembler resourceAssembler;
 
-    @Autowired
     public IngredientController(IngredientAppService ingredientAppService,
             IngredientResourceAssembler resourceAssembler) {
         this.ingredientAppService = ingredientAppService;

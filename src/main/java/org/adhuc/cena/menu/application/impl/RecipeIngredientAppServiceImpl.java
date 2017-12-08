@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +52,6 @@ public class RecipeIngredientAppServiceImpl implements RecipeIngredientAppServic
     private RecipeRepository                recipeRepository;
     private IngredientRepository            ingredientRepository;
 
-    @Autowired
     public RecipeIngredientAppServiceImpl(RecipeIngredientAdditionService recipeIngredientAdditionService,
             RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
         this.recipeIngredientAdditionService = recipeIngredientAdditionService;

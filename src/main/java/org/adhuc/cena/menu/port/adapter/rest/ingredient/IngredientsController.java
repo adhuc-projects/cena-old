@@ -25,7 +25,6 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
@@ -59,7 +58,6 @@ public class IngredientsController extends AbstractRequestValidationController {
 
     private Method                      listMethod;
 
-    @Autowired
     public IngredientsController(IngredientAppService ingredientAppService,
             IngredientResourceAssembler resourceAssembler) {
         this.ingredientAppService = ingredientAppService;

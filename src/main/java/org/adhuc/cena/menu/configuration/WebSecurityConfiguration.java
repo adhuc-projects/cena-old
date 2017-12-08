@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +60,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private SecurityProperties    securityProperties;
     private Authentication        authentication;
 
-    @Autowired
     public WebSecurityConfiguration(SecurityProperties securityProperties,
             MenuGenerationProperties menuGenerationProperties) {
         notNull(securityProperties, "Cannot initialize web security configuration with null properties");

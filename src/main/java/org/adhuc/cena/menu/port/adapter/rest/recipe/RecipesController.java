@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,7 +59,6 @@ public class RecipesController extends AbstractRequestValidationController {
 
     private Method                  listMethod;
 
-    @Autowired
     public RecipesController(RecipeAppService recipeAppService, RecipeResourceAssembler resourceAssembler) {
         this.recipeAppService = recipeAppService;
         this.resourceAssembler = resourceAssembler;

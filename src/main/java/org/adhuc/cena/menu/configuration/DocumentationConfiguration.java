@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.configuration;
 
 import static org.springframework.util.Assert.notNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -39,7 +38,6 @@ public class DocumentationConfiguration extends WebMvcConfigurerAdapter {
 
     private final Documentation documentation;
 
-    @Autowired
     public DocumentationConfiguration(MenuGenerationProperties menuGenerationProperties) {
         notNull(menuGenerationProperties, "Cannot initialize documentation configuration with null properties");
         documentation = menuGenerationProperties.getDocumentation();

@@ -20,7 +20,6 @@ import static org.springframework.util.Assert.notNull;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.MenuAppService;
@@ -44,7 +43,6 @@ public class MenuAppServiceImpl implements MenuAppService {
     private MenuRepository        menuRepository;
     private MenuGenerationService menuGenerationService;
 
-    @Autowired
     public MenuAppServiceImpl(MenuRepository menuRepository, MenuGenerationService menuGenerationService) {
         this.menuRepository = menuRepository;
         this.menuGenerationService = menuGenerationService;

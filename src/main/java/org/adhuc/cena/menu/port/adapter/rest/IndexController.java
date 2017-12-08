@@ -19,7 +19,6 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.util.Assert.notNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +44,6 @@ public class IndexController {
 
     private final Documentation documentation;
 
-    @Autowired
     public IndexController(MenuGenerationProperties menuGenerationProperties) {
         notNull(menuGenerationProperties, "Cannot initialize index controller with null properties");
         documentation = menuGenerationProperties.getDocumentation();

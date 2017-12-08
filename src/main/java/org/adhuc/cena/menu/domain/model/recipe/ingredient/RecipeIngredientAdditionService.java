@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.domain.model.recipe.ingredient;
 
 import static org.springframework.util.Assert.notNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
@@ -39,7 +38,6 @@ public class RecipeIngredientAdditionService {
     private RecipeRepository     recipeRepository;
     private IngredientRepository ingredientRepository;
 
-    @Autowired
     public RecipeIngredientAdditionService(RecipeRepository recipeRepository,
             IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;

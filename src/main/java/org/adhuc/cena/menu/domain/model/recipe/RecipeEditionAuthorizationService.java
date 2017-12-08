@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.domain.model.recipe;
 
 import static org.springframework.util.Assert.notNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +35,6 @@ public class RecipeEditionAuthorizationService {
 
     private RecipeRepository recipeRepository;
 
-    @Autowired
     public RecipeEditionAuthorizationService(RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }

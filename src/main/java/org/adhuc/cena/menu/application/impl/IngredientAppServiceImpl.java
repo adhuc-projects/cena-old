@@ -19,7 +19,6 @@ import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,6 @@ public class IngredientAppServiceImpl implements IngredientAppService {
 
     private IngredientRepository ingredientRepository;
 
-    @Autowired
     public IngredientAppServiceImpl(IngredientRepository ingredientRepository) {
         this.ingredientRepository = ingredientRepository;
     }

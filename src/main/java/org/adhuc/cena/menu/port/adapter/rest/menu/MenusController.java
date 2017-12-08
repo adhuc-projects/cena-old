@@ -27,7 +27,6 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
@@ -64,7 +63,6 @@ public class MenusController extends AbstractRequestValidationController {
 
     private Method                listMethod;
 
-    @Autowired
     public MenusController(Clock clock, MenuAppService menuAppService, MenuResourceAssembler resourceAssembler) {
         this.clock = clock;
         this.menuAppService = menuAppService;

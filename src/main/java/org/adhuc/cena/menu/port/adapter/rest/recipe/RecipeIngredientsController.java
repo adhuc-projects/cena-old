@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +50,6 @@ public class RecipeIngredientsController {
 
     private Method                            listMethod;
 
-    @Autowired
     public RecipeIngredientsController(RecipeIngredientAppService recipeIngredientAppService,
             RecipeIngredientResourceAssembler recipeIngredientResourceAssembler) {
         this.recipeIngredientAppService = recipeIngredientAppService;

@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.recipe;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +46,6 @@ public class RecipeIngredientController {
     private RecipeIngredientAppService        recipeIngredientAppService;
     private RecipeIngredientResourceAssembler recipeIngredientResourceAssembler;
 
-    @Autowired
     public RecipeIngredientController(RecipeIngredientAppService recipeIngredientAppService,
             RecipeIngredientResourceAssembler recipeIngredientResourceAssembler) {
         this.recipeIngredientAppService = recipeIngredientAppService;

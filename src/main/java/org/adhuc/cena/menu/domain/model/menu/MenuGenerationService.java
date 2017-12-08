@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.domain.model.menu;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,7 +34,6 @@ public class MenuGenerationService {
     private MealFrequencyIterationGenerator mealFrequencyIterationGenerator;
     private MenuRecipeDefinerStrategy       menuRecipeDefinerStrategy;
 
-    @Autowired
     public MenuGenerationService(MenuRepository menuRepository,
             MealFrequencyIterationGenerator mealFrequencyIterationGenerator,
             MenuRecipeDefinerStrategy menuRecipeDefinerStrategy) {
