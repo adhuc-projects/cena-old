@@ -17,7 +17,7 @@ Scenario Outline: Generate a menus list successfully
     | days | recipes_count | start_date | meal_frequency    | meals_count |
     |    1 |             1 | 2017-01-02 | WEEK_WORKING_DAYS |           1 |
     |    1 |             2 | 2017-01-01 | WEEK_WORKING_DAYS |           2 |
-    |    5 |             5 | 2017-01-02 | WEEK_WORKING_DAYS |           5 |
+    |    5 |             7 | 2017-01-02 | WEEK_WORKING_DAYS |           5 |
     |    7 |            12 | 2017-01-02 | WEEK_WORKING_DAYS |           9 |
     |    1 |             2 | 2017-01-02 | TWICE_A_DAY       |           2 |
     |    1 |             2 | 2017-01-01 | TWICE_A_DAY       |           2 |
