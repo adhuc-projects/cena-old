@@ -114,7 +114,7 @@ public class MenuGenerationStateTest {
         @Test
         @DisplayName("filter already used recipes returns all recipes")
         public void filterAlreadyUsedRecipes() {
-            assertThat(state.filterAlreadyUsedRecipes(allRecipesWithIngredients()))
+            assertThat(state.filterAlreadyUsedRecipes(allRecipesWithIngredients())).usingFieldByFieldElementComparator()
                     .containsExactlyElementsOf(allRecipesWithIngredients());
         }
 
@@ -140,13 +140,15 @@ public class MenuGenerationStateTest {
         @Test
         @DisplayName("returns known menu from id")
         public void getMenuKnown() {
-            assertThat(state.menu(lunch20170103().id())).isPresent().contains(lunch20170103());
+            assertThat(state.menu(lunch20170103().id())).isPresent().usingFieldByFieldValueComparator()
+                    .contains(lunch20170103());
         }
 
         @Test
         @DisplayName("has menus after initialization")
         public void hasNoMenuAfterInitialization() {
-            assertThat(state.menus()).isNotNull().isNotEmpty().contains(lunch20170103(), dinner20170103());
+            assertThat(state.menus()).isNotNull().isNotEmpty().usingFieldByFieldElementComparator()
+                    .contains(lunch20170103(), dinner20170103());
         }
 
         @Test
@@ -162,7 +164,8 @@ public class MenuGenerationStateTest {
             SoftAssertions.assertSoftly(softly -> {
                 MenuGenerationState originalState = menuGeneration2DaysAt20170103TwiceADayCurrentState();
                 softly.assertThat(state.command()).isEqualTo(originalState.command());
-                softly.assertThat(state.menus()).containsExactlyElementsOf(originalState.menus());
+                softly.assertThat(state.menus()).usingFieldByFieldElementComparator()
+                        .containsExactlyElementsOf(originalState.menus());
             });
         }
 
@@ -177,7 +180,7 @@ public class MenuGenerationStateTest {
         public void filterAlreadyUsedRecipesSubset() {
             assertThat(
                     state.filterAlreadyUsedRecipes(Arrays.asList(raclette(), croqueMonsieur(), omelette(), lasagne())))
-                            .containsExactlyInAnyOrder(omelette(), lasagne());
+                            .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(omelette(), lasagne());
         }
 
     }

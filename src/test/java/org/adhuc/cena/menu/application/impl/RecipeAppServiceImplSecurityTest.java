@@ -67,28 +67,30 @@ public class RecipeAppServiceImplSecurityTest {
     @WithAnonymousUser
     @DisplayName("grants access to recipes list to anonymous user")
     public void getRecipesAsAnonymous() {
-        assertThat(service.getRecipes()).contains(tomatoCucumberOliveFetaSalad());
+        assertThat(service.getRecipes()).usingFieldByFieldElementComparator().contains(tomatoCucumberOliveFetaSalad());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("grants access to recipes list to authenticated user")
     public void getRecipesAsAuthenticatedUser() {
-        assertThat(service.getRecipes()).contains(tomatoCucumberOliveFetaSalad());
+        assertThat(service.getRecipes()).usingFieldByFieldElementComparator().contains(tomatoCucumberOliveFetaSalad());
     }
 
     @Test
     @WithAnonymousUser
     @DisplayName("grants access to recipe detail to anonymous user")
     public void getRecipeAsAnonymous() {
-        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID)).isEqualTo(tomatoCucumberOliveFetaSalad());
+        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID))
+                .isEqualToComparingFieldByField(tomatoCucumberOliveFetaSalad());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("grants access to recipe detail to authenticated user")
     public void getRecipeAsAuthenticatedUser() {
-        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID)).isEqualTo(tomatoCucumberOliveFetaSalad());
+        assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID))
+                .isEqualToComparingFieldByField(tomatoCucumberOliveFetaSalad());
     }
 
     @Test
@@ -103,7 +105,7 @@ public class RecipeAppServiceImplSecurityTest {
     @DisplayName("grants access to recipe creation to authenticated user")
     public void createRecipeAsAuthenticatedUser() {
         service.createRecipe(createTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipes()).contains(tomatoCucumberMozzaSalad());
+        assertThat(service.getRecipes()).usingFieldByFieldElementComparator().contains(tomatoCucumberMozzaSalad());
     }
 
 }

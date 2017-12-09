@@ -15,13 +15,13 @@
  */
 package org.adhuc.cena.menu.domain.model.ingredient;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.createTomato;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -61,8 +61,10 @@ public class CreateIngredientTest {
     @DisplayName("is composed of the id and name used during construction")
     public void createIngredientWithValidValues() {
         CreateIngredient command = createTomato();
-        assertThat(command.ingredientId()).isEqualTo(TOMATO_ID);
-        assertThat(command.ingredientName()).isEqualTo(TOMATO_NAME);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(command.ingredientId()).isEqualTo(TOMATO_ID);
+            softly.assertThat(command.ingredientName()).isEqualTo(TOMATO_NAME);
+        });
     }
 
 }

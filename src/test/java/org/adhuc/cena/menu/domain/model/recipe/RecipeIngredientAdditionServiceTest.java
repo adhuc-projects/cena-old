@@ -30,6 +30,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mustardInToma
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCantalPie;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -72,8 +73,10 @@ public class RecipeIngredientAdditionServiceTest {
     public void addIngredientToUnknownRecipe() {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad()));
-        assertThat(exception.entityType()).isEqualTo(Recipe.class);
-        assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(exception.entityType()).isEqualTo(Recipe.class);
+            softly.assertThat(exception.identity()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID.toString());
+        });
     }
 
     @Nested
@@ -93,8 +96,10 @@ public class RecipeIngredientAdditionServiceTest {
         public void addUnknownIngredientToRecipe() {
             EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                     () -> service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad()));
-            assertThat(exception.entityType()).isEqualTo(Ingredient.class);
-            assertThat(exception.identity()).isEqualTo(CUCUMBER_ID.toString());
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(exception.entityType()).isEqualTo(Ingredient.class);
+                softly.assertThat(exception.identity()).isEqualTo(CUCUMBER_ID.toString());
+            });
         }
 
         @Nested

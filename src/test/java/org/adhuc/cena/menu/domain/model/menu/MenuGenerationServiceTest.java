@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -96,8 +97,10 @@ public class MenuGenerationServiceTest {
             service.generateMenus(command);
 
             Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-            assertThat(menu).isNotEmpty();
-            assertThat(menu.get().recipe()).isNotNull();
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(menu).isNotEmpty();
+                softly.assertThat(menu.get().recipe()).isNotNull();
+            });
         }
 
         @Test
@@ -115,7 +118,8 @@ public class MenuGenerationServiceTest {
             menuRepository.save(lunch);
             service.generateMenus(command);
 
-            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().containsSame(lunch);
+            assertThat(menuRepository.findOne(LUNCH_2017_01_02_ID)).isNotEmpty().usingFieldByFieldValueComparator()
+                    .containsSame(lunch);
         }
 
         @Test
@@ -124,7 +128,10 @@ public class MenuGenerationServiceTest {
             service.generateMenus(command);
 
             Optional<Menu> menu = menuRepository.findOne(DINNER_2017_01_02_ID);
-            assertThat(menu.get().recipe()).isNotNull();
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(menu).isPresent();
+                softly.assertThat(menu.get().recipe()).isNotNull();
+            });
         }
 
     }

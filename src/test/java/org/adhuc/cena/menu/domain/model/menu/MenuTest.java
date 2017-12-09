@@ -27,6 +27,7 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
 
 import java.util.stream.Stream;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -69,8 +70,10 @@ public class MenuTest {
         @Test
         @DisplayName("contains id and recipe used during creation")
         public void menuWithValidValues() {
-            assertThat(menu.id()).isEqualTo(DINNER_2017_01_02_ID);
-            assertThat(menu.recipe()).isEqualTo(DINNER_2017_01_02_RECIPE);
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(menu.id()).isEqualTo(DINNER_2017_01_02_ID);
+                softly.assertThat(menu.recipe()).isEqualTo(DINNER_2017_01_02_RECIPE);
+            });
         }
 
     }

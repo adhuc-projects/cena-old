@@ -102,7 +102,8 @@ public class IngredientAppServiceImplTest {
         @Test
         @DisplayName("returns list containing ingredient")
         public void getIngredientsContainsCreatedIngredient() {
-            assertThat(service.getIngredients()).isNotEmpty().containsExactly(tomato());
+            assertThat(service.getIngredients()).isNotEmpty().usingFieldByFieldElementComparator()
+                    .containsExactly(tomato());
         }
 
         @Test
@@ -114,7 +115,7 @@ public class IngredientAppServiceImplTest {
         @Test
         @DisplayName("returns ingredient from known tomato identity")
         public void getCreatedIngredient() {
-            assertThat(service.getIngredient(TOMATO_ID)).isEqualTo(tomato());
+            assertThat(service.getIngredient(TOMATO_ID)).isEqualToComparingFieldByField(tomato());
         }
 
         @Test
@@ -137,7 +138,8 @@ public class IngredientAppServiceImplTest {
             @Test
             @DisplayName("returns list containing all ingredients")
             public void getIngredientsContainsAllCreatedIngredients() {
-                assertThat(service.getIngredients()).isNotEmpty().containsExactlyInAnyOrder(tomato(), cucumber());
+                assertThat(service.getIngredients()).isNotEmpty().usingFieldByFieldElementComparator()
+                        .containsExactlyInAnyOrder(tomato(), cucumber());
             }
 
         }

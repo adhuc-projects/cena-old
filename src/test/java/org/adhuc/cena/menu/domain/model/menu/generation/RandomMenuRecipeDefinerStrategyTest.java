@@ -142,6 +142,7 @@ public class RandomMenuRecipeDefinerStrategyTest {
             @DisplayName("defines leeks with ham and bechamel sauce")
             public void defineRecipeForMenu() {
                 assertThat(strategy.defineRecipeForMenu(LUNCH_2017_01_04_ID, state).menus())
+                        .usingFieldByFieldElementComparator()
                         .contains(new Menu(LUNCH_2017_01_04_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID));
             }
 
@@ -193,8 +194,8 @@ public class RandomMenuRecipeDefinerStrategyTest {
 
             ThrowingConsumer<Integer> testExecutor = (input) -> SoftAssertions.assertSoftly(softly -> {
                 MenuGenerationState nextState = strategy.defineRecipeForMenu(LUNCH_2017_01_04_ID, state);
-                assertThat(nextState.menu(LUNCH_2017_01_04_ID)).isPresent();
-                assertThat(nextState.menu(LUNCH_2017_01_04_ID).get().recipe()).as(
+                softly.assertThat(nextState.menu(LUNCH_2017_01_04_ID)).isPresent();
+                softly.assertThat(nextState.menu(LUNCH_2017_01_04_ID).get().recipe()).as(
                         "Recipe %s is either sauerkraut, leeks with ham and bechamel sauce, moussaka or duck parmentier",
                         recipeRepository.findOneNotNull(nextState.menu(LUNCH_2017_01_04_ID).get().recipe()))
                         .isIn(Arrays.asList(SAUERKRAUT_ID, LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID, MOUSSAKA_ID,

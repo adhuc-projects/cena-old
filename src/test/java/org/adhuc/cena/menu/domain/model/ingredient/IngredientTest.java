@@ -23,6 +23,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_NAME;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -63,8 +64,10 @@ public class IngredientTest {
     @DisplayName("contains id and name used during creation")
     public void ingredientWithValidValues() {
         Ingredient ingredient = tomato();
-        assertThat(ingredient.id()).isEqualTo(TOMATO_ID);
-        assertThat(ingredient.name()).isEqualTo(TOMATO_NAME);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(ingredient.id()).isEqualTo(TOMATO_ID);
+            softly.assertThat(ingredient.name()).isEqualTo(TOMATO_NAME);
+        });
     }
 
     @Nested

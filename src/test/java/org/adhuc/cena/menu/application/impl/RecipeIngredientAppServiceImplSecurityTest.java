@@ -94,7 +94,7 @@ public class RecipeIngredientAppServiceImplSecurityTest {
         RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
 
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipeIngredients(recipeId)).contains(cucumber);
+        assertThat(service.getRecipeIngredients(recipeId)).usingFieldByFieldElementComparator().contains(cucumber);
     }
 
 }

@@ -15,7 +15,6 @@
  */
 package org.adhuc.cena.menu.domain.model.recipe;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR;
@@ -24,6 +23,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMB
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_NAME;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.createTomatoCucumberMozzaSalad;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -87,10 +87,12 @@ public class CreateRecipeTest {
     @DisplayName("is composed of the id, name and content used during construction")
     public void createRecipeWithValidValues() {
         CreateRecipe command = createTomatoCucumberMozzaSalad();
-        assertThat(command.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
-        assertThat(command.recipeName()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
-        assertThat(command.recipeContent()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
-        assertThat(command.recipeAuthor()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(command.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+            softly.assertThat(command.recipeName()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
+            softly.assertThat(command.recipeContent()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+            softly.assertThat(command.recipeAuthor()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR);
+        });
     }
 
 }

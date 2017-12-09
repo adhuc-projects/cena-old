@@ -108,7 +108,7 @@ public class WeekWorkingDaysMealFrequencyIterationGeneratorTest {
 
     @Test
     @DisplayName("determines iteration for 3rd menu during 5 working days")
-    public void determineThirsMenuIteration5WorkingDays() {
+    public void determineThirdMenuIteration5WorkingDays() {
         assertThat(generator.determineIteration(DINNER_2017_01_04_ID,
                 new GenerateMenus(5, LocalDate.parse("2017-01-02"), MealFrequency.WEEK_WORKING_DAYS))).isEqualTo(3);
     }

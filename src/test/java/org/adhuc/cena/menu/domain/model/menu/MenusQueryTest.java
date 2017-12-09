@@ -15,11 +15,11 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -60,8 +60,10 @@ public class MenusQueryTest {
     public void createOK() {
         LocalDate startDate = LocalDate.parse("2017-01-02");
         MenusQuery query = new MenusQuery(3, startDate);
-        assertThat(query.days()).isEqualTo(3);
-        assertThat(query.startDate()).isEqualTo(startDate);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(query.days()).isEqualTo(3);
+            softly.assertThat(query.startDate()).isEqualTo(startDate);
+        });
     }
 
 }

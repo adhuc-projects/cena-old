@@ -29,6 +29,7 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTom
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.mozzaInTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumberMozzaSalad;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -119,8 +120,12 @@ public class RecipeIngredientAppServiceImplTest {
         RecipeIngredient cucumber = new RecipeIngredient(recipeId, cucumberInTomatoCucumberMozzaSalad(), cucumber());
         assumeFalse(service.getRecipeIngredients(recipeId).contains(cucumber));
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipeIngredients(recipeId)).contains(cucumber);
-        assertThat(service.getRecipeIngredient(recipeId, CUCUMBER_ID)).isEqualTo(cucumber);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(service.getRecipeIngredients(recipeId)).usingFieldByFieldElementComparator()
+                    .contains(cucumber);
+            softly.assertThat(service.getRecipeIngredient(recipeId, CUCUMBER_ID))
+                    .isEqualToComparingFieldByField(cucumber);
+        });
     }
 
     @Test
@@ -131,7 +136,8 @@ public class RecipeIngredientAppServiceImplTest {
         RecipeIngredient mozza = new RecipeIngredient(recipeId, mozzaInTomatoCucumberMozzaSalad(), mozzarella());
         service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad());
         service.addIngredientToRecipe(addMozzaToTomatoCucumberMozzaSalad());
-        assertThat(service.getRecipeIngredients(recipeId)).containsExactlyInAnyOrder(cucumber, mozza);
+        assertThat(service.getRecipeIngredients(recipeId)).usingFieldByFieldElementComparator()
+                .containsExactlyInAnyOrder(cucumber, mozza);
     }
 
 }

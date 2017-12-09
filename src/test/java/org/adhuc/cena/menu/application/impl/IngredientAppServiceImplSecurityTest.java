@@ -66,21 +66,21 @@ public class IngredientAppServiceImplSecurityTest {
     @WithAnonymousUser
     @DisplayName("grants access to ingredients list to anonymous user")
     public void getIngredientsAsAnonymous() {
-        assertThat(service.getIngredients()).contains(cucumber());
+        assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("grants access to ingredients list to authenticated user")
     public void getIngredientsAsAuthenticatedUser() {
-        assertThat(service.getIngredients()).contains(cucumber());
+        assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
     }
 
     @Test
     @WithMockUser(roles = "INGREDIENT_MANAGER")
     @DisplayName("grants access to ingredients list to ingredient manager")
     public void getIngredientsAsIngredientManager() {
-        assertThat(service.getIngredients()).contains(cucumber());
+        assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class IngredientAppServiceImplSecurityTest {
     @DisplayName("grants access to ingredient creation to ingredient manager")
     public void createIngredientAsIngredientManager() {
         service.createIngredient(createTomato());
-        assertThat(service.getIngredients()).contains(tomato());
+        assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(tomato());
     }
 
 }

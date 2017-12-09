@@ -29,6 +29,7 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_
 
 import java.util.stream.Stream;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -67,8 +68,10 @@ public class MenuIdTest {
     @DisplayName("contains date and meal type values used during construction")
     public void createMenuIdWithDateAndMealType() {
         final MenuId createdId = new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE);
-        assertThat(createdId.date()).isEqualTo(DINNER_2017_01_02_DATE);
-        assertThat(createdId.type()).isEqualTo(DINNER_2017_01_02_MEAL_TYPE);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(createdId.date()).isEqualTo(DINNER_2017_01_02_DATE);
+            softly.assertThat(createdId.type()).isEqualTo(DINNER_2017_01_02_MEAL_TYPE);
+        });
     }
 
     @ParameterizedTest

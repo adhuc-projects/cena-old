@@ -15,7 +15,6 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_DAYS;
@@ -25,6 +24,7 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_D
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -81,18 +81,22 @@ public class GenerateMenusTest {
     @DisplayName("is composed of days, start date and frequency, with days higher or equal to 1")
     public void generateMenus1DayAt20170102WeekWorkingDays() {
         GenerateMenus command = MenuMother.generateMenus1DayAt20170102WeekWorkingDays();
-        assertThat(command.days()).isEqualTo(MENU_2017_01_02_DAYS);
-        assertThat(command.startDate()).isEqualTo(MENU_2017_01_02_START_DATE);
-        assertThat(command.frequency()).isEqualTo(MENU_2017_01_02_FREQUENCY);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(command.days()).isEqualTo(MENU_2017_01_02_DAYS);
+            softly.assertThat(command.startDate()).isEqualTo(MENU_2017_01_02_START_DATE);
+            softly.assertThat(command.frequency()).isEqualTo(MENU_2017_01_02_FREQUENCY);
+        });
     }
 
     @Test
     @DisplayName("is composed of days, start date and frequency, with days higher or equal to 1")
     public void generateMenus10DaysAt20170101TwiceADay() {
         GenerateMenus command = MenuMother.generateMenus7DaysAt20170101TwiceADay();
-        assertThat(command.days()).isEqualTo(MENU_2017_01_01_DAYS);
-        assertThat(command.startDate()).isEqualTo(MENU_2017_01_01_START_DATE);
-        assertThat(command.frequency()).isEqualTo(MENU_2017_01_01_FREQUENCY);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(command.days()).isEqualTo(MENU_2017_01_01_DAYS);
+            softly.assertThat(command.startDate()).isEqualTo(MENU_2017_01_01_START_DATE);
+            softly.assertThat(command.frequency()).isEqualTo(MENU_2017_01_01_FREQUENCY);
+        });
     }
 
 }

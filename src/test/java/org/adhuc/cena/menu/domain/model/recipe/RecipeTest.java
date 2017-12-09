@@ -105,9 +105,11 @@ public class RecipeTest {
         @Test
         @DisplayName("contains id, name and content used during creation")
         public void recipeWithValidValues() {
-            assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
-            assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
-            assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(recipe.id()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+                softly.assertThat(recipe.name()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_NAME);
+                softly.assertThat(recipe.content()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT);
+            });
         }
 
         @Test
@@ -128,8 +130,10 @@ public class RecipeTest {
         public void getIngredientNotLinked() {
             IngredientNotLinkedToRecipeException exception =
                     assertThrows(IngredientNotLinkedToRecipeException.class, () -> recipe.ingredient(TOMATO_ID));
-            assertThat(exception.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
-            assertThat(exception.ingredientId()).isEqualTo(TOMATO_ID);
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(exception.recipeId()).isEqualTo(TOMATO_CUCUMBER_MOZZA_SALAD_ID);
+                softly.assertThat(exception.ingredientId()).isEqualTo(TOMATO_ID);
+            });
         }
 
         @Test
@@ -174,16 +178,20 @@ public class RecipeTest {
         @DisplayName("contains a new ingredient after adding it")
         public void addIngredientThenIngredientContained() {
             RecipeIngredientId ingredient = new RecipeIngredientId(IngredientId.generate(), false);
-            assertThat(recipe.addIngredient(ingredient)).isTrue();
-            assertThat(recipe.ingredients()).contains(ingredient);
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(recipe.addIngredient(ingredient)).isTrue();
+                softly.assertThat(recipe.ingredients()).contains(ingredient);
+            });
         }
 
         @Test
         @DisplayName("contains a new main ingredient after adding it")
         public void addMainIngredientThenIngredientContained() {
             RecipeIngredientId ingredient = new RecipeIngredientId(IngredientId.generate(), true);
-            assertThat(recipe.addIngredient(ingredient)).isTrue();
-            assertThat(recipe.ingredients()).contains(ingredient);
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(recipe.addIngredient(ingredient)).isTrue();
+                softly.assertThat(recipe.ingredients()).contains(ingredient);
+            });
         }
 
         @Nested
@@ -199,17 +207,21 @@ public class RecipeTest {
             @DisplayName("add tomato main ingredient twice does not change recipe")
             public void addTomatoMainIngredientTwiceDoesNotChangeRecipe() {
                 RecipeIngredientId ingredient = new RecipeIngredientId(TOMATO_ID, true);
-                assertThat(recipe.addIngredient(ingredient)).isFalse();
-                assertThat(recipe.ingredients()).contains(ingredient);
+                SoftAssertions.assertSoftly(softly -> {
+                    softly.assertThat(recipe.addIngredient(ingredient)).isFalse();
+                    softly.assertThat(recipe.ingredients()).contains(ingredient);
+                });
             }
 
             @Test
             @DisplayName("remove tomato from main ingredients")
             public void removeTomatoFromMainIngredients() {
                 RecipeIngredientId ingredient = new RecipeIngredientId(TOMATO_ID, false);
-                assertThat(recipe.addIngredient(ingredient)).isTrue();
-                assertThat(recipe.ingredients()).contains(ingredient)
-                        .doesNotContain(new RecipeIngredientId(TOMATO_ID, true));
+                SoftAssertions.assertSoftly(softly -> {
+                    softly.assertThat(recipe.addIngredient(ingredient)).isTrue();
+                    softly.assertThat(recipe.ingredients()).contains(ingredient)
+                            .doesNotContain(new RecipeIngredientId(TOMATO_ID, true));
+                });
             }
 
             @Test
@@ -233,17 +245,21 @@ public class RecipeTest {
             @DisplayName("add mozzarella basic ingredient twice does not change recipe")
             public void addMozzaNotMainIngredientTwiceDoesNotChangeRecipe() {
                 RecipeIngredientId ingredient = new RecipeIngredientId(MOZZARELLA_ID, false);
-                assertThat(recipe.addIngredient(ingredient)).isFalse();
-                assertThat(recipe.ingredients()).contains(ingredient);
+                SoftAssertions.assertSoftly(softly -> {
+                    softly.assertThat(recipe.addIngredient(ingredient)).isFalse();
+                    softly.assertThat(recipe.ingredients()).contains(ingredient);
+                });
             }
 
             @Test
             @DisplayName("add mozzarella to main ingredients")
             public void addMozzaToMainIngredients() {
                 RecipeIngredientId ingredient = new RecipeIngredientId(MOZZARELLA_ID, true);
-                assertThat(recipe.addIngredient(ingredient)).isTrue();
-                assertThat(recipe.ingredients()).contains(ingredient)
-                        .doesNotContain(new RecipeIngredientId(MOZZARELLA_ID, false));
+                SoftAssertions.assertSoftly(softly -> {
+                    softly.assertThat(recipe.addIngredient(ingredient)).isTrue();
+                    softly.assertThat(recipe.ingredients()).contains(ingredient)
+                            .doesNotContain(new RecipeIngredientId(MOZZARELLA_ID, false));
+                });
             }
 
         }

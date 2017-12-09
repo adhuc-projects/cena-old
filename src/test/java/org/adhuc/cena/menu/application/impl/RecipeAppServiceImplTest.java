@@ -98,7 +98,8 @@ public class RecipeAppServiceImplTest {
         @Test
         @DisplayName("returns list containing recipe")
         public void getRecipesContainsCreatedRecipe() {
-            assertThat(service.getRecipes()).isNotEmpty().containsExactly(tomatoCucumberMozzaSalad());
+            assertThat(service.getRecipes()).isNotEmpty().usingFieldByFieldElementComparator()
+                    .containsExactly(tomatoCucumberMozzaSalad());
         }
 
         @Test
@@ -110,7 +111,8 @@ public class RecipeAppServiceImplTest {
         @Test
         @DisplayName("returns recipe from known tomato, cucumber and mozza salad identity")
         public void getCreatedRecipe() {
-            assertThat(service.getRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID)).isEqualTo(tomatoCucumberMozzaSalad());
+            assertThat(service.getRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID))
+                    .isEqualToComparingFieldByField(tomatoCucumberMozzaSalad());
         }
 
         @Nested
@@ -125,8 +127,8 @@ public class RecipeAppServiceImplTest {
             @Test
             @DisplayName("returns list containing all recipes")
             public void getRecipesContainsAllCreatedRecipes() {
-                assertThat(service.getRecipes()).isNotEmpty().containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(),
-                        tomatoCucumberOliveFetaSalad());
+                assertThat(service.getRecipes()).isNotEmpty().usingFieldByFieldElementComparator()
+                        .containsExactlyInAnyOrder(tomatoCucumberMozzaSalad(), tomatoCucumberOliveFetaSalad());
             }
 
         }

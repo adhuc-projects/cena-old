@@ -122,7 +122,7 @@ public class InMemoryRecipeRepositoryTest {
         @DisplayName("finding recipes not using tomato main ingredient returns moussaka")
         public void findByMainIngredientsNotInTomato() {
             assertThat(repository.findByMainIngredientsNotIn(Collections.singleton(TOMATO_ID)))
-                    .containsExactly(moussakaWithIngredients());
+                    .usingFieldByFieldElementComparator().containsExactly(moussakaWithIngredients());
         }
 
         @Test

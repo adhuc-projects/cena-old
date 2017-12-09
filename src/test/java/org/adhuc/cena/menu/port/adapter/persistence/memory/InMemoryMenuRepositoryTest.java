@@ -78,8 +78,8 @@ public class InMemoryMenuRepositoryTest {
         @DisplayName("get menus between 2017-01-03 and 2017-01-05")
         public void findByDateBetween() {
             assertThat(repository.findByDateBetween(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05")))
-                    .containsExactlyInAnyOrder(lunch20170103(), dinner20170103(), lunch20170104(), dinner20170104(),
-                            lunch20170105(), dinner20170105());
+                    .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(lunch20170103(), dinner20170103(),
+                            lunch20170104(), dinner20170104(), lunch20170105(), dinner20170105());
         }
 
     }
