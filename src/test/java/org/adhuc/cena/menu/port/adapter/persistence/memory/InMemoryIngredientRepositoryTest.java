@@ -16,7 +16,6 @@
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.CUCUMBER_NAME;
@@ -32,9 +31,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
-import org.adhuc.cena.menu.domain.model.ingredient.Ingredient;
 
 /**
  * The {@link InMemoryIngredientRepository} test class.
@@ -56,30 +52,9 @@ public class InMemoryIngredientRepositoryTest {
         repository = new InMemoryIngredientRepository();
     }
 
-    @Test
-    @DisplayName("throws IllegalArgumentException when saving null ingredient")
-    public void saveNullIngredient() {
-        assertThrows(IllegalArgumentException.class, () -> repository.save(null));
-    }
-
-    @Test
-    @DisplayName("throws EntityNotFoundException when finding unknown ingredient (not null required)")
-    public void findOneNotNullUnknown() {
-        EntityNotFoundException exception =
-                assertThrows(EntityNotFoundException.class, () -> repository.findOneNotNull(TOMATO_ID));
-        assertThat(exception.entityType()).isEqualTo(Ingredient.class);
-        assertThat(exception.identity()).isEqualTo(TOMATO_ID.toString());
-    }
-
     @Nested
     @DisplayName("with no ingredient")
     class WithNoIngredient {
-
-        @Test
-        @DisplayName("returns empty list")
-        public void findAllEmpty() {
-            assertThat(repository.findAll()).isEmpty();
-        }
 
         @Test
         @DisplayName("returns empty list from a list of ingredient identities containing tomato and cucumber ids")
@@ -99,22 +74,10 @@ public class InMemoryIngredientRepositoryTest {
         }
 
         @Test
-        @DisplayName("returns a list containing tomato")
-        public void findAllAfterSaveContainsSavedIngredient() {
-            assertThat(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(tomato());
-        }
-
-        @Test
         @DisplayName("returns a list containing tomato from a list of ingredient identities containing tomato and cucumber ids")
         public void findAllById() {
             assertThat(repository.findAll(Arrays.asList(TOMATO_ID, CUCUMBER_ID))).usingFieldByFieldElementComparator()
                     .containsExactly(tomato());
-        }
-
-        @Test
-        @DisplayName("returns an empty ingredient when finding by unknown id")
-        public void findOneNotExisting() {
-            assertThat(repository.findOne(CUCUMBER_ID)).isNotPresent();
         }
 
         @Test
@@ -124,24 +87,10 @@ public class InMemoryIngredientRepositoryTest {
         }
 
         @Test
-        @DisplayName("returns tomato ingredient when finding by tomato id")
-        public void findOneExisting() {
-            assertThat(repository.findOne(TOMATO_ID)).isPresent().usingFieldByFieldValueComparator().contains(tomato());
-        }
-
-        @Test
         @DisplayName("returns tomato ingredient when finding by tomato name")
         public void findOneByNameExisting() {
             assertThat(repository.findOneByName(TOMATO_NAME)).isPresent().usingFieldByFieldValueComparator()
                     .contains(tomato());
-        }
-
-        @Test
-        @DisplayName("overwrites known ingredient when saving with same id")
-        public void saveExistingIngredientOverwritePreviousValue() {
-            repository.save(tomato().name(CUCUMBER_NAME));
-            assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                    .containsExactly(new Ingredient(TOMATO_ID, CUCUMBER_NAME));
         }
 
         @Nested
@@ -151,13 +100,6 @@ public class InMemoryIngredientRepositoryTest {
             @BeforeEach
             public void setUp() {
                 repository.save(cucumber());
-            }
-
-            @Test
-            @DisplayName("returns a list containing both tomato and cucumber")
-            public void findAllAfterMultipleSaveContainsSavedIngredients() {
-                assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                        .containsExactlyInAnyOrder(tomato(), cucumber());
             }
 
             @Test

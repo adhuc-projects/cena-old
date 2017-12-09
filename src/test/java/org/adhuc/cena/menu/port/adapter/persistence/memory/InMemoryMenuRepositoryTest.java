@@ -16,20 +16,14 @@
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_01_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.allMenus;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170105;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170101;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170105;
-import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 
 import java.time.LocalDate;
 
@@ -38,9 +32,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import org.adhuc.cena.menu.domain.model.EntityNotFoundException;
-import org.adhuc.cena.menu.domain.model.menu.Menu;
 
 /**
  * The {@link InMemoryMenuRepository} test class.
@@ -62,91 +53,14 @@ public class InMemoryMenuRepositoryTest {
         repository = new InMemoryMenuRepository();
     }
 
-    @Test
-    @DisplayName("throws IllegalArgumentException when saving null menu")
-    public void saveNullMenu() {
-        assertThrows(IllegalArgumentException.class, () -> repository.save(null));
-    }
-
-    @Test
-    @DisplayName("throws EntityNotFoundException when finding unknown menu (not null required)")
-    public void findOneNotNullUnknown() {
-        EntityNotFoundException exception =
-                assertThrows(EntityNotFoundException.class, () -> repository.findOneNotNull(DINNER_2017_01_02_ID));
-        assertThat(exception.entityType()).isEqualTo(Menu.class);
-        assertThat(exception.identity()).isEqualTo(DINNER_2017_01_02_ID.toString());
-    }
-
     @Nested
     @DisplayName("with no menu")
     class WithNoMenu {
 
         @Test
-        @DisplayName("returns empty list")
-        public void findAllEmpty() {
-            assertThat(repository.findAll()).isEmpty();
-        }
-
-        @Test
         @DisplayName("returns empty list of menus between min and max")
         public void findAllEmptyMinAndMax() {
             assertThat(repository.findByDateBetween(LocalDate.MIN, LocalDate.MAX)).isEmpty();
-        }
-
-    }
-
-    @Nested
-    @DisplayName("with dinner at 2017-01-02")
-    class WithDinner20170102 {
-
-        @BeforeEach
-        public void setUp() {
-            repository.save(dinner20170102());
-        }
-
-        @Test
-        @DisplayName("returns a menus list containing saved menu")
-        public void findAllAfterSaveContainsSavedMenu() {
-            assertThat(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(dinner20170102());
-        }
-
-        @Test
-        @DisplayName("returns an empty menu when finding by unknown id")
-        public void findOneNotExisting() {
-            assertThat(repository.findOne(LUNCH_2017_01_01_ID)).isNotPresent();
-        }
-
-        @Test
-        @DisplayName("returns dinner at 2017-01-02 when finding by id")
-        public void findOneExisting() {
-            assertThat(repository.findOne(DINNER_2017_01_02_ID)).isPresent().usingFieldByFieldValueComparator()
-                    .contains(dinner20170102());
-        }
-
-        @Test
-        @DisplayName("returns a menus list containing saved menu with new value")
-        public void saveExistingRecipeOverwritePreviousValue() {
-            repository.save(dinner20170102().recipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID));
-            assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                    .containsExactly(new Menu(DINNER_2017_01_02_ID, TOMATO_CUCUMBER_MOZZA_SALAD_ID));
-        }
-
-        @Nested
-        @DisplayName("and lunch at 2017-01-01")
-        class AndLunch20170101 {
-
-            @BeforeEach
-            public void setUp() {
-                repository.save(lunch20170101());
-            }
-
-            @Test
-            @DisplayName("returns a menus list containing all saved menus")
-            public void findAllAfterMultipleSaveContainsSavedMenus() {
-                assertThat(repository.findAll()).usingFieldByFieldElementComparator()
-                        .containsExactlyInAnyOrder(dinner20170102(), lunch20170101());
-            }
-
         }
 
     }
