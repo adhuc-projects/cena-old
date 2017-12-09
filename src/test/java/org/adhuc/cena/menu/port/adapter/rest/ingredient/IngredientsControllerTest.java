@@ -54,7 +54,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,6 +64,7 @@ import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link IngredientsController} test class.
@@ -156,9 +156,9 @@ public class IngredientsControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("creating ingredient as anonymous user returns unauthorized status")
-    @WithAnonymousUser
-    public void createIngredientAsAnonymousUser() throws Exception {
+    @DisplayName("creating ingredient as community user returns unauthorized status")
+    @WithCommunityUser
+    public void createIngredientAsCommunityUser() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(asJson(createTomatoRequest())))
                 .andExpect(status().isUnauthorized());
     }

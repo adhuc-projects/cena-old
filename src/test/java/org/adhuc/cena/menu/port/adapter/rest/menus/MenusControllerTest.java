@@ -59,7 +59,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -76,6 +75,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link MenusController} test class.
@@ -266,9 +266,9 @@ public class MenusControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("generating menus as anonymous user returns created status")
-    @WithAnonymousUser
-    public void generateMenusAsAnonymousUserReturnsCreatedStatus() throws Exception {
+    @DisplayName("generating menus as community user returns created status")
+    @WithCommunityUser
+    public void generateMenusAsCommunityUserReturnsCreatedStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
     }

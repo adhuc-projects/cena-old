@@ -13,32 +13,30 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.support.authentication;
+package org.adhuc.cena.menu.support.security;
 
-import org.adhuc.cena.menu.acceptance.support.authentication.AcceptanceAuthenticationMother.AcceptanceAuthenticationKey;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 /**
- * The authentication types.
+ * Indicates that a test must be run under the role of a community user.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public enum AuthenticationType {
-
-    COMMUNITY_USER(AcceptanceAuthenticationKey.COMMUNITY_USER),
-    AUTHENTICATED_USER(AcceptanceAuthenticationKey.AUTHENTICATED_USER),
-    INGREDIENT_MANAGER(AcceptanceAuthenticationKey.INGREDIENT_MANAGER);
-
-    private AcceptanceAuthenticationKey authenticationKey;
-
-    private AuthenticationType(AcceptanceAuthenticationKey authenticationKey) {
-        this.authenticationKey = authenticationKey;
-    }
-
-    protected AcceptanceAuthenticationKey authenticationKey() {
-        return authenticationKey;
-    }
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@WithAnonymousUser
+public @interface WithCommunityUser {
 
 }

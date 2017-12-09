@@ -32,7 +32,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -41,6 +40,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link RecipeIngredientAppServiceImpl} security tests.
@@ -71,9 +71,9 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("refuses access to ingredient to recipe addition to anonymous user")
-    public void addIngredientToRecipeAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("refuses access to ingredient to recipe addition to community user")
+    public void addIngredientToRecipeAsCommunityUser() {
         assertThrows(AccessDeniedException.class,
                 () -> service.addIngredientToRecipe(addCucumberToTomatoCucumberMozzaSalad()));
     }

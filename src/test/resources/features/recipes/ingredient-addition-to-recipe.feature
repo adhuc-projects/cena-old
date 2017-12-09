@@ -33,8 +33,8 @@ Scenario: Add an ingredient to a recipe of which the author is someone else
   Then an error notifies that user does not have sufficient rights
     And the ingredient cannot be found in the recipe's ingredients list
 
-Scenario: Add an ingredient to a recipe as anonymous user
-  Given an anonymous user
+Scenario: Add an ingredient to a recipe as community user
+  Given a community user
     And an existing "Tomato, cucumber, olive and feta salad" recipe
     And an existing "Olive" ingredient
   When he adds the ingredient to the recipe

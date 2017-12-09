@@ -65,7 +65,7 @@ public class RestAuthenticationProvider {
      */
     public void clean() {
         specification = SerenityRest.rest();
-        withAnonymousUser();
+        withCommunityUser();
     }
 
     /**
@@ -120,10 +120,10 @@ public class RestAuthenticationProvider {
     }
 
     /**
-     * Defines an anonymous user, that is not authenticated.
+     * Defines a community user, that is not authenticated.
      */
-    public void withAnonymousUser() {
-        withAuthentication(authenticationMother.anonymousUser());
+    public void withCommunityUser() {
+        withAuthentication(authenticationMother.communityUser());
     }
 
     /**

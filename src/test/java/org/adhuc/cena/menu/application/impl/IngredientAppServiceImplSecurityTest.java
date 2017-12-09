@@ -30,12 +30,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link IngredientAppServiceImpl} security tests.
@@ -63,9 +63,9 @@ public class IngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("grants access to ingredients list to anonymous user")
-    public void getIngredientsAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("grants access to ingredients list to community user")
+    public void getIngredientsAsCommunityUser() {
         assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
     }
 
@@ -84,9 +84,9 @@ public class IngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("refuses access to ingredient creation to anonymous user")
-    public void createIngredientAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("refuses access to ingredient creation to community user")
+    public void createIngredientAsCommunityUser() {
         assertThrows(AccessDeniedException.class, () -> service.createIngredient(createTomato()));
     }
 

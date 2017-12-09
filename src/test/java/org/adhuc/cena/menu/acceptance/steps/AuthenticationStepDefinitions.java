@@ -39,9 +39,9 @@ public class AuthenticationStepDefinitions {
         authenticationServiceClient.withIngredientManager();
     }
 
-    @Given("^an anonymous user$")
-    public void anonymousUser() {
-        authenticationServiceClient.withAnonymousUser();
+    @Given("^a community user$")
+    public void communityUser() {
+        authenticationServiceClient.withCommunityUser();
     }
 
     @Given("^an authenticated user$")

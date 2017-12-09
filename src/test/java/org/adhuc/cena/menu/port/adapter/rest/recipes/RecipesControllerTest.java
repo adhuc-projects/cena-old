@@ -54,7 +54,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -70,6 +69,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link RecipesController} test class.
@@ -163,9 +163,9 @@ public class RecipesControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("creating recipe as anonymous user returns unauthorized status")
-    @WithAnonymousUser
-    public void createRecipeAsAnonymousUser() throws Exception {
+    @DisplayName("creating recipe as community user returns unauthorized status")
+    @WithCommunityUser
+    public void createRecipeAsCommunityUser() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(createTomatoCucumberMozzaSaladRequest()))).andExpect(status().isUnauthorized());
     }

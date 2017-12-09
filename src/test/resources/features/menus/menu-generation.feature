@@ -1,8 +1,8 @@
 Feature: Generate menus composed of recipes
-  As an anonymous user, I want to generate menus so that I do not have to think about menus myself
+  As a community user, I want to generate menus so that I do not have to think about menus myself
 
 Scenario Outline: Generate a menus list successfully
-  Given an anonymous user
+  Given a community user
     And a list of existing recipes with at least <recipes_count> elements
   When he specifies a period of time of <days> days starting from <start_date>
     And he specifies the frequency of meals as <meal_frequency>

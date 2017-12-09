@@ -34,7 +34,7 @@ import io.restassured.specification.RequestSpecification;
 public final class AcceptanceAuthenticationMother {
 
     public static enum AcceptanceAuthenticationKey {
-        ANONYMOUS_USER,
+        COMMUNITY_USER,
         AUTHENTICATED_USER,
         ANOTHER_AUTHENTICATED_USER,
         INGREDIENT_MANAGER,
@@ -51,7 +51,7 @@ public final class AcceptanceAuthenticationMother {
 
     private AcceptanceAuthenticationMother() {
         authentications = new HashMap<>();
-        authentications.put(AcceptanceAuthenticationKey.ANONYMOUS_USER, new AnonymousAuthentication());
+        authentications.put(AcceptanceAuthenticationKey.COMMUNITY_USER, new AnonymousAuthentication());
         authentications.put(AcceptanceAuthenticationKey.AUTHENTICATED_USER,
                 new BasicAuthentication("authenticated-user", "authenticated-user"));
         authentications.put(AcceptanceAuthenticationKey.ANOTHER_AUTHENTICATED_USER,
@@ -73,8 +73,8 @@ public final class AcceptanceAuthenticationMother {
         return authentication.get();
     }
 
-    protected AcceptanceAuthentication anonymousUser() {
-        return authentications.get(AcceptanceAuthenticationKey.ANONYMOUS_USER);
+    protected AcceptanceAuthentication communityUser() {
+        return authentications.get(AcceptanceAuthenticationKey.COMMUNITY_USER);
     }
 
     protected AcceptanceAuthentication authenticatedUser() {

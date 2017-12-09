@@ -31,12 +31,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
  * The {@link RecipeAppServiceImpl} security tests.
@@ -64,9 +64,9 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("grants access to recipes list to anonymous user")
-    public void getRecipesAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("grants access to recipes list to community user")
+    public void getRecipesAsCommunityUser() {
         assertThat(service.getRecipes()).usingFieldByFieldElementComparator().contains(tomatoCucumberOliveFetaSalad());
     }
 
@@ -78,9 +78,9 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("grants access to recipe detail to anonymous user")
-    public void getRecipeAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("grants access to recipe detail to community user")
+    public void getRecipeAsCommunityUser() {
         assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID))
                 .isEqualToComparingFieldByField(tomatoCucumberOliveFetaSalad());
     }
@@ -94,9 +94,9 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithAnonymousUser
-    @DisplayName("refuses access to recipe creation to anonymous user")
-    public void createRecipeAsAnonymous() {
+    @WithCommunityUser
+    @DisplayName("refuses access to recipe creation to community user")
+    public void createRecipeAsCommunityUser() {
         assertThrows(AccessDeniedException.class, () -> service.createRecipe(createTomatoCucumberMozzaSalad()));
     }
 

@@ -30,9 +30,9 @@ import net.thucydides.core.annotations.Step;
 @SuppressWarnings("serial")
 public class AuthenticationServiceClientSteps extends AbstractServiceClientSteps {
 
-    @Step("Given an anonymous user")
-    public void withAnonymousUser() {
-        restAuthenticationProvider.withAnonymousUser();
+    @Step("Given a community user")
+    public void withCommunityUser() {
+        restAuthenticationProvider.withCommunityUser();
     }
 
     @Step("Given an authenticated user")
