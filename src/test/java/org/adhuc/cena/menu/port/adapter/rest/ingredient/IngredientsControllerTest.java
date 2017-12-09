@@ -159,7 +159,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
     @DisplayName("creating ingredient as community user returns unauthorized status")
     @WithCommunityUser
     public void createIngredientAsCommunityUser() throws Exception {
-        mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(asJson(createTomatoRequest())))
+        mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(status().isUnauthorized());
     }
 

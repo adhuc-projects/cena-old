@@ -23,10 +23,19 @@ cena:
         username: ingredient-manager
         password: ingredient-manager
       users:
-        - username: authenticated-user
-          password: authenticated-user
-        - username: another-user
-          password: another-user
+      - username: authenticated-user
+        password: authenticated-user
+      - username: another-user
+        password: another-user
+    secured-resources:
+    - method: post
+      paths:
+      - '/api/ingredients/**'
+      - '/api/recipes/**'
+    - method: put
+      paths:
+      - '/api/ingredients/**'
+      - '/api/recipes/**'
 
 ### Logging configuration
 logging:

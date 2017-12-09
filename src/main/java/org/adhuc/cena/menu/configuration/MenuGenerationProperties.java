@@ -15,9 +15,11 @@
  */
 package org.adhuc.cena.menu.configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpMethod;
 
 import lombok.Data;
 
@@ -33,8 +35,9 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "cena.menu-generation")
 public class MenuGenerationProperties {
 
-    private Documentation  documentation  = new Documentation();
-    private Authentication authentication = new Authentication();
+    private Documentation          documentation    = new Documentation();
+    private Authentication         authentication   = new Authentication();
+    private List<ResourceSecurity> securedResources = new ArrayList<>();
 
     @Data
     public static class Documentation {
@@ -46,10 +49,8 @@ public class MenuGenerationProperties {
 
     @Data
     public static class Authentication {
-
         private UsernamePassword       ingredientManager;
         private List<UsernamePassword> users;
-
     }
 
     @Data
@@ -58,6 +59,14 @@ public class MenuGenerationProperties {
         private String username;
         /** The password. */
         private String password;
+    }
+
+    @Data
+    public static class ResourceSecurity {
+        /** The HTTP method corresponding to secured paths. */
+        private HttpMethod   method = HttpMethod.POST;
+        /** The secured paths. */
+        private List<String> paths  = new ArrayList<>();
     }
 
 }

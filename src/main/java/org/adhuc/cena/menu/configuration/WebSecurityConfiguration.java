@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.configuration;
 
-import static org.springframework.util.Assert.notNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +24,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,6 +40,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties.Authentication;
+import org.adhuc.cena.menu.configuration.MenuGenerationProperties.ResourceSecurity;
+
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The spring configuration for security in web layer.
@@ -51,27 +53,35 @@ import org.adhuc.cena.menu.configuration.MenuGenerationProperties.Authentication
  * @version 0.1.0
  * @since 0.1.0
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] SECURED_RESOURCES = new String[] { "/api/ingredients/**", "/api/recipes/**" };
+    private static final String    BASE_API_PATH = "/api/**";
 
-    private SecurityProperties    securityProperties;
-    private Authentication        authentication;
+    private SecurityProperties     securityProperties;
+    private Authentication         authentication;
+    private List<ResourceSecurity> securedResources;
 
-    public WebSecurityConfiguration(SecurityProperties securityProperties,
-            MenuGenerationProperties menuGenerationProperties) {
-        notNull(securityProperties, "Cannot initialize web security configuration with null properties");
-        notNull(menuGenerationProperties, "Cannot initialize web security configuration with null properties");
+    public WebSecurityConfiguration(@NonNull SecurityProperties securityProperties,
+            @NonNull MenuGenerationProperties menuGenerationProperties) {
         this.securityProperties = securityProperties;
         authentication = menuGenerationProperties.getAuthentication();
+        securedResources = menuGenerationProperties.getSecuredResources();
     }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.POST, SECURED_RESOURCES).authenticated()
-                .antMatchers(HttpMethod.PUT, SECURED_RESOURCES).authenticated().antMatchers("/api/**").permitAll();
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizationConfigurer =
+                http.authorizeRequests();
+        for (ResourceSecurity securedResource : securedResources) {
+            log.info("Secure paths {} for http method {}", securedResource.getPaths(), securedResource.getMethod());
+            authorizationConfigurer
+                    .antMatchers(securedResource.getMethod(), securedResource.getPaths().toArray(new String[0]))
+                    .authenticated();
+        }
+        authorizationConfigurer.antMatchers(BASE_API_PATH).permitAll();
         http.csrf().disable();
         http.httpBasic();
     }
