@@ -101,7 +101,7 @@ public class RandomMenuRecipeDefinerStrategyTest {
     @Test
     @DisplayName("cannot define recipe for menu with no existing recipe")
     public void defineRecipeForMenuNoDefinedRecipe() {
-        assertThrows(IllegalStateException.class, () -> strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID,
+        assertThrows(NoRecipeForMenuGenerationException.class, () -> strategy.defineRecipeForMenu(LUNCH_2017_01_01_ID,
                 new MenuGenerationState(generateMenus7DaysAt20170101TwiceADay())));
     }
 
@@ -125,7 +125,8 @@ public class RandomMenuRecipeDefinerStrategyTest {
         @Test
         @DisplayName("cannot define recipe for menu")
         public void defineRecipeForMenuNoUsableRecipe() {
-            assertThrows(IllegalStateException.class, () -> strategy.defineRecipeForMenu(LUNCH_2017_01_04_ID, state));
+            assertThrows(NoRecipeForMenuGenerationException.class,
+                    () -> strategy.defineRecipeForMenu(LUNCH_2017_01_04_ID, state));
         }
 
         @Nested

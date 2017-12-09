@@ -63,7 +63,7 @@ public class RandomMenuRecipeDefinerStrategy implements MenuRecipeDefinerStrateg
         log.trace("Define recipe for menu {} from recipes {}", menuId, usableRecipes);
         if (CollectionUtils.isEmpty(usableRecipes)) {
             log.debug("No usable recipe for menu {}", menuId);
-            throw new IllegalStateException("Cannot generate menu " + menuId + " : there is no recipe");
+            throw new NoRecipeForMenuGenerationException(menuId);
         }
         return state.addMenu(new Menu(menuId, selectRandomRecipe(usableRecipes)));
     }

@@ -45,7 +45,8 @@ public enum ExceptionCode {
 
     ENTITY_NOT_FOUND(900000, "Entity not found"),
     INGREDIENT_NAME_ALREADY_USED(900100, "Ingredient name already used"),
-    INGREDIENT_NOT_LINKED_TO_RECIPE(900200, "Ingredient is not linked to the recipe");
+    INGREDIENT_NOT_LINKED_TO_RECIPE(900200, "Ingredient is not linked to the recipe"),
+    NO_RECIPE_FOR_MENU_GENERATION(900300, "No recipe can be selected for menu generation");
 
     private final int    code;
     private final String description;
