@@ -17,14 +17,17 @@ package org.adhuc.cena.menu.domain.model.menu;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_03_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.menuGeneration2DaysAt20170103TwiceADayCurrentState;
+import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.LASAGNE_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.allRecipesWithIngredients;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.croqueMonsieur;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.lasagne;
@@ -145,10 +148,18 @@ public class MenuGenerationStateTest {
         }
 
         @Test
-        @DisplayName("has menus after initialization")
-        public void hasNoMenuAfterInitialization() {
+        @DisplayName("has menus")
+        public void hasMenus() {
             assertThat(state.menus()).isNotNull().isNotEmpty().usingFieldByFieldElementComparator()
                     .contains(lunch20170103(), dinner20170103());
+        }
+
+        @Test
+        @DisplayName("cannot add already known menu id")
+        public void cannotAddAlreadyKnownMenuId() {
+            assumeTrue(state.menus().contains(lunch20170103()));
+            assertThrows(IllegalArgumentException.class,
+                    () -> state.addMenu(new Menu(LUNCH_2017_01_03_ID, LASAGNE_ID)));
         }
 
         @Test

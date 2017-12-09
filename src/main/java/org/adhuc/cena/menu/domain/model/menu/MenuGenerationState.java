@@ -81,6 +81,9 @@ public class MenuGenerationState {
      */
     public MenuGenerationState addMenu(@NonNull Menu menu) {
         log.debug("Add menu {} to menus generated for command {}", menu, command);
+        if (containsMenuWithId(menu.id())) {
+            throw new IllegalArgumentException("Cannot add menu " + menu + " with already known identity");
+        }
         List<Menu> menus = new ArrayList<>(this.menus);
         menus.add(menu);
         return new MenuGenerationState(command, Collections.unmodifiableList(menus));
@@ -97,6 +100,10 @@ public class MenuGenerationState {
     public List<Recipe> filterAlreadyUsedRecipes(@NonNull Collection<Recipe> recipes) {
         return recipes.stream().filter(r -> menus.stream().filter(m -> m.recipe().equals(r.id())).count() == 0)
                 .collect(Collectors.toList());
+    }
+
+    private boolean containsMenuWithId(MenuId menuId) {
+        return menus.stream().anyMatch(m -> m.id().equals(menuId));
     }
 
 }
