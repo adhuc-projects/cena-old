@@ -65,6 +65,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -83,6 +84,8 @@ import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryRecipeReposit
  * @version 0.1.0
  * @since 0.1.0
  */
+@Tag("unit")
+@Tag("domain")
 @DisplayName("Random menu recipe definer strategy")
 public class RandomMenuRecipeDefinerStrategyTest {
 
