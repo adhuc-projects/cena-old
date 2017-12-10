@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
+import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
 
 import java.time.LocalDate;
 
@@ -54,15 +55,15 @@ public class CompositeMealFrequencyIterationGeneratorTest {
     @DisplayName("generates menus iterations for 1 working day with week working days frequency")
     public void generateIterations1WorkingDayWithWeekWorkingDaysFrequency() {
         assertThat(generator.generateIterations(
-                new GenerateMenus(1, LocalDate.parse("2017-01-02"), MealFrequency.WEEK_WORKING_DAYS)))
+                new GenerateMenus(CLOCK, 1, LocalDate.parse("2017-01-02"), MealFrequency.WEEK_WORKING_DAYS)))
                         .containsExactlyInAnyOrder(DINNER_2017_01_02_ID);
     }
 
     @Test
     @DisplayName("generates menus iterations for 1 working day with twice a day frequency")
     public void generateIterations1WorkingDayWithTwiceADayFrequency() {
-        assertThat(generator
-                .generateIterations(new GenerateMenus(1, LocalDate.parse("2017-01-02"), MealFrequency.TWICE_A_DAY)))
+        assertThat(generator.generateIterations(
+                new GenerateMenus(CLOCK, 1, LocalDate.parse("2017-01-02"), MealFrequency.TWICE_A_DAY)))
                         .containsExactlyInAnyOrder(LUNCH_2017_01_02_ID, DINNER_2017_01_02_ID);
     }
 

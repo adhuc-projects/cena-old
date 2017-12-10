@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
+import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -193,15 +195,15 @@ public class MenuMother {
     }
 
     public static GenerateMenus generateMenus1DayAt20170102WeekWorkingDays() {
-        return new GenerateMenus(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY);
+        return new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY);
     }
 
     public static GenerateMenus generateMenus2DaysAt20170103TwiceADay() {
-        return new GenerateMenus(MENU_2017_01_03_DAYS, MENU_2017_01_03_START_DATE, MENU_2017_01_03_FREQUENCY);
+        return new GenerateMenus(CLOCK, MENU_2017_01_03_DAYS, MENU_2017_01_03_START_DATE, MENU_2017_01_03_FREQUENCY);
     }
 
     public static GenerateMenus generateMenus7DaysAt20170101TwiceADay() {
-        return new GenerateMenus(MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE, MENU_2017_01_01_FREQUENCY);
+        return new GenerateMenus(CLOCK, MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE, MENU_2017_01_01_FREQUENCY);
     }
 
     public static MenuGenerationState menuGeneration2DaysAt20170103TwiceADayCurrentState() {

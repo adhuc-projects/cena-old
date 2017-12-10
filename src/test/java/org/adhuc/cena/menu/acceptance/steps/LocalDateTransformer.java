@@ -15,7 +15,9 @@
  */
 package org.adhuc.cena.menu.acceptance.steps;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 import cucumber.api.Transformer;
 
@@ -31,9 +33,28 @@ import cucumber.api.Transformer;
  */
 public class LocalDateTransformer extends Transformer<LocalDate> {
 
+    private static final String YESTERDAY_KEYWORD = "yesterday";
+    private static final String NEXT_DAY_KEYWORD  = "next ";
+
     @Override
     public LocalDate transform(String value) {
+        if (YESTERDAY_KEYWORD.equals(value)) {
+            return yesterday();
+        }
+        if (value.startsWith(NEXT_DAY_KEYWORD)) {
+            return nextDay(value);
+        }
         return LocalDate.parse(value);
+    }
+
+    private LocalDate yesterday() {
+        return LocalDate.now().minusDays(1);
+    }
+
+    private LocalDate nextDay(String value) {
+        DayOfWeek dayOfWeek =
+                DayOfWeek.valueOf(value.substring(NEXT_DAY_KEYWORD.length(), value.length()).toUpperCase());
+        return LocalDate.now().with(TemporalAdjusters.next(dayOfWeek));
     }
 
 }

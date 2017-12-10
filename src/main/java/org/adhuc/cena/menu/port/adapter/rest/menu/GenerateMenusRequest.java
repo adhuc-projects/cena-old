@@ -15,6 +15,7 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.menu;
 
+import java.time.Clock;
 import java.time.LocalDate;
 
 import javax.validation.constraints.Max;
@@ -55,10 +56,13 @@ public class GenerateMenusRequest {
     /**
      * Converts this request to a {@code GenerateMenus} command.
      *
+     * @param clock
+     *            the current clock.
+     *
      * @return the menus generation command.
      */
-    public GenerateMenus toCommand() {
-        return new GenerateMenus(days, startDate, frequency);
+    public GenerateMenus toCommand(Clock clock) {
+        return new GenerateMenus(clock, days, startDate, frequency);
     }
 
 }

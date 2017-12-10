@@ -13,23 +13,24 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance;
+package org.adhuc.cena.menu.support;
 
-import org.junit.runner.RunWith;
-
-import cucumber.api.CucumberOptions;
-import net.serenitybdd.cucumber.CucumberWithSerenity;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 /**
- * The menu generation acceptance tests main executor.
+ * A {@link Clock} provider, for testing purposes.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features", tags = { "@WorkingOn" })
-public class MenuGenerationAcceptanceTest {
+public class ClockProvider {
+
+    public static final Clock CLOCK =
+            Clock.fixed(LocalDate.parse("2017-01-01").atStartOfDay().toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
 
 }

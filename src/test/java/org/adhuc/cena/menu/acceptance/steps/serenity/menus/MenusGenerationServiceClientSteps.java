@@ -22,6 +22,7 @@ import static java.time.DayOfWeek.SUNDAY;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.time.DayOfWeek;
@@ -42,6 +43,7 @@ import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientVal
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientsListServiceClientSteps;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
+import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest.GenerateMenusRequestBuilder;
 
@@ -148,6 +150,11 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
         menus.stream().filter(m2 -> !menu.equals(m2) && menu.isConsecutiveDay(m2))
                 .forEach(m2 -> softly.assertThat(compareMenusRecipeMainIngredients(menu, m2))
                         .as("Menu %s should not use same main ingredients as %s", menu, m2).isEmpty());
+    }
+
+    @Step("Assert menus generation results in no generation in the past error")
+    public void assertNoGenerationInThePast() {
+        assertException(BAD_REQUEST, ExceptionCode.NO_MENU_GENERATION_IN_THE_PAST);
     }
 
     @Step("Get menu list from {0}")

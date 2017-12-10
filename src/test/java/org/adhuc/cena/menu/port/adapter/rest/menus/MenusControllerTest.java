@@ -35,11 +35,10 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1Day
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170101;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
+import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -340,8 +339,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
         @Bean
         public Clock clock() {
-            return Clock.fixed(LocalDate.parse("2017-01-01").atStartOfDay().toInstant(ZoneOffset.UTC),
-                    ZoneId.systemDefault());
+            return CLOCK;
         }
 
     }

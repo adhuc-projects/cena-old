@@ -23,6 +23,9 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_S
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_DAYS;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
+import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
+
+import java.time.LocalDate;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -46,35 +49,42 @@ public class GenerateMenusTest {
     @DisplayName("cannot be created with negative days")
     public void generateMenusWithNegativeDays() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(-1, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+                () -> new GenerateMenus(CLOCK, -1, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with 0 days")
     public void generateMenusWithZeroDays() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(0, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+                () -> new GenerateMenus(CLOCK, 0, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with more than 10 days")
     public void generateMenusWith11Days() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(11, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+                () -> new GenerateMenus(CLOCK, 11, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with invalid start date")
     public void generateMenusWithInvalidStartDate() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(MENU_2017_01_02_DAYS, null, MENU_2017_01_02_FREQUENCY));
+                () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, null, MENU_2017_01_02_FREQUENCY));
+    }
+
+    @Test
+    @DisplayName("cannot be created with start date in the past")
+    public void generateMenusWithStartDateInThePast() {
+        assertThrows(GenerateMenusInThePastException.class, () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS,
+                LocalDate.parse("2016-12-31"), MENU_2017_01_02_FREQUENCY));
     }
 
     @Test
     @DisplayName("cannot be created with invalid meal frequency")
     public void generateMenusWithInvalidMealFrequency() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, null));
+                () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, null));
     }
 
     @Test

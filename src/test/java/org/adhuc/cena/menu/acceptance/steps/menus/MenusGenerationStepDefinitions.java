@@ -41,7 +41,7 @@ public class MenusGenerationStepDefinitions {
     @Steps
     private MenusGenerationServiceClientSteps menusGenerationServiceClient;
 
-    @When("^he specifies a period of time of (\\d+) days starting from ([0-9]{4}-[0-9]{2}-[0-9]{2})$")
+    @When("^he specifies a period of time of (\\d+) days starting from (yesterday|next monday|next sunday|[0-9]{4}-[0-9]{2}-[0-9]{2})$")
     public void specifyMenusGenerationOptions(int days, @Transform(LocalDateTransformer.class) LocalDate startDate) {
         menusGenerationServiceClient.setMenusGenerationDays(days);
         menusGenerationServiceClient.setMenusGenerationStartDate(startDate);
@@ -80,6 +80,11 @@ public class MenusGenerationStepDefinitions {
     @Then("^no meal has the same main ingredients as the previous nor next day$")
     public void menusWithNoMainRecipeIngredientWithinConsecutiveDays() {
         menusGenerationServiceClient.assertMenusUseNotSameMainIngredientsConsecutiveDays();
+    }
+
+    @Then("^an error notifies that menu cannot be generated in the past$")
+    public void errorOnMenusGenerationNoGenerationInThePast() {
+        menusGenerationServiceClient.assertNoGenerationInThePast();
     }
 
 }

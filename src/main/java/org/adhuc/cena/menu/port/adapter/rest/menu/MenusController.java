@@ -103,7 +103,7 @@ public class MenusController extends AbstractRequestValidationController {
     @ResponseStatus(HttpStatus.CREATED)
     public HttpHeaders generateMenus(@RequestBody @Valid GenerateMenusRequest request, Errors errors) {
         validateRequest(errors);
-        menuAppService.generateMenus(request.toCommand());
+        menuAppService.generateMenus(request.toCommand(clock));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(
                 linkTo(methodOn(MenusController.class).getMenus(request.getDays(), request.getStartDate())).toUri());
