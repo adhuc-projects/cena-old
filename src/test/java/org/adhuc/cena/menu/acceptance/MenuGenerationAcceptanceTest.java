@@ -29,7 +29,7 @@ import net.serenitybdd.cucumber.CucumberWithSerenity;
  * @since 0.1.0
  */
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features", tags = { "@WorkingOn" })
+@CucumberOptions(features = "src/test/resources/features")
 public class MenuGenerationAcceptanceTest {
 
 }

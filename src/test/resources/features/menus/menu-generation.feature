@@ -1,4 +1,3 @@
-@WorkingOn
 Feature: Generate menus composed of recipes
   As a community user, I want to generate menus so that I do not have to think about menus myself
 
