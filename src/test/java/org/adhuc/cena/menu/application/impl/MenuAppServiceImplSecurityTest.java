@@ -33,13 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MenuGenerationService;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
@@ -77,7 +77,7 @@ public class MenuAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to menus list to authenticated user")
     public void getRecipesAsAuthenticatedUser() {
         assertThat(service.getMenus(queryMenus1DayAt20170102())).usingFieldByFieldElementComparator()
@@ -93,7 +93,7 @@ public class MenuAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to recipe creation to authenticated user")
     public void createRecipeAsAuthenticatedUser() {
         GenerateMenus command = generateMenus1DayAt20170102WeekWorkingDays();

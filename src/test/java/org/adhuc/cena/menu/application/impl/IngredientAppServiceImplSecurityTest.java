@@ -30,12 +30,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
+import org.adhuc.cena.menu.support.security.WithIngredientManager;
 
 /**
  * The {@link IngredientAppServiceImpl} security tests.
@@ -70,14 +71,14 @@ public class IngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to ingredients list to authenticated user")
     public void getIngredientsAsAuthenticatedUser() {
         assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
     }
 
     @Test
-    @WithMockUser(roles = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     @DisplayName("grants access to ingredients list to ingredient manager")
     public void getIngredientsAsIngredientManager() {
         assertThat(service.getIngredients()).usingFieldByFieldElementComparator().contains(cucumber());
@@ -91,14 +92,14 @@ public class IngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("refuses access to ingredient creation to authenticated user")
     public void createIngredientAsAuthenticatedUser() {
         assertThrows(AccessDeniedException.class, () -> service.createIngredient(createTomato()));
     }
 
     @Test
-    @WithMockUser(roles = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     @DisplayName("grants access to ingredient creation to ingredient manager")
     public void createIngredientAsIngredientManager() {
         service.createIngredient(createTomato());

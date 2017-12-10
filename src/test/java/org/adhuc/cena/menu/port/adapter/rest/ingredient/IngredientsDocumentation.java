@@ -50,7 +50,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -61,6 +60,7 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
+import org.adhuc.cena.menu.support.security.WithIngredientManager;
 
 /**
  * The ingredients related rest-services documentation.
@@ -115,7 +115,7 @@ public class IngredientsDocumentation extends ControllerTestSupport {
 
     @Test
     @DisplayName("generates ingredient creation example")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void ingredientsCreateExample() throws Exception {
         doNothing().when(ingredientAppServiceMock).createIngredient(anyObject());
 

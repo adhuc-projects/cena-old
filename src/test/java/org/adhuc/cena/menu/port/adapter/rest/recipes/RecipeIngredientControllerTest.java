@@ -46,7 +46,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -61,6 +60,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientController;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
  * The {@link RecipeIngredientsController} test class.
@@ -107,7 +107,7 @@ public class RecipeIngredientControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("adding ingredient to recipe returns no content status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void addIngredientToRecipeReturnsNoContentStatus() throws Exception {
         mvc.perform(put(RECIPE_INGREDIENT_API_URL, TOMATO_CUCUMBER_MOZZA_SALAD_ID, CUCUMBER_ID))
                 .andExpect(status().isNoContent());
@@ -115,7 +115,7 @@ public class RecipeIngredientControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("adding ingredient to recipe as basic ingredient calls the application service with command")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void addBasicIngredientToRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<AddIngredientToRecipe> commandCaptor =
                 ArgumentCaptor.forClass(AddIngredientToRecipe.class);
@@ -128,7 +128,7 @@ public class RecipeIngredientControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("adding ingredient to recipe as main ingredient calls the application service with command")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void addMainIngredientToRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<AddIngredientToRecipe> commandCaptor =
                 ArgumentCaptor.forClass(AddIngredientToRecipe.class);

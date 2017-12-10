@@ -54,7 +54,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -69,6 +68,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
@@ -173,7 +173,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating recipe with no name returns bad request status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeInvalidRequestNoName() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(CreateRecipeRequest.builder().content(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT).build())))
@@ -182,7 +182,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating recipe with empty name returns bad request status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeInvalidRequestBlankName() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
                 asJson(CreateRecipeRequest.builder().name("").content(TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT).build())))
@@ -191,7 +191,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating recipe with no content returns bad request status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeInvalidRequestNoContent() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(CreateRecipeRequest.builder().name(TOMATO_CUCUMBER_MOZZA_SALAD_NAME).build())))
@@ -200,7 +200,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating recipe with empty content returns bad request status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeInvalidRequestBlankContent() throws Exception {
         mvc.perform(post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(
                 asJson(CreateRecipeRequest.builder().name(TOMATO_CUCUMBER_MOZZA_SALAD_NAME).content("").build())))
@@ -209,7 +209,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid recipe returns created status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeReturnsCreatedStatus() throws Exception {
         mvc.perform(
                 post(RECIPES_API_URL).contentType(APPLICATION_JSON).content(createTomatoCucumberMozzaSaladRequest()))
@@ -218,7 +218,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid recipe calls the application service with command")
-    @WithMockUser(username = "authenticated-user", authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<CreateRecipe> commandCaptor = ArgumentCaptor.forClass(CreateRecipe.class);
 
@@ -232,7 +232,7 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid recipe returns location header with link to recipe details")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void createRecipeReturnsLocationHeader() throws Exception {
         final ArgumentCaptor<CreateRecipe> commandCaptor = ArgumentCaptor.forClass(CreateRecipe.class);
         doNothing().when(recipeAppServiceMock).createRecipe(commandCaptor.capture());

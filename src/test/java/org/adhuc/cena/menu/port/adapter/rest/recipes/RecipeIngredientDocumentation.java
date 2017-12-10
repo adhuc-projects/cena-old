@@ -48,7 +48,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,6 +62,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.ingredient.IngredientDocumentation;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientController;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
  * The recipe ingredient related rest-services documentation.
@@ -124,7 +124,7 @@ public class RecipeIngredientDocumentation extends ControllerTestSupport {
 
     @Test
     @DisplayName("generates recipe ingredient addition example")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void recipeIngredientsAddExample() throws Exception {
         doNothing().when(recipeIngredientAppServiceMock).addIngredientToRecipe(anyObject());
 

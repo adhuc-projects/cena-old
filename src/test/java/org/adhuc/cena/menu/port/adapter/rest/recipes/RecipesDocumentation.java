@@ -50,7 +50,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -64,6 +63,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
 import org.adhuc.cena.menu.port.adapter.rest.recipe.CreateRecipeRequest;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
  * The recipes related rest-services documentation.
@@ -119,7 +119,7 @@ public class RecipesDocumentation extends ControllerTestSupport {
 
     @Test
     @DisplayName("generates recipe creation example")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void recipesCreateExample() throws Exception {
         doNothing().when(recipeAppServiceMock).createRecipe(anyObject());
 

@@ -31,11 +31,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.RecipeAppService;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
@@ -71,7 +71,7 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to recipes list to authenticated user")
     public void getRecipesAsAuthenticatedUser() {
         assertThat(service.getRecipes()).usingFieldByFieldElementComparator().contains(tomatoCucumberOliveFetaSalad());
@@ -86,7 +86,7 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to recipe detail to authenticated user")
     public void getRecipeAsAuthenticatedUser() {
         assertThat(service.getRecipe(TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID))
@@ -101,7 +101,7 @@ public class RecipeAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to recipe creation to authenticated user")
     public void createRecipeAsAuthenticatedUser() {
         service.createRecipe(createTomatoCucumberMozzaSalad());

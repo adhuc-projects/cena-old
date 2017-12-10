@@ -56,7 +56,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -70,6 +69,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
  * The menus related rest-services documentation.
@@ -109,7 +109,7 @@ public class MenusDocumentation extends ControllerTestSupport {
 
     @Test
     @DisplayName("generates menus list example")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void menusListExample() throws Exception {
         when(menuAppServiceMock.getMenus(queryMenus1DayAt20170102()))
                 .thenReturn(Arrays.asList(lunch20170102(), dinner20170102()));
@@ -129,7 +129,7 @@ public class MenusDocumentation extends ControllerTestSupport {
 
     @Test
     @DisplayName("generates menus generation example")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void menusGenerateExample() throws Exception {
         ConstrainedFields fields = new ConstrainedFields(GenerateMenusRequest.class);
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(generateMenusRequest())))

@@ -15,7 +15,7 @@
  */
 package org.adhuc.cena.menu.support.security;
 
-import static org.adhuc.cena.menu.support.UserProvider.AUTHENTICATED_USER;
+import static org.adhuc.cena.menu.support.UserProvider.ANOTHER_USER;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 import org.springframework.security.test.context.support.WithMockUser;
 
 /**
- * Indicates that a test must be run with authenticated user named "authenticated-user".
+ *
  *
  * @author Alexandre Carbenay
  *
@@ -38,7 +38,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@WithMockUser(username = AUTHENTICATED_USER, roles = "USER")
-public @interface WithAuthenticatedUser {
+@WithMockUser(username = ANOTHER_USER, roles = "USER")
+public @interface WithAnotherUser {
 
 }

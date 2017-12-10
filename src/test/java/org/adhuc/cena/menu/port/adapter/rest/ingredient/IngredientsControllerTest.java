@@ -54,7 +54,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -65,6 +64,7 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.CreateIngredient;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
+import org.adhuc.cena.menu.support.security.WithIngredientManager;
 
 /**
  * The {@link IngredientsController} test class.
@@ -165,7 +165,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating ingredient with no name returns bad request status")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void createIngredientNoNameRequest() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(CreateIngredientRequest.builder().build()))).andExpect(status().isBadRequest());
@@ -173,7 +173,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating ingredient with invalid name returns bad request status")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void createIngredientInvalidNameRequest() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(CreateIngredientRequest.builder().name("").build())))
@@ -182,7 +182,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid ingredient returns created status")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void createIngredientReturnsCreatedStatus() throws Exception {
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest()))
                 .andExpect(status().isCreated());
@@ -190,7 +190,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid ingredient calls the application service with command")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void createIngredientCallsAppServiceWithCommand() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
         mvc.perform(post(INGREDIENTS_API_URL).contentType(APPLICATION_JSON).content(createTomatoRequest())).andReturn();
@@ -201,7 +201,7 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("creating valid ingredient returns location header with link to ingredient details")
-    @WithMockUser(authorities = "INGREDIENT_MANAGER")
+    @WithIngredientManager
     public void createIngredientReturnsLocationHeader() throws Exception {
         final ArgumentCaptor<CreateIngredient> commandCaptor = ArgumentCaptor.forClass(CreateIngredient.class);
         doNothing().when(ingredientAppServiceMock).createIngredient(commandCaptor.capture());

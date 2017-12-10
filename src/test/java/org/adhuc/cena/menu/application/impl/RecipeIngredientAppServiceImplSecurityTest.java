@@ -32,7 +32,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.adhuc.cena.menu.application.RecipeIngredientAppService;
@@ -40,6 +39,8 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientRepository;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeId;
 import org.adhuc.cena.menu.domain.model.recipe.RecipeRepository;
 import org.adhuc.cena.menu.domain.model.recipe.ingredient.RecipeIngredient;
+import org.adhuc.cena.menu.support.security.WithAnotherUser;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
@@ -79,7 +80,7 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithAnotherUser
     @DisplayName("refuses access to ingredient to recipe addition to authenticated user that is not the recipe author")
     public void addIngredientToRecipeAsAuthenticatedUserNotRecipeAuthor() {
         assertThrows(AccessDeniedException.class,
@@ -87,7 +88,7 @@ public class RecipeIngredientAppServiceImplSecurityTest {
     }
 
     @Test
-    @WithMockUser(username = "authenticated-user", roles = "USER")
+    @WithAuthenticatedUser
     @DisplayName("grants access to ingredient to recipe addition to authenticated user that is not the recipe author")
     public void addIngredientToRecipeAsRecipeAuthor() {
         RecipeId recipeId = TOMATO_CUCUMBER_MOZZA_SALAD_ID;
