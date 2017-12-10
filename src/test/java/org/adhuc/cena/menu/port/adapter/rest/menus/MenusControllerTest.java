@@ -108,6 +108,14 @@ public class MenusControllerTest extends ControllerTestSupport {
         reset(menuAppServiceMock);
     }
 
+    @Test
+    @DisplayName("getting list as community user returns unauthorized status")
+    @WithCommunityUser
+    public void getMenusHasSelfLink() throws Exception {
+        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
+                .andExpect(status().isUnauthorized());
+    }
+
     @Nested
     @DisplayName("with empty menus list")
     class WithEmptyMenusList {
@@ -172,6 +180,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
         @Test
         @DisplayName("getting list contains self link to resource")
+        @WithMockUser(authorities = "USER")
         public void getMenusHasSelfLink() throws Exception {
             assertSelfLinkEqualToRequestUrl(mvc
                     .perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02")));
@@ -265,8 +274,16 @@ public class MenusControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    @DisplayName("generating menus as community user returns created status")
+    @DisplayName("generating menus as community user returns unauthorized status")
     @WithCommunityUser
+    public void createRecipeAsCommunityUser() throws Exception {
+        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
+                .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("generating menus as community user returns created status")
+    @WithMockUser(authorities = "USER")
     public void generateMenusAsCommunityUserReturnsCreatedStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());

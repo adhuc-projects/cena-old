@@ -1,8 +1,8 @@
 Feature: Generate menus composed of recipes
-  As a community user, I want to generate menus so that I do not have to think about menus myself
+  As an authenticated user, I want to generate menus so that I do not have to think about menus myself
 
 Scenario Outline: Generate a menus list successfully
-  Given a community user
+  Given an authenticated user
     And a list of existing recipes with at least <recipes_count> elements
   When he specifies a period of time of <days> days starting from <start_date>
     And he specifies the frequency of meals as <meal_frequency>
@@ -24,9 +24,17 @@ Scenario Outline: Generate a menus list successfully
     |    7 |            18 | next monday | TWICE_A_DAY       |          14 |
 
 Scenario: Generate a menus list starting in the past
-  Given a community user
+  Given an authenticated user
     And a list of existing recipes with at least 10 elements
   When he specifies a period of time of 5 days starting from yesterday
     And he specifies the frequency of meals as WEEK_WORKING_DAYS
     And he generates the menus
   Then an error notifies that menu cannot be generated in the past
+
+Scenario: Generate a menus list as community user
+  Given a community user
+    And a list of existing recipes with at least 2 elements
+  When he specifies a period of time of 1 days starting from next monday
+    And he specifies the frequency of meals as WEEK_WORKING_DAYS
+    And he generates the menus
+  Then an error notifies that user is not authenticated

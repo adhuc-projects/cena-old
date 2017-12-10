@@ -18,6 +18,7 @@ package org.adhuc.cena.menu.application.impl;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.adhuc.cena.menu.application.MenuAppService;
@@ -52,6 +53,7 @@ public class MenuAppServiceImpl implements MenuAppService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public List<Menu> getMenus(@NonNull MenusQuery query) {
         List<Menu> menus =
                 menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
@@ -60,6 +62,7 @@ public class MenuAppServiceImpl implements MenuAppService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public void generateMenus(@NonNull GenerateMenus command) {
         log.info("Generate menus from command {}", command);
         menuGenerationService.generateMenus(command);

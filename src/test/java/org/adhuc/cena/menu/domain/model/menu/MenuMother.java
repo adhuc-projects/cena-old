@@ -198,12 +198,24 @@ public class MenuMother {
         return new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY);
     }
 
+    public static MenusQuery queryMenus1DayAt20170102() {
+        return new MenusQuery(MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE);
+    }
+
     public static GenerateMenus generateMenus2DaysAt20170103TwiceADay() {
         return new GenerateMenus(CLOCK, MENU_2017_01_03_DAYS, MENU_2017_01_03_START_DATE, MENU_2017_01_03_FREQUENCY);
     }
 
+    public static MenusQuery queryMenus2DaysAt20170103() {
+        return new MenusQuery(MENU_2017_01_03_DAYS, MENU_2017_01_03_START_DATE);
+    }
+
     public static GenerateMenus generateMenus7DaysAt20170101TwiceADay() {
         return new GenerateMenus(CLOCK, MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE, MENU_2017_01_01_FREQUENCY);
+    }
+
+    public static MenusQuery queryMenus7DaysAt20170101() {
+        return new MenusQuery(MENU_2017_01_01_DAYS, MENU_2017_01_01_START_DATE);
     }
 
     public static MenuGenerationState menuGeneration2DaysAt20170103TwiceADayCurrentState() {

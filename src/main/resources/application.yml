@@ -28,10 +28,14 @@ cena:
       - username: another-user
         password: another-user
     secured-resources:
+    - method: get
+      paths:
+      - '/api/menus/**'
     - method: post
       paths:
       - '/api/ingredients/**'
       - '/api/recipes/**'
+      - '/api/menus/**'
     - method: put
       paths:
       - '/api/ingredients/**'
