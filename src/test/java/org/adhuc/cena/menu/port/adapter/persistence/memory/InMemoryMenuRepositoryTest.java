@@ -18,12 +18,16 @@ package org.adhuc.cena.menu.port.adapter.persistence.memory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.allMenus;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.allOtherMenus;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170105;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170105;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.otherDinner20170103;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.otherDinner20170104;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.otherDinner20170105;
 
 import java.time.LocalDate;
 
@@ -32,6 +36,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import org.adhuc.cena.menu.domain.model.DateInterval;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
+import org.adhuc.cena.menu.support.UserProvider;
 
 /**
  * The {@link InMemoryMenuRepository} test class.
@@ -60,14 +68,15 @@ public class InMemoryMenuRepositoryTest {
         @Test
         @DisplayName("returns empty list of menus between min and max")
         public void findAllEmptyMinAndMax() {
-            assertThat(repository.findByDateBetween(LocalDate.MIN, LocalDate.MAX)).isEmpty();
+            assertThat(repository.findByOwnerAndDateBetween(new MenuOwner(UserProvider.AUTHENTICATED_USER),
+                    new DateInterval(LocalDate.MIN, LocalDate.MAX))).isEmpty();
         }
 
     }
 
     @Nested
-    @DisplayName("with multiple menus")
-    class WithMultipleMenus {
+    @DisplayName("with multiple menus for authenticated user")
+    class WithMultipleMenusForAuthenticatedUser {
 
         @BeforeEach
         public void setUp() {
@@ -76,10 +85,49 @@ public class InMemoryMenuRepositoryTest {
 
         @Test
         @DisplayName("get menus between 2017-01-03 and 2017-01-05")
-        public void findByDateBetween() {
-            assertThat(repository.findByDateBetween(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05")))
-                    .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(lunch20170103(), dinner20170103(),
-                            lunch20170104(), dinner20170104(), lunch20170105(), dinner20170105());
+        public void findByDateBetweenAuthenticatedUser() {
+            assertThat(repository.findByOwnerAndDateBetween(new MenuOwner(UserProvider.AUTHENTICATED_USER),
+                    new DateInterval(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05"))))
+                            .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(lunch20170103(),
+                                    dinner20170103(), lunch20170104(), dinner20170104(), lunch20170105(),
+                                    dinner20170105());
+        }
+
+        @Test
+        @DisplayName("get menus between 2017-01-03 and 2017-01-05 for other user")
+        public void findByDateBetweenOtherUser() {
+            assertThat(repository.findByOwnerAndDateBetween(new MenuOwner(UserProvider.ANOTHER_USER),
+                    new DateInterval(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05")))).isEmpty();
+        }
+
+        @Nested
+        @DisplayName("and multiple menus for another user")
+        class WithMultipleMenusForAnotherUser {
+
+            @BeforeEach
+            public void setUp() {
+                allOtherMenus().stream().forEach(m -> repository.save(m));
+            }
+
+            @Test
+            @DisplayName("get menus between 2017-01-03 and 2017-01-05")
+            public void findByDateBetweenAuthenticatedUser() {
+                assertThat(repository.findByOwnerAndDateBetween(new MenuOwner(UserProvider.AUTHENTICATED_USER),
+                        new DateInterval(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05"))))
+                                .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(lunch20170103(),
+                                        dinner20170103(), lunch20170104(), dinner20170104(), lunch20170105(),
+                                        dinner20170105());
+            }
+
+            @Test
+            @DisplayName("get menus between 2017-01-03 and 2017-01-05 for other user")
+            public void findByDateBetweenOtherUser() {
+                assertThat(repository.findByOwnerAndDateBetween(new MenuOwner(UserProvider.ANOTHER_USER),
+                        new DateInterval(LocalDate.parse("2017-01-03"), LocalDate.parse("2017-01-05"))))
+                                .usingFieldByFieldElementComparator().containsExactlyInAnyOrder(otherDinner20170103(),
+                                        otherDinner20170104(), otherDinner20170105());
+            }
+
         }
 
     }

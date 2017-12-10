@@ -55,8 +55,7 @@ public class MenuAppServiceImpl implements MenuAppService {
     @Override
     @PreAuthorize("isAuthenticated()")
     public List<Menu> getMenus(@NonNull MenusQuery query) {
-        List<Menu> menus =
-                menuRepository.findByDateBetween(query.startDate(), query.startDate().plusDays(query.days() - 1));
+        List<Menu> menus = menuRepository.findByOwnerAndDateBetween(query.owner(), query.interval());
         Collections.sort(menus);
         return menus;
     }

@@ -24,11 +24,13 @@ import javax.validation.constraints.NotNull;
 
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 /**
  * A request to generate menus.
@@ -58,11 +60,14 @@ public class GenerateMenusRequest {
      *
      * @param clock
      *            the current clock.
+     * 
+     * @param menuOwner
+     *            the menu owner.
      *
      * @return the menus generation command.
      */
-    public GenerateMenus toCommand(Clock clock) {
-        return new GenerateMenus(clock, days, startDate, frequency);
+    public GenerateMenus toCommand(@NonNull Clock clock, @NonNull MenuOwner menuOwner) {
+        return new GenerateMenus(clock, days, startDate, frequency, menuOwner);
     }
 
 }

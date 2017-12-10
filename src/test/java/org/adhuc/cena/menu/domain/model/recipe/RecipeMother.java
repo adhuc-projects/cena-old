@@ -54,6 +54,7 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMAT
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TUNA_FILLET_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TURNIP_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.WATERCRESS_ID;
+import static org.adhuc.cena.menu.support.UserProvider.AUTHENTICATED_USER;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,108 +80,108 @@ public class RecipeMother {
             "Tomato, cucumber and mozzarella salad";
     public static final String       TOMATO_CUCUMBER_MOZZA_SALAD_CONTENT       =
             "Cut everything into dices, mix it, dress it";
-    public static final RecipeAuthor TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR        = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor TOMATO_CUCUMBER_MOZZA_SALAD_AUTHOR        = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     TOMATO_CUCUMBER_OLIVE_FETA_SALAD_ID       = RecipeId.generate();
     public static final String       TOMATO_CUCUMBER_OLIVE_FETA_SALAD_NAME     =
             "Tomato, cucumber, olive and feta salad";
     public static final String       TOMATO_CUCUMBER_OLIVE_FETA_SALAD_CONTENT  =
             "Cut everything into dices, mix it, dress it";
-    public static final RecipeAuthor TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR   = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor TOMATO_CUCUMBER_OLIVE_FETA_SALAD_AUTHOR   = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     TOMATO_CANTAL_PIE_ID                      = RecipeId.generate();
     public static final String       TOMATO_CANTAL_PIE_NAME                    = "Tomato and cantal pie";
     public static final String       TOMATO_CANTAL_PIE_CONTENT                 =
             "Spread the shortcrust in a pie plate, wrap it with mustard, tomato slices and cantal slices in this order, and bake it during 20 minutes";
-    public static final RecipeAuthor TOMATO_CANTAL_PIE_AUTHOR                  = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor TOMATO_CANTAL_PIE_AUTHOR                  = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     QUICHE_LORRAINE_ID                        = RecipeId.generate();
     public static final String       QUICHE_LORRAINE_NAME                      = "Quiche lorraine";
     public static final String       QUICHE_LORRAINE_CONTENT                   =
             "Spread the shortcrust in a pie plate, beat the eggs with milk, add lardons, pour on the pastry and bake it during 30 minutes";
-    public static final RecipeAuthor QUICHE_LORRAINE_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor QUICHE_LORRAINE_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     WATERCRESS_SOUP_ID                        = RecipeId.generate();
     public static final String       WATERCRESS_SOUP_NAME                      = "Watercress soup";
     public static final String       WATERCRESS_SOUP_CONTENT                   = "Watercress soup recipe content";
-    public static final RecipeAuthor WATERCRESS_SOUP_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor WATERCRESS_SOUP_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     GAZPACHO_ID                               = RecipeId.generate();
     public static final String       GAZPACHO_NAME                             = "Gazpacho";
     public static final String       GAZPACHO_CONTENT                          = "Gazpacho recipe content";
-    public static final RecipeAuthor GAZPACHO_AUTHOR                           = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor GAZPACHO_AUTHOR                           = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     POACHED_EGGS_SALAD_ID                     = RecipeId.generate();
     public static final String       POACHED_EGGS_SALAD_NAME                   = "Poached eggs salad";
     public static final String       POACHED_EGGS_SALAD_CONTENT                = "Poached eggs salad recipe content";
-    public static final RecipeAuthor POACHED_EGGS_SALAD_AUTHOR                 = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor POACHED_EGGS_SALAD_AUTHOR                 = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     NORVEGIAN_SALAD_ID                        = RecipeId.generate();
     public static final String       NORVEGIAN_SALAD_NAME                      = "Norvegian salad";
     public static final String       NORVEGIAN_SALAD_CONTENT                   = "Norvegian salad recipe content";
-    public static final RecipeAuthor NORVEGIAN_SALAD_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor NORVEGIAN_SALAD_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     OMELETTE_ID                               = RecipeId.generate();
     public static final String       OMELETTE_NAME                             = "Omelette";
     public static final String       OMELETTE_CONTENT                          = "Omelette recipe content";
-    public static final RecipeAuthor OMELETTE_AUTHOR                           = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor OMELETTE_AUTHOR                           = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     CHILI_CON_CARNE_ID                        = RecipeId.generate();
     public static final String       CHILI_CON_CARNE_NAME                      = "Chili con carne";
     public static final String       CHILI_CON_CARNE_CONTENT                   = "Chili con carne recipe content";
-    public static final RecipeAuthor CHILI_CON_CARNE_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor CHILI_CON_CARNE_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     SAUERKRAUT_ID                             = RecipeId.generate();
     public static final String       SAUERKRAUT_NAME                           = "Sauerkraut";
     public static final String       SAUERKRAUT_CONTENT                        = "Sauerkraut recipe content";
-    public static final RecipeAuthor SAUERKRAUT_AUTHOR                         = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor SAUERKRAUT_AUTHOR                         = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_ID      = RecipeId.generate();
     public static final String       LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_NAME    = "Leeks with ham and béchamel sauce";
     public static final String       LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_CONTENT =
             "Leeks with ham and béchamel sauce recipe content";
-    public static final RecipeAuthor LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_AUTHOR  = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor LEEKS_WITH_HAM_AND_BECHAMEL_SAUCE_AUTHOR  = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     MOUSSAKA_ID                               = RecipeId.generate();
     public static final String       MOUSSAKA_NAME                             = "Moussaka";
     public static final String       MOUSSAKA_CONTENT                          = "Moussaka recipe content";
-    public static final RecipeAuthor MOUSSAKA_AUTHOR                           = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor MOUSSAKA_AUTHOR                           = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     LASAGNE_ID                                = RecipeId.generate();
     public static final String       LASAGNE_NAME                              = "Lasagne";
     public static final String       LASAGNE_CONTENT                           = "Lasagne recipe content";
-    public static final RecipeAuthor LASAGNE_AUTHOR                            = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor LASAGNE_AUTHOR                            = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     DUCK_BREAST_FILLET_WITH_TURNIPS_ID        = RecipeId.generate();
     public static final String       DUCK_BREAST_FILLET_WITH_TURNIPS_NAME      = "Duck breast fillet with turnips";
     public static final String       DUCK_BREAST_FILLET_WITH_TURNIPS_CONTENT   =
             "Duck breast fillet with turnips recipe content";
-    public static final RecipeAuthor DUCK_BREAST_FILLET_WITH_TURNIPS_AUTHOR    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor DUCK_BREAST_FILLET_WITH_TURNIPS_AUTHOR    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     CROQUE_MONSIEUR_ID                        = RecipeId.generate();
     public static final String       CROQUE_MONSIEUR_NAME                      = "Croque-monsieur";
     public static final String       CROQUE_MONSIEUR_CONTENT                   = "Croque-monsieur recipe content";
-    public static final RecipeAuthor CROQUE_MONSIEUR_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor CROQUE_MONSIEUR_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     RACLETTE_ID                               = RecipeId.generate();
     public static final String       RACLETTE_NAME                             = "Raclette";
     public static final String       RACLETTE_CONTENT                          = "Raclette recipe content";
-    public static final RecipeAuthor RACLETTE_AUTHOR                           = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor RACLETTE_AUTHOR                           = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     DUCK_PARMENTIER_ID                        = RecipeId.generate();
     public static final String       DUCK_PARMENTIER_NAME                      = "Duck parmentier";
     public static final String       DUCK_PARMENTIER_CONTENT                   = "Duck parmentier recipe content";
-    public static final RecipeAuthor DUCK_PARMENTIER_AUTHOR                    = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor DUCK_PARMENTIER_AUTHOR                    = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     CAESAR_SALAD_ID                           = RecipeId.generate();
     public static final String       CAESAR_SALAD_NAME                         = "Caesar salad";
     public static final String       CAESAR_SALAD_CONTENT                      = "Caesar salad recipe content";
-    public static final RecipeAuthor CAESAR_SALAD_AUTHOR                       = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor CAESAR_SALAD_AUTHOR                       = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static final RecipeId     JAPANESE_TUNA_ID                          = RecipeId.generate();
     public static final String       JAPANESE_TUNA_NAME                        = "Japanese tuna";
     public static final String       JAPANESE_TUNA_CONTENT                     = "Japanese tuna recipe content";
-    public static final RecipeAuthor JAPANESE_TUNA_AUTHOR                      = new RecipeAuthor("authenticated-user");
+    public static final RecipeAuthor JAPANESE_TUNA_AUTHOR                      = new RecipeAuthor(AUTHENTICATED_USER);
 
     public static CreateRecipe createTomatoCucumberMozzaSalad() {
         return new CreateRecipe(TOMATO_CUCUMBER_MOZZA_SALAD_ID, TOMATO_CUCUMBER_MOZZA_SALAD_NAME,

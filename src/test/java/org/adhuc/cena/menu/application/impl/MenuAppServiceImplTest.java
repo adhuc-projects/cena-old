@@ -23,13 +23,10 @@ import static org.mockito.Mockito.verify;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.allMenus;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170104;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170105;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170105;
-
-import java.time.LocalDate;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.queryMenus2DaysAt20170103;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +37,6 @@ import org.mockito.Mockito;
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MenuGenerationService;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
-import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.persistence.memory.InMemoryMenuRepository;
 
 /**
@@ -75,12 +71,11 @@ public class MenuAppServiceImplTest {
     }
 
     @Test
-    @DisplayName("gets menus starting from 2017-01-03 for 3 days")
-    public void getMenusFrom20170103For3Days() {
+    @DisplayName("gets menus starting from 2017-01-03 for 2 days")
+    public void getMenusFrom20170103For2Days() {
         allMenus().stream().forEach(m -> menuRepository.save(m));
-        assertThat(service.getMenus(new MenusQuery(3, LocalDate.parse("2017-01-03"))))
-                .usingFieldByFieldElementComparator().containsExactly(lunch20170103(), dinner20170103(),
-                        lunch20170104(), dinner20170104(), lunch20170105(), dinner20170105());
+        assertThat(service.getMenus(queryMenus2DaysAt20170103())).usingFieldByFieldElementComparator()
+                .containsExactly(lunch20170103(), dinner20170103(), lunch20170104(), dinner20170104());
     }
 
     @Test

@@ -17,7 +17,8 @@ package org.adhuc.cena.menu.domain.model.menu;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDate;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_01_DATE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_01_OWNER;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -40,29 +41,37 @@ public class MenusQueryTest {
     @Test
     @DisplayName("cannot be created with negative days")
     public void createWithNegativeDays() {
-        assertThrows(IllegalArgumentException.class, () -> new MenusQuery(-1, LocalDate.now()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new MenusQuery(-1, DINNER_2017_01_01_DATE, DINNER_2017_01_01_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with 0 days")
     public void createWithZeroDays() {
-        assertThrows(IllegalArgumentException.class, () -> new MenusQuery(0, LocalDate.now()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new MenusQuery(0, DINNER_2017_01_01_DATE, DINNER_2017_01_01_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with null start date")
     public void createWithNullStartDate() {
-        assertThrows(IllegalArgumentException.class, () -> new MenusQuery(1, null));
+        assertThrows(IllegalArgumentException.class, () -> new MenusQuery(1, null, DINNER_2017_01_01_OWNER));
+    }
+
+    @Test
+    @DisplayName("cannot be created with null menu owner")
+    public void createWithNullMenuOwner() {
+        assertThrows(IllegalArgumentException.class, () -> new MenusQuery(1, DINNER_2017_01_01_DATE, null));
     }
 
     @Test
     @DisplayName("contains days and start date")
     public void createOK() {
-        LocalDate startDate = LocalDate.parse("2017-01-02");
-        MenusQuery query = new MenusQuery(3, startDate);
+        MenusQuery query = new MenusQuery(3, DINNER_2017_01_01_DATE, DINNER_2017_01_01_OWNER);
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(query.days()).isEqualTo(3);
-            softly.assertThat(query.startDate()).isEqualTo(startDate);
+            softly.assertThat(query.startDate()).isEqualTo(DINNER_2017_01_01_DATE);
+            softly.assertThat(query.owner()).isEqualTo(DINNER_2017_01_01_OWNER);
         });
     }
 

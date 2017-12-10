@@ -29,13 +29,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_DAYS;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.queryMenus1DayAt20170102;
+import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
 
 import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,8 +64,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.adhuc.cena.menu.application.MenuAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
-import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
-import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFields;
@@ -111,10 +111,10 @@ public class MenusDocumentation extends ControllerTestSupport {
     @DisplayName("generates menus list example")
     @WithMockUser(authorities = "USER")
     public void menusListExample() throws Exception {
-        when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-02"))))
+        when(menuAppServiceMock.getMenus(queryMenus1DayAt20170102()))
                 .thenReturn(Arrays.asList(lunch20170102(), dinner20170102()));
-        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
-                .andExpect(status().isOk())
+        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_02_DAYS)).param("startDate",
+                MENU_2017_01_02_START_DATE.toString())).andExpect(status().isOk())
                 .andDo(documentationHandler.document(requestParameters(
                         parameterWithName("days").description("The number of days to get menus for (default = 1)"),
                         parameterWithName("startDate")
@@ -141,8 +141,8 @@ public class MenusDocumentation extends ControllerTestSupport {
     }
 
     private GenerateMenusRequest generateMenusRequest() {
-        return GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS)
-                .startDate(LocalDate.parse("2017-01-02")).build();
+        return GenerateMenusRequest.builder().days(MENU_2017_01_02_DAYS).frequency(MENU_2017_01_02_FREQUENCY)
+                .startDate(MENU_2017_01_02_START_DATE).build();
     }
 
     @TestConfiguration
@@ -150,8 +150,7 @@ public class MenusDocumentation extends ControllerTestSupport {
 
         @Bean
         public Clock clock() {
-            return Clock.fixed(LocalDate.parse("2017-01-01").atStartOfDay().toInstant(ZoneOffset.UTC),
-                    ZoneId.systemDefault());
+            return CLOCK;
         }
 
     }

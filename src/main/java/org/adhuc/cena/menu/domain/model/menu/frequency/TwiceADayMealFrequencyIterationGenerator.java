@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 
 import lombok.NonNull;
 
@@ -36,10 +37,10 @@ import lombok.NonNull;
 public class TwiceADayMealFrequencyIterationGenerator extends AbstractMealFrequencyIterationGenerator {
 
     @Override
-    protected Set<MenuId> generateIterations(@NonNull LocalDate date) {
+    protected Set<MenuId> generateIterations(@NonNull LocalDate date, @NonNull MenuOwner owner) {
         Set<MenuId> iterations = new HashSet<>();
-        iterations.add(new MenuId(date, MealType.LUNCH));
-        iterations.add(new MenuId(date, MealType.DINNER));
+        iterations.add(new MenuId(date, MealType.LUNCH, owner));
+        iterations.add(new MenuId(date, MealType.DINNER, owner));
         return iterations;
     }
 

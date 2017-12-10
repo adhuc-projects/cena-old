@@ -13,34 +13,30 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.menu;
+package org.adhuc.cena.menu.support.security;
 
-import java.util.List;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.adhuc.cena.menu.domain.model.DateInterval;
-import org.adhuc.cena.menu.domain.model.WritableRepository;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
- * A {@link Menu} repository.
+ * Indicates that a test must be run with authenticated user named "authenticated-user".
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface MenuRepository extends WritableRepository<Menu, MenuId> {
-
-    /**
-     * Finds the menus corresponding to the specified owner and interval.
-     *
-     * @param owner
-     *            the menus owner.
-     *
-     * @param interval
-     *            the query interval.
-     *
-     * @return the menus corresponding to owner and interval.
-     */
-    List<Menu> findByOwnerAndDateBetween(MenuOwner owner, DateInterval interval);
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@WithMockUser(username = "authenticated-user", authorities = "USER")
+public @interface WithAuthenticatedUser {
 
 }

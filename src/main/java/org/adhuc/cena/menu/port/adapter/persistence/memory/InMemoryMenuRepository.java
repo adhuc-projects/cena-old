@@ -15,15 +15,16 @@
  */
 package org.adhuc.cena.menu.port.adapter.persistence.memory;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import org.adhuc.cena.menu.domain.model.DateInterval;
 import org.adhuc.cena.menu.domain.model.menu.Menu;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 import org.adhuc.cena.menu.domain.model.menu.MenuRepository;
 
 import lombok.NonNull;
@@ -46,9 +47,9 @@ public class InMemoryMenuRepository extends AbstractInMemoryRepository<Menu, Men
     }
 
     @Override
-    public List<Menu> findByDateBetween(@NonNull LocalDate startDate, @NonNull LocalDate endDate) {
-        return entities().values().stream().filter(m -> m.id().isBetween(startDate, endDate))
-                .collect(Collectors.toList());
+    public List<Menu> findByOwnerAndDateBetween(@NonNull MenuOwner owner, @NonNull DateInterval interval) {
+        return entities().values().stream().filter(m -> owner.equals(m.id().owner()))
+                .filter(m -> interval.contains(m.id().date())).collect(Collectors.toList());
     }
 
 }

@@ -38,3 +38,10 @@ Scenario: Generate a menus list as community user
     And he specifies the frequency of meals as WEEK_WORKING_DAYS
     And he generates the menus
   Then an error notifies that user is not authenticated
+
+Scenario: Generated menus are accessible only to owner
+  Given a list of existing recipes with at least 2 elements
+    And generated menus by an authenticated user for a period of time of 2 days starting from next monday
+    And another authenticated user
+  When he lists the menus for the same period of time starting from the same day
+  Then the menus list is empty or different from authenticated user list

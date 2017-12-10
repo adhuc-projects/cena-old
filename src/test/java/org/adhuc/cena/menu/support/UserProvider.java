@@ -13,34 +13,20 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.domain.model.menu;
-
-import java.util.List;
-
-import org.adhuc.cena.menu.domain.model.DateInterval;
-import org.adhuc.cena.menu.domain.model.WritableRepository;
+package org.adhuc.cena.menu.support;
 
 /**
- * A {@link Menu} repository.
+ * A user provider, for testing purposes.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface MenuRepository extends WritableRepository<Menu, MenuId> {
+public class UserProvider {
 
-    /**
-     * Finds the menus corresponding to the specified owner and interval.
-     *
-     * @param owner
-     *            the menus owner.
-     *
-     * @param interval
-     *            the query interval.
-     *
-     * @return the menus corresponding to owner and interval.
-     */
-    List<Menu> findByOwnerAndDateBetween(MenuOwner owner, DateInterval interval);
+    public static final String AUTHENTICATED_USER = "authenticated-user";
+    public static final String ANOTHER_USER       = "another-user";
+    public static final String INGREDIENT_MANAGER = "ingredient-manager";
 
 }

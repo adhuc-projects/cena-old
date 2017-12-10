@@ -15,18 +15,14 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import static org.springframework.util.Assert.isTrue;
-
-import java.time.LocalDate;
-
-import org.adhuc.cena.menu.domain.model.DateInterval;
+import java.util.Comparator;
 
 import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
 /**
- * A query to get menus.
+ * A menu owner definition.
  *
  * @author Alexandre Carbenay
  *
@@ -35,26 +31,19 @@ import lombok.experimental.Accessors;
  */
 @Value
 @Accessors(fluent = true)
-public class MenusQuery {
+public class MenuOwner implements Comparable<MenuOwner> {
 
-    private final int       days;
-    private final LocalDate startDate;
-    private final MenuOwner owner;
+    @NonNull
+    private final String name;
 
-    public MenusQuery(int days, @NonNull LocalDate startDate, @NonNull MenuOwner owner) {
-        isTrue(days > 0, "Cannot get menus with negative days value");
-        this.days = days;
-        this.startDate = startDate;
-        this.owner = owner;
+    @Override
+    public int compareTo(MenuOwner o) {
+        return Comparator.comparing(MenuOwner::name).compare(this, o);
     }
 
-    /**
-     * Gets the interval starting from start date and finishing to (start date + days - 1).
-     *
-     * @return the interval corresponding to query.
-     */
-    public DateInterval interval() {
-        return new DateInterval(startDate, startDate.plusDays(days - 1));
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

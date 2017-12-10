@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.domain.model.menu;
 
-import static org.springframework.util.Assert.notNull;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -60,7 +58,6 @@ public class Menu extends BasicEntity<MenuId> implements Comparable<Menu> {
      */
     public Menu(@NonNull MenuId id, @NonNull RecipeId recipe) {
         super(id);
-        notNull(recipe, "Cannot create menu without recipe");
         this.recipe = recipe;
     }
 

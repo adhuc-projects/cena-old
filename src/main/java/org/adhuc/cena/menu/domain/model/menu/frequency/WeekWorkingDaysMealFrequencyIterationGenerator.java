@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 
 import lombok.NonNull;
 
@@ -44,12 +45,12 @@ public class WeekWorkingDaysMealFrequencyIterationGenerator extends AbstractMeal
     private static Set<DayOfWeek> WEEK_END_DAYS = new HashSet<>(Arrays.asList(SATURDAY, SUNDAY));
 
     @Override
-    protected Set<MenuId> generateIterations(@NonNull LocalDate date) {
+    protected Set<MenuId> generateIterations(@NonNull LocalDate date, @NonNull MenuOwner owner) {
         Set<MenuId> iterations = new HashSet<>();
         if (WEEK_END_DAYS.contains(date.getDayOfWeek())) {
-            iterations.add(new MenuId(date, MealType.LUNCH));
+            iterations.add(new MenuId(date, MealType.LUNCH, owner));
         }
-        iterations.add(new MenuId(date, MealType.DINNER));
+        iterations.add(new MenuId(date, MealType.DINNER, owner));
         return iterations;
     }
 

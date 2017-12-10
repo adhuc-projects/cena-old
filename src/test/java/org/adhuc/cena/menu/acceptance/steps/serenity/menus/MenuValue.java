@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Optional;
 
 import org.springframework.hateoas.Link;
@@ -67,6 +68,14 @@ public class MenuValue extends HateoasHalClientResourceSupport {
 
     public boolean isConsecutiveDay(MenuValue other) {
         return Duration.between(date.atStartOfDay(), other.date.atStartOfDay()).abs().toDays() <= 1;
+    }
+
+    public static class MenuValueComparator implements Comparator<MenuValue> {
+        @Override
+        public int compare(MenuValue o1, MenuValue o2) {
+            return Comparator.comparing(MenuValue::date).thenComparing(MenuValue::type)
+                    .thenComparing(MenuValue::getRecipeUrl).compare(o1, o2);
+        }
     }
 
 }

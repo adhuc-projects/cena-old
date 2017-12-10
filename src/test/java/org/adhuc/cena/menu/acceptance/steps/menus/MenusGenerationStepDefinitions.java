@@ -22,6 +22,7 @@ import org.adhuc.cena.menu.acceptance.steps.serenity.menus.MenusGenerationServic
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
@@ -38,10 +39,22 @@ import net.thucydides.core.annotations.Steps;
 @StepDefAnnotation
 public class MenusGenerationStepDefinitions {
 
+    private static final String               START_DATE_REGEX =
+            "(yesterday|next monday|next sunday|[0-9]{4}-[0-9]{2}-[0-9]{2})";
+
     @Steps
     private MenusGenerationServiceClientSteps menusGenerationServiceClient;
 
-    @When("^he specifies a period of time of (\\d+) days starting from (yesterday|next monday|next sunday|[0-9]{4}-[0-9]{2}-[0-9]{2})$")
+    @Given("^generated menus by an authenticated user for a period of time of (\\d+) days starting from "
+            + START_DATE_REGEX + "$")
+    public void menusGeneratedByAuthenticatedUser(int days,
+            @Transform(LocalDateTransformer.class) LocalDate startDate) {
+        menusGenerationServiceClient.setMenusGenerationDays(days);
+        menusGenerationServiceClient.setMenusGenerationStartDate(startDate);
+        menusGenerationServiceClient.generateMenusForAuthenticatedUser();
+    }
+
+    @When("^he specifies a period of time of (\\d+) days starting from " + START_DATE_REGEX + "$")
     public void specifyMenusGenerationOptions(int days, @Transform(LocalDateTransformer.class) LocalDate startDate) {
         menusGenerationServiceClient.setMenusGenerationDays(days);
         menusGenerationServiceClient.setMenusGenerationStartDate(startDate);
@@ -55,6 +68,11 @@ public class MenusGenerationStepDefinitions {
     @When("^he generates the menus$")
     public void generateMenus() {
         menusGenerationServiceClient.generateMenus();
+    }
+
+    @When("^he lists the menus for the same period of time starting from the same day$")
+    public void listMenus() {
+        menusGenerationServiceClient.listMenus();
     }
 
     @Then("^the menus have been generated$")
@@ -85,6 +103,11 @@ public class MenusGenerationStepDefinitions {
     @Then("^an error notifies that menu cannot be generated in the past$")
     public void errorOnMenusGenerationNoGenerationInThePast() {
         menusGenerationServiceClient.assertNoGenerationInThePast();
+    }
+
+    @Then("^the menus list is empty or different from authenticated user list$")
+    public void emptyOrDifferentListFromAuthenticatedUser() {
+        menusGenerationServiceClient.assertDifferentMenusListForCurrentUserAndAuthenticatedUser();
     }
 
 }

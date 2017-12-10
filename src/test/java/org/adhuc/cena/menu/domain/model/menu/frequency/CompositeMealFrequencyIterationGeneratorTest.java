@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_OWNER;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
 import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
-
-import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,17 +54,17 @@ public class CompositeMealFrequencyIterationGeneratorTest {
     @Test
     @DisplayName("generates menus iterations for 1 working day with week working days frequency")
     public void generateIterations1WorkingDayWithWeekWorkingDaysFrequency() {
-        assertThat(generator.generateIterations(
-                new GenerateMenus(CLOCK, 1, LocalDate.parse("2017-01-02"), MealFrequency.WEEK_WORKING_DAYS)))
+        assertThat(generator.generateIterations(new GenerateMenus(CLOCK, 1, MENU_2017_01_02_START_DATE,
+                MealFrequency.WEEK_WORKING_DAYS, MENU_2017_01_02_OWNER)))
                         .containsExactlyInAnyOrder(DINNER_2017_01_02_ID);
     }
 
     @Test
     @DisplayName("generates menus iterations for 1 working day with twice a day frequency")
     public void generateIterations1WorkingDayWithTwiceADayFrequency() {
-        assertThat(generator.generateIterations(
-                new GenerateMenus(CLOCK, 1, LocalDate.parse("2017-01-02"), MealFrequency.TWICE_A_DAY)))
-                        .containsExactlyInAnyOrder(LUNCH_2017_01_02_ID, DINNER_2017_01_02_ID);
+        assertThat(generator.generateIterations(new GenerateMenus(CLOCK, 1, MENU_2017_01_02_START_DATE,
+                MealFrequency.TWICE_A_DAY, MENU_2017_01_02_OWNER))).containsExactlyInAnyOrder(LUNCH_2017_01_02_ID,
+                        DINNER_2017_01_02_ID);
     }
 
 }

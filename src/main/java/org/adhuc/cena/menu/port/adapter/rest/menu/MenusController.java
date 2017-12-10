@@ -31,6 +31,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.adhuc.cena.menu.application.MenuAppService;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 import org.adhuc.cena.menu.domain.model.menu.MenusQuery;
 import org.adhuc.cena.menu.port.adapter.rest.AbstractRequestValidationController;
 import org.adhuc.cena.menu.port.adapter.rest.support.ListResource;
@@ -74,7 +77,7 @@ public class MenusController extends AbstractRequestValidationController {
      */
     @PostConstruct
     public void initMethodsForLinks() throws Exception {
-        listMethod = MenusController.class.getMethod("getMenus", Integer.class, LocalDate.class);
+        listMethod = MenusController.class.getMethod("getMenus", Integer.class, LocalDate.class, UserDetails.class);
     }
 
     /**
@@ -85,10 +88,12 @@ public class MenusController extends AbstractRequestValidationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ListResource<MenuResource> getMenus(@RequestParam(name = "days", defaultValue = "1") Integer days,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate startDate) {
-        return new ListResource<>(resourceAssembler
-                .toResources(menuAppService.getMenus(new MenusQuery(days, startDateOrDefault(startDate)))))
-                        .withSelfRef(listMethod, days, startDate);
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate startDate,
+            @AuthenticationPrincipal UserDetails user) {
+        startDate = startDateOrDefault(startDate);
+        return new ListResource<>(resourceAssembler.toResources(
+                menuAppService.getMenus(new MenusQuery(days, startDate, new MenuOwner(user.getUsername())))))
+                        .withSelfRef(listMethod, days, startDate, null);
     }
 
     /**
@@ -101,17 +106,24 @@ public class MenusController extends AbstractRequestValidationController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public HttpHeaders generateMenus(@RequestBody @Valid GenerateMenusRequest request, Errors errors) {
+    public HttpHeaders generateMenus(@RequestBody @Valid GenerateMenusRequest request, Errors errors,
+            @AuthenticationPrincipal UserDetails user) {
         validateRequest(errors);
-        menuAppService.generateMenus(request.toCommand(clock));
+        MenuOwner menuOwner = convertAuthenticationToMenuOwner(user);
+        menuAppService.generateMenus(request.toCommand(clock, menuOwner));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(
-                linkTo(methodOn(MenusController.class).getMenus(request.getDays(), request.getStartDate())).toUri());
+                linkTo(methodOn(MenusController.class).getMenus(request.getDays(), request.getStartDate(), null))
+                        .toUri());
         return httpHeaders;
     }
 
     private LocalDate startDateOrDefault(LocalDate startDate) {
         return Optional.ofNullable(startDate).orElse(LocalDate.now(clock));
+    }
+
+    private MenuOwner convertAuthenticationToMenuOwner(UserDetails user) {
+        return new MenuOwner(user.getUsername());
     }
 
 }

@@ -40,18 +40,20 @@ public class GenerateMenus {
     private static final String MAX_MENUS_GENERATION_DAYS_MESSAGE =
             "Cannot generate menus for more than " + MAX_MENUS_GENERATION_DAYS + " days";
 
-    private int                 days;
-    private LocalDate           startDate;
-    private MealFrequency       frequency;
+    private final int           days;
+    private final LocalDate     startDate;
+    private final MealFrequency frequency;
+    private final MenuOwner     menuOwner;
 
-    public GenerateMenus(@NonNull Clock clock, int days, @NonNull LocalDate startDate,
-            @NonNull MealFrequency frequency) {
+    public GenerateMenus(@NonNull Clock clock, int days, @NonNull LocalDate startDate, @NonNull MealFrequency frequency,
+            @NonNull MenuOwner menuOwner) {
         isTrue(days >= 1, "Cannot generate menus for negative days count");
         isTrue(days <= MAX_MENUS_GENERATION_DAYS, MAX_MENUS_GENERATION_DAYS_MESSAGE);
         assertStartDateTodayOrInFuture(clock, startDate);
         this.days = days;
         this.startDate = startDate;
         this.frequency = frequency;
+        this.menuOwner = menuOwner;
     }
 
     private void assertStartDateTodayOrInFuture(Clock clock, LocalDate startDate) {

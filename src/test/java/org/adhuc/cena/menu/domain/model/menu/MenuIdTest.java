@@ -22,6 +22,7 @@ import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_01
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_MEAL_TYPE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_02_OWNER;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.DINNER_2017_01_03_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_01_ID;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.LUNCH_2017_01_02_ID;
@@ -55,22 +56,33 @@ public class MenuIdTest {
     @Test
     @DisplayName("cannot be created from null date")
     public void createMenuIdFromNullDate() {
-        assertThrows(EntityNotFoundException.class, () -> new MenuId(null, DINNER_2017_01_02_MEAL_TYPE));
+        assertThrows(EntityNotFoundException.class,
+                () -> new MenuId(null, DINNER_2017_01_02_MEAL_TYPE, DINNER_2017_01_02_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created from null meal type")
     public void createMenuIdFromNullMealType() {
-        assertThrows(EntityNotFoundException.class, () -> new MenuId(DINNER_2017_01_02_DATE, null));
+        assertThrows(EntityNotFoundException.class,
+                () -> new MenuId(DINNER_2017_01_02_DATE, null, DINNER_2017_01_02_OWNER));
+    }
+
+    @Test
+    @DisplayName("cannot be created from null owner")
+    public void createMenuIdFromNullOwner() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE, null));
     }
 
     @Test
     @DisplayName("contains date and meal type values used during construction")
     public void createMenuIdWithDateAndMealType() {
-        final MenuId createdId = new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE);
+        final MenuId createdId =
+                new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE, DINNER_2017_01_02_OWNER);
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(createdId.date()).isEqualTo(DINNER_2017_01_02_DATE);
             softly.assertThat(createdId.type()).isEqualTo(DINNER_2017_01_02_MEAL_TYPE);
+            softly.assertThat(createdId.owner()).isEqualTo(DINNER_2017_01_02_OWNER);
         });
     }
 
@@ -94,7 +106,8 @@ public class MenuIdTest {
                 Arguments.of(LUNCH_2017_01_01_ID, LUNCH_2017_01_02_ID, -1),
                 Arguments.of(DINNER_2017_01_01_ID, LUNCH_2017_01_02_ID, -1),
                 Arguments.of(LUNCH_2017_01_02_ID, LUNCH_2017_01_01_ID, 1),
-                Arguments.of(DINNER_2017_01_02_ID, LUNCH_2017_01_01_ID, 1));
+                Arguments.of(DINNER_2017_01_02_ID, LUNCH_2017_01_01_ID, 1), Arguments.of(DINNER_2017_01_02_ID,
+                        new MenuId(DINNER_2017_01_02_DATE, DINNER_2017_01_02_MEAL_TYPE, new MenuOwner("other")), -1));
     }
 
     @ParameterizedTest

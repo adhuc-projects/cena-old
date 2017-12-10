@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import org.adhuc.cena.menu.domain.model.menu.GenerateMenus;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequencyIterationGenerator;
 import org.adhuc.cena.menu.domain.model.menu.MenuId;
+import org.adhuc.cena.menu.domain.model.menu.MenuOwner;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public abstract class AbstractMealFrequencyIterationGenerator implements MealFre
         TreeSet<MenuId> menuIds = new TreeSet<>();
         for (int daysIncrement = 0; daysIncrement < command.days(); daysIncrement++) {
             LocalDate date = command.startDate().plusDays(daysIncrement);
-            menuIds.addAll(generateIterations(date));
+            menuIds.addAll(generateIterations(date, command.menuOwner()));
         }
         log.debug("Generated menu iterations {} from command {}", menuIds, command);
         return menuIds;
@@ -56,8 +57,11 @@ public abstract class AbstractMealFrequencyIterationGenerator implements MealFre
      * @param date
      *            the date.
      *
+     * @param owner
+     *            the menu owner.
+     *
      * @return the menu identities corresponding to the date.
      */
-    protected abstract Set<MenuId> generateIterations(LocalDate date);
+    protected abstract Set<MenuId> generateIterations(LocalDate date, MenuOwner owner);
 
 }

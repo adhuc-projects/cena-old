@@ -15,42 +15,45 @@
  */
 package org.adhuc.cena.menu.domain.model;
 
+import static org.springframework.util.Assert.isTrue;
+
 import java.time.LocalDate;
 
 import lombok.NonNull;
+import lombok.Value;
+import lombok.experimental.Accessors;
 
 /**
- * A dateable element.
+ * Defines a date interval, between lower and upper boundaries inclusively.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-public interface Dateable {
+@Value
+@Accessors(fluent = true)
+public class DateInterval {
+
+    private final LocalDate lower;
+    private final LocalDate upper;
+
+    public DateInterval(@NonNull LocalDate lower, @NonNull LocalDate upper) {
+        isTrue(!lower.isAfter(upper), "Cannot create interval with lower boudary after upper boundary");
+        this.lower = lower;
+        this.upper = upper;
+    }
 
     /**
-     * Gets the element's date.
+     * Indicates whether the specified date is between the interval boundaries inclusively.
      *
-     * @return the date.
+     * @param date
+     *            the date.
+     *
+     * @return {@code true} if date is in interval.
      */
-    LocalDate date();
-
-    /**
-     * Indicates whether the element's date is between the specified dates. Between corresponds to equal or after lower
-     * date, and equal or before upper date.
-     *
-     * @param lowerDate
-     *            the lower limit date.
-     *
-     * @param upperDate
-     *            the upper limit date.
-     *
-     * @return {@code true} if element's date is between dates.
-     */
-    default boolean isBetween(@NonNull LocalDate lowerDate, @NonNull LocalDate upperDate) {
-        return (date().isEqual(lowerDate) || date().isAfter(lowerDate))
-                && (date().isEqual(upperDate) || date().isBefore(upperDate));
+    public boolean contains(@NonNull LocalDate date) {
+        return (date.isEqual(lower) || date.isAfter(lower)) && (date.isEqual(upper) || date.isBefore(upper));
     }
 
 }

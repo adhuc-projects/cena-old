@@ -15,13 +15,10 @@
  */
 package org.adhuc.cena.menu.acceptance.steps.serenity.menus;
 
-import static net.serenitybdd.rest.SerenityRest.then;
-
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,11 +33,13 @@ import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.assertj.core.api.SoftAssertions;
+import org.springframework.http.HttpStatus;
 
 import org.adhuc.cena.menu.acceptance.steps.serenity.AbstractServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeDetailServiceClientSteps;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientValue;
 import org.adhuc.cena.menu.acceptance.steps.serenity.recipes.RecipeIngredientsListServiceClientSteps;
+import org.adhuc.cena.menu.acceptance.support.authentication.AuthenticationType;
 import org.adhuc.cena.menu.domain.model.menu.MealFrequency;
 import org.adhuc.cena.menu.domain.model.menu.MealType;
 import org.adhuc.cena.menu.exception.ExceptionCode;
@@ -69,7 +68,8 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
     @Steps
     private RecipeIngredientsListServiceClientSteps recipeIngredientsListServiceClient;
 
-    private GenerateMenusRequestBuilder             requestBuilder = GenerateMenusRequest.builder();
+    private GenerateMenusRequestBuilder             requestBuilder = GenerateMenusRequest.builder().days(1)
+            .startDate(LocalDate.now()).frequency(MealFrequency.WEEK_WORKING_DAYS);
     private List<MenuValue>                         menus;
 
     @Step("Specify menus generation days count as {0}")
@@ -87,11 +87,33 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
         requestBuilder.frequency(frequency);
     }
 
-    @Step("Generate menus")
+    @Step("Generate menus for current user based on specifications")
     public void generateMenus() {
-        RequestSpecification rest = rest();
+        generateMenus(rest(), requestBuilder.build());
+    }
+
+    @Step("Generate menus for authenticated user based on specifications")
+    public void generateMenusForAuthenticatedUser() {
+        generateMenus(restWithAuth(AuthenticationType.AUTHENTICATED_USER), requestBuilder.build());
+        assertCreated();
+    }
+
+    @Step("Generate menus with {1} specification")
+    public void generateMenus(RequestSpecification rest, GenerateMenusRequest request) {
         String menusResourceUrl = getMenusResourceUrl(rest);
         rest.contentType(APPLICATION_JSON_VALUE).body(requestBuilder.build()).post(menusResourceUrl).andReturn();
+    }
+
+    @Step("List menus for current user corresponding to specifications")
+    public List<MenuValue> listMenus() {
+        menus = getMenuListFromUrl(rest(), buildMenuListUrlFromSpecifications(rest()));
+        return menus;
+    }
+
+    @Step("List menus for authenticated user based on specifications")
+    public List<MenuValue> listMenusForAuthenticatedUser() {
+        RequestSpecification rest = restWithAuth(AuthenticationType.AUTHENTICATED_USER);
+        return getMenuListFromUrl(rest, buildMenuListUrlFromSpecifications(rest));
     }
 
     @Step("Assert menus have been successfully generated")
@@ -101,9 +123,20 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
 
     @Step("Assert there is exactly {0} meals in menus list")
     public void assertExactNumberOfMealsInMenusList(int mealsCount) {
-        String menuListUrl = then().extract().header(LOCATION);
-        menus = getMenuListFromUrl(menuListUrl);
-        assertThat(menus).hasSize(mealsCount);
+        assertThat(listMenus()).hasSize(mealsCount);
+    }
+
+    @Step("Assert menus list is empty or different from menus list of authenticated user")
+    public void assertDifferentMenusListForCurrentUserAndAuthenticatedUser() {
+        assertThat(menus).isNotNull();
+        if (!menus.isEmpty()) {
+            List<MenuValue> authenticatedUserMenus = listMenusForAuthenticatedUser();
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(authenticatedUserMenus).isNotEmpty().hasSameSizeAs(menus);
+                softly.assertThat(authenticatedUserMenus).usingElementComparator(new MenuValue.MenuValueComparator())
+                        .doesNotContainSequence(menus);
+            });
+        }
     }
 
     @Step("Assert meals distribution corresponds to specifications")
@@ -157,13 +190,19 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
         assertException(BAD_REQUEST, ExceptionCode.NO_MENU_GENERATION_IN_THE_PAST);
     }
 
-    @Step("Get menu list from {0}")
-    public List<MenuValue> getMenuListFromUrl(String menuListUrl) {
-        return rest().get(menuListUrl).then().extract().jsonPath().getList("_embedded.data", MenuValue.class);
+    @Step("Get menu list from {1}")
+    public List<MenuValue> getMenuListFromUrl(RequestSpecification rest, String menuListUrl) {
+        return rest().get(menuListUrl).then().statusCode(HttpStatus.OK.value()).extract().jsonPath()
+                .getList("_embedded.data", MenuValue.class);
     }
 
     private String getMenusResourceUrl(RequestSpecification rest) {
         return getApiClientResource(rest).getMenus().getHref();
+    }
+
+    private String buildMenuListUrlFromSpecifications(RequestSpecification rest) {
+        GenerateMenusRequest request = requestBuilder.build();
+        return getMenusResourceUrl(rest) + "?days=" + request.getDays() + "&startDate=" + request.getStartDate();
     }
 
     private Collection<MealType> determineExpectedMealTypes(LocalDate date, GenerateMenusRequest request) {

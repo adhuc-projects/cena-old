@@ -28,13 +28,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_DAYS;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_FREQUENCY;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_OWNER;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_START_DATE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_DAYS;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_03_DAYS;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_03_START_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170101;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170103;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.dinner20170104;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.generateMenus1DayAt20170102WeekWorkingDays;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170101;
-import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170102;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170103;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.lunch20170104;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.queryMenus1DayAt20170102;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.queryMenus2DaysAt20170103;
 import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
 
 import java.time.Clock;
@@ -58,7 +69,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -74,6 +84,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 import org.adhuc.cena.menu.support.security.WithCommunityUser;
 
 /**
@@ -112,8 +123,8 @@ public class MenusControllerTest extends ControllerTestSupport {
     @DisplayName("getting list as community user returns unauthorized status")
     @WithCommunityUser
     public void getMenusHasSelfLink() throws Exception {
-        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
-                .andExpect(status().isUnauthorized());
+        mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_02_DAYS)).param("startDate",
+                MENU_2017_01_02_START_DATE.toString())).andExpect(status().isUnauthorized());
     }
 
     @Nested
@@ -122,24 +133,23 @@ public class MenusControllerTest extends ControllerTestSupport {
 
         @BeforeEach
         public void setUp() {
-            when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-02"))))
-                    .thenReturn(Collections.emptyList());
+            when(menuAppServiceMock.getMenus(queryMenus1DayAt20170102())).thenReturn(Collections.emptyList());
         }
 
         @Test
         @DisplayName("getting menus starting at 2017-01-02 for 1 day returns OK")
-        @WithMockUser(authorities = "USER")
+        @WithAuthenticatedUser
         public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
-            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
-                    .andExpect(status().isOk());
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_02_DAYS)).param("startDate",
+                    MENU_2017_01_02_START_DATE.toString())).andExpect(status().isOk());
         }
 
         @Test
         @DisplayName("getting menus starting at 2017-01-02 for 1 day returns empty list")
-        @WithMockUser(authorities = "USER")
+        @WithAuthenticatedUser
         public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
-            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(1)).param("startDate", "2017-01-02"))
-                    .andExpect(jsonPath("$._embedded.data").isArray())
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_02_DAYS)).param("startDate",
+                    MENU_2017_01_02_START_DATE.toString())).andExpect(jsonPath("$._embedded.data").isArray())
                     .andExpect(jsonPath("$._embedded.data").isEmpty());
         }
 
@@ -151,39 +161,41 @@ public class MenusControllerTest extends ControllerTestSupport {
 
         @BeforeEach
         public void setUp() {
-            when(menuAppServiceMock.getMenus(new MenusQuery(2, LocalDate.parse("2017-01-02"))))
-                    .thenReturn(Arrays.asList(lunch20170102(), dinner20170102(), lunch20170103(), dinner20170103()));
+            when(menuAppServiceMock.getMenus(queryMenus2DaysAt20170103()))
+                    .thenReturn(Arrays.asList(lunch20170103(), dinner20170103(), lunch20170104(), dinner20170104()));
         }
 
         @Test
-        @DisplayName("getting menus starting at 2017-01-01 for 2 days returns OK")
-        @WithMockUser(authorities = "USER")
-        public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
-            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02"))
-                    .andExpect(status().isOk());
+        @DisplayName("getting menus starting at 2017-01-03 for 2 days returns OK")
+        @WithAuthenticatedUser
+        public void getMenus2DaysStartDate20170103ReturnsOKStatus() throws Exception {
+            mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_03_DAYS)).param("startDate",
+                    MENU_2017_01_03_START_DATE.toString())).andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("getting menus starting at 2017-01-01 for 2 days returns list with 4 menus")
-        @WithMockUser(authorities = "USER")
-        public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
-            final ResultActions resultActions =
-                    mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02"))
-                            .andExpect(jsonPath("$._embedded.data").isArray())
-                            .andExpect(jsonPath("$._embedded.data").isNotEmpty())
-                            .andExpect(jsonPath("$._embedded.data", hasSize(4)));
-            assertJsonContainsMenu(resultActions, "$._embedded.data[0]", lunch20170102());
-            assertJsonContainsMenu(resultActions, "$._embedded.data[1]", dinner20170102());
-            assertJsonContainsMenu(resultActions, "$._embedded.data[2]", lunch20170103());
-            assertJsonContainsMenu(resultActions, "$._embedded.data[3]", dinner20170103());
+        @DisplayName("getting menus starting at 2017-01-03 for 2 days returns list with 4 menus")
+        @WithAuthenticatedUser
+        public void getMenus2DaysStartDate20170103WithNoMenuReturnsEmptyList() throws Exception {
+            final ResultActions resultActions = mvc
+                    .perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_03_DAYS)).param("startDate",
+                            MENU_2017_01_03_START_DATE.toString()))
+                    .andExpect(jsonPath("$._embedded.data").isArray())
+                    .andExpect(jsonPath("$._embedded.data").isNotEmpty())
+                    .andExpect(jsonPath("$._embedded.data", hasSize(4)));
+            assertJsonContainsMenu(resultActions, "$._embedded.data[0]", lunch20170103());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[1]", dinner20170103());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[2]", lunch20170104());
+            assertJsonContainsMenu(resultActions, "$._embedded.data[3]", dinner20170104());
         }
 
         @Test
         @DisplayName("getting list contains self link to resource")
-        @WithMockUser(authorities = "USER")
+        @WithAuthenticatedUser
         public void getMenusHasSelfLink() throws Exception {
-            assertSelfLinkEqualToRequestUrl(mvc
-                    .perform(get(MENUS_API_URL).param("days", Integer.toString(2)).param("startDate", "2017-01-02")));
+            assertSelfLinkEqualToRequestUrl(
+                    mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_03_DAYS))
+                            .param("startDate", MENU_2017_01_02_START_DATE.toString())));
         }
 
     }
@@ -194,21 +206,21 @@ public class MenusControllerTest extends ControllerTestSupport {
 
         @BeforeEach
         public void setUp() {
-            when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-01"))))
+            when(menuAppServiceMock.getMenus(new MenusQuery(1, LocalDate.parse("2017-01-01"), MENU_2017_01_01_OWNER)))
                     .thenReturn(Arrays.asList(lunch20170101(), dinner20170101()));
         }
 
         @Test
         @DisplayName("returns OK")
-        @WithMockUser(authorities = "USER")
-        public void getMenus1DayStartDate20170102ReturnsOKStatus() throws Exception {
+        @WithAuthenticatedUser
+        public void getMenusDefaultReturnsOKStatus() throws Exception {
             mvc.perform(get(MENUS_API_URL)).andExpect(status().isOk());
         }
 
         @Test
         @DisplayName("returns list with 2 menus")
-        @WithMockUser(authorities = "USER")
-        public void getMenus1DayStartDate20170102WithNoMenuReturnsEmptyList() throws Exception {
+        @WithAuthenticatedUser
+        public void getMenusDefaultWithNoMenuReturnsEmptyList() throws Exception {
             final ResultActions resultActions =
                     mvc.perform(get(MENUS_API_URL)).andExpect(jsonPath("$._embedded.data").isArray())
                             .andExpect(jsonPath("$._embedded.data").isNotEmpty())
@@ -221,55 +233,55 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus without days returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWithoutDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(MENU_2017_01_02_START_DATE).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("generating menus with negative days returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWithNegativeDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(-1).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(-1).frequency(MENU_2017_01_02_FREQUENCY).startDate(MENU_2017_01_02_START_DATE).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("generating menus with 0 days returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWith0DaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(0).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(0).frequency(MENU_2017_01_02_FREQUENCY).startDate(MENU_2017_01_02_START_DATE).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("generating menus with too much days returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWithTooMuchDaysReturnsBadRequestStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
-                .days(11).frequency(MealFrequency.WEEK_WORKING_DAYS).startDate(LocalDate.parse("2017-01-02")).build())))
+                .days(11).frequency(MENU_2017_01_02_FREQUENCY).startDate(MENU_2017_01_02_START_DATE).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("generating menus without frequency returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWithoutFrequencyReturnsBadRequestStatus() throws Exception {
-        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(
-                asJson(GenerateMenusRequest.builder().days(1).startDate(LocalDate.parse("2017-01-02")).build())))
+        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
+                .days(MENU_2017_01_02_DAYS).startDate(MENU_2017_01_02_START_DATE).build())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("generating menus without start date returns bad request")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusWithoutStartDateReturnsBadRequestStatus() throws Exception {
-        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(
-                asJson(GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS).build())))
+        mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(GenerateMenusRequest.builder()
+                .days(MENU_2017_01_02_DAYS).frequency(MENU_2017_01_02_FREQUENCY).build())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -283,7 +295,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus as community user returns created status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenusAsCommunityUserReturnsCreatedStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
@@ -291,7 +303,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus for 1 day for week working days starting on 02-01-2017 calls application service")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenus1DayWeekWorkingDays2Jan17CallsAppService() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
@@ -300,7 +312,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus for 1 day for week working days starting on 02-01-2017 returns created status")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenus1DayWeekWorkingDays2Jan17ReturnsCreatedStatus() throws Exception {
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON)
                 .content(asJson(generateMenus1DayWeekWorkingDays2Jan17Request()))).andExpect(status().isCreated());
@@ -308,7 +320,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus for 1 day for week working days starting on 02-01-2017 returns location header with link to menus list")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenus1DayWeekWorkingDays2Jan17ReturnsLinkToMenusList() throws Exception {
         GenerateMenusRequest request = generateMenus1DayWeekWorkingDays2Jan17Request();
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(request)))
@@ -317,7 +329,7 @@ public class MenusControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("generating menus for 10 days for twice a day starting on 01-01-2017 returns location header with link to menus list")
-    @WithMockUser(authorities = "USER")
+    @WithAuthenticatedUser
     public void generateMenus10DaysTwiceADay1Jan17ReturnsLinkToMenusList() throws Exception {
         GenerateMenusRequest request = generateMenus10DaysTwiceADay1Jan17Request();
         mvc.perform(post(MENUS_API_URL).contentType(APPLICATION_JSON).content(asJson(request)))
@@ -325,13 +337,13 @@ public class MenusControllerTest extends ControllerTestSupport {
     }
 
     private GenerateMenusRequest generateMenus1DayWeekWorkingDays2Jan17Request() {
-        return GenerateMenusRequest.builder().days(1).frequency(MealFrequency.WEEK_WORKING_DAYS)
-                .startDate(LocalDate.parse("2017-01-02")).build();
+        return GenerateMenusRequest.builder().days(MENU_2017_01_02_DAYS).frequency(MENU_2017_01_02_FREQUENCY)
+                .startDate(MENU_2017_01_02_START_DATE).build();
     }
 
     private GenerateMenusRequest generateMenus10DaysTwiceADay1Jan17Request() {
-        return GenerateMenusRequest.builder().days(10).frequency(MealFrequency.TWICE_A_DAY)
-                .startDate(LocalDate.parse("2017-01-01")).build();
+        return GenerateMenusRequest.builder().days(MENU_2017_01_01_DAYS).frequency(MENU_2017_01_01_FREQUENCY)
+                .startDate(MENU_2017_01_01_START_DATE).build();
     }
 
     private String buildMenusListLink(GenerateMenusRequest request) {

@@ -19,9 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_DAYS;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_FREQUENCY;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_OWNER;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_01_START_DATE;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_DAYS;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_FREQUENCY;
+import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_OWNER;
 import static org.adhuc.cena.menu.domain.model.menu.MenuMother.MENU_2017_01_02_START_DATE;
 import static org.adhuc.cena.menu.support.ClockProvider.CLOCK;
 
@@ -48,43 +50,50 @@ public class GenerateMenusTest {
     @Test
     @DisplayName("cannot be created with negative days")
     public void generateMenusWithNegativeDays() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(CLOCK, -1, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, -1, MENU_2017_01_02_START_DATE,
+                MENU_2017_01_02_FREQUENCY, MENU_2017_01_02_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with 0 days")
     public void generateMenusWithZeroDays() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(CLOCK, 0, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, 0, MENU_2017_01_02_START_DATE,
+                MENU_2017_01_02_FREQUENCY, MENU_2017_01_02_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with more than 10 days")
     public void generateMenusWith11Days() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(CLOCK, 11, MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY));
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, 11, MENU_2017_01_02_START_DATE,
+                MENU_2017_01_02_FREQUENCY, MENU_2017_01_02_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with invalid start date")
     public void generateMenusWithInvalidStartDate() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, null, MENU_2017_01_02_FREQUENCY));
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, null,
+                MENU_2017_01_02_FREQUENCY, MENU_2017_01_02_OWNER));
     }
 
     @Test
     @DisplayName("cannot be created with start date in the past")
     public void generateMenusWithStartDateInThePast() {
         assertThrows(GenerateMenusInThePastException.class, () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS,
-                LocalDate.parse("2016-12-31"), MENU_2017_01_02_FREQUENCY));
+                LocalDate.parse("2016-12-31"), MENU_2017_01_02_FREQUENCY, MENU_2017_01_02_OWNER));
+    }
+
+    @Test
+    @DisplayName("cannot be created with invalid owner")
+    public void generateMenusWithInvalidOwner() {
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS,
+                MENU_2017_01_02_START_DATE, MENU_2017_01_02_FREQUENCY, null));
     }
 
     @Test
     @DisplayName("cannot be created with invalid meal frequency")
     public void generateMenusWithInvalidMealFrequency() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS, MENU_2017_01_02_START_DATE, null));
+        assertThrows(IllegalArgumentException.class, () -> new GenerateMenus(CLOCK, MENU_2017_01_02_DAYS,
+                MENU_2017_01_02_START_DATE, null, MENU_2017_01_02_OWNER));
     }
 
     @Test
@@ -95,6 +104,7 @@ public class GenerateMenusTest {
             softly.assertThat(command.days()).isEqualTo(MENU_2017_01_02_DAYS);
             softly.assertThat(command.startDate()).isEqualTo(MENU_2017_01_02_START_DATE);
             softly.assertThat(command.frequency()).isEqualTo(MENU_2017_01_02_FREQUENCY);
+            softly.assertThat(command.menuOwner()).isEqualTo(MENU_2017_01_02_OWNER);
         });
     }
 
@@ -106,6 +116,7 @@ public class GenerateMenusTest {
             softly.assertThat(command.days()).isEqualTo(MENU_2017_01_01_DAYS);
             softly.assertThat(command.startDate()).isEqualTo(MENU_2017_01_01_START_DATE);
             softly.assertThat(command.frequency()).isEqualTo(MENU_2017_01_01_FREQUENCY);
+            softly.assertThat(command.menuOwner()).isEqualTo(MENU_2017_01_01_OWNER);
         });
     }
 
