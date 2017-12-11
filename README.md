@@ -28,6 +28,8 @@ Considering you have installed the [prerequesite](#general-prerequisites) tools 
 - [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads)
 - [Maven](https://maven.apache.org/)
 - [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/)
+- [NodeJS](https://nodejs.org/) (6.9.x or later) and [NPM](https://www.npmjs.com/) (3.x.x or later)
+- [Angular CLI](https://cli.angular.io/)
 
 Be sure that your `JAVA_HOME` environment variable points to the `jdk1.8.0` folder extracted from the JDK download.
 
@@ -37,15 +39,34 @@ The following sections propose to use `Makefile` targets in the form of`make` co
 
 `make` is available by default on unix based systems, and can be installed on Windows from this [site](http://gnuwin32.sourceforge.net/packages/make.htm).
 
+## Project structure
+
+The project is actually composed of the [Angular](https://angular.io/) front-end Single Page Application and the backend application, both served through a [Spring-Boot](https://projects.spring.io/spring-boot/) application.
+
+Its sources folders are composed of :
+
+- `src/main/java`, containing the Java sources for the backend part
+- `src/main/angular`, containing the Typescript sources for the front-end part
+
 ## Usage
 
 This project is designed to be usable in both development situation and in classical maven build.
 
 ### Development Usage
 
-Execute `org.adhuc.cena.menu.MenuGenerationApplication`.
+#### Angular SPA
 
-Once started, the application will be available at [http://localhost:8080](http://localhost:8080). The application needs to be restarted after each modification in the project source.
+The Angular Single Page Application can be run directly and independently using [Angular CLI](https://cli.angular.io/). It will provide a stand-alone application, that is still connected to the backend application. The main advantage of running the SPA using Angular CLI is that its source code is re-transpiled on each change, making the development process more fluid.
+
+From `cena` project folder, execute either `make run-angular` or, from `src/main/angular` folder, `npm install && npm start`.
+
+Once started, the Single Page Application will be available at [http://localhost:4200](http://localhost:4200).
+
+#### Backend
+
+Execute `org.adhuc.cena.menu.MenuGenerationApplication` in your favorite IDE. The application uses [Spring Devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html), which means that the application does not need to be restarted after each modification in the project source, but will be re-compiled and reloaded each time.
+
+Once started, the application will be available at [http://localhost:8080](http://localhost:8080).
 
 ### Build
 
@@ -82,6 +103,8 @@ The docker environment can be stopped using `make down` or `cd docker && docker-
 From `cena` project folder, execute either `make test` or `mvn verify -Pfunctional-acceptance` command. The latter command will be used in all cases to run the build. The default profile will skip the acceptance tests execution.
 
 The acceptance tests are run against a docker-compose environment. The acceptance tests results are available through `cena/target/site/serenity/index.html` page.
+
+It is too soon to expect having a stable user interface, so the SPA is not tested through acceptance tests.
 
 ## Restful API documentation
 

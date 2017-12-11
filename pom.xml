@@ -20,6 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.angular.sourceDirectory>${basedir}/src/main/angular</project.angular.sourceDirectory>
     <java.version>1.8</java.version>
     <!-- Dependencies versions -->
     <junit.jupiter.version>5.0.1</junit.jupiter.version>
@@ -32,6 +33,8 @@
     <serenity.version>1.6.3</serenity.version>
     <serenity.cucumber.version>1.5.13</serenity.cucumber.version>
     <!-- Build execution -->
+    <angular.build.skip>false</angular.build.skip>
+    <angular.build.executable>npm</angular.build.executable>
     <docker.build.skip>true</docker.build.skip>
     <test.unit.skip>false</test.unit.skip>
     <test.unit.jacoco.reportPath>${project.build.directory}/coverage-reports</test.unit.jacoco.reportPath>
@@ -65,19 +68,21 @@
     <profile>
       <id>functional-acceptance</id>
       <properties>
+        <angular.build.skip>true</angular.build.skip>
         <test.unit.skip>true</test.unit.skip>
         <test.acceptance.dockerEnv.skip>false</test.acceptance.dockerEnv.skip>
         <test.acceptance.functional.skip>false</test.acceptance.functional.skip>
       </properties>
     </profile>
     <profile>
-      <id>functional-acceptance-windows</id>
+      <id>build-windows</id>
       <activation>
         <os>
           <family>Windows</family>
         </os>
       </activation>
       <properties>
+        <angular.build.executable>npm.cmd</angular.build.executable>
         <test.acceptance.dockerEnv.pre.script>pre.bat</test.acceptance.dockerEnv.pre.script>
         <test.acceptance.dockerEnv.post.script>post.bat</test.acceptance.dockerEnv.post.script>
       </properties>
@@ -89,6 +94,13 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.angular.sourceDirectory}/build</directory>
+        <targetPath>static</targetPath>
+        <excludes>
+          <exclude>index.html</exclude>
+        </excludes>
       </resource>
       <resource>
         <directory>${project.basedir}</directory>
@@ -225,11 +237,67 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Acceptance tests execution -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
+          <!-- Install npm modules -->
+          <execution>
+            <id>exec-npm-install</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <skip>${angular.build.skip}</skip>
+              <workingDirectory>${project.angular.sourceDirectory}</workingDirectory>
+              <executable>${angular.build.executable}</executable>
+              <commandlineArgs>install</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Update npm modules -->
+          <execution>
+            <id>exec-npm-update</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <skip>${angular.build.skip}</skip>
+              <workingDirectory>${project.angular.sourceDirectory}</workingDirectory>
+              <executable>${angular.build.executable}</executable>
+              <commandlineArgs>update</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Lint angular app -->
+          <execution>
+            <id>exec-ng-lint</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <skip>${angular.build.skip}</skip>
+              <workingDirectory>${project.angular.sourceDirectory}</workingDirectory>
+              <executable>${angular.build.executable}</executable>
+              <commandlineArgs>run lint</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Build angular app -->
+          <execution>
+            <id>exec-ng-build</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <skip>${angular.build.skip}</skip>
+              <workingDirectory>${project.angular.sourceDirectory}</workingDirectory>
+              <executable>${angular.build.executable}</executable>
+              <commandlineArgs>run build-prod</commandlineArgs>
+            </configuration>
+          </execution>
+          <!-- Acceptance tests execution -->
           <execution>
             <id>start-containers</id>
             <goals>
@@ -315,6 +383,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

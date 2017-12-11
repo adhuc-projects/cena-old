@@ -40,11 +40,11 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipesController;
  */
 @RestController
 @RequestMapping(value = "/api", produces = HAL_JSON_VALUE)
-public class IndexController {
+public class ApiIndexController {
 
     private final Documentation documentation;
 
-    public IndexController(MenuGenerationProperties menuGenerationProperties) {
+    public ApiIndexController(MenuGenerationProperties menuGenerationProperties) {
         notNull(menuGenerationProperties, "Cannot initialize index controller with null properties");
         documentation = menuGenerationProperties.getDocumentation();
     }
@@ -53,9 +53,9 @@ public class IndexController {
     public ResourceSupport index() {
         final ResourceSupport index = new ResourceSupport();
         if (documentation.isEnabled()) {
-            index.add(linkTo(IndexController.class).slash("docs").slash("api-guide.html").withRel("documentation"));
+            index.add(linkTo(ApiIndexController.class).slash("docs").slash("api-guide.html").withRel("documentation"));
         }
-        index.add(linkTo(IndexController.class).slash("management").withRel("management"));
+        index.add(linkTo(ApiIndexController.class).slash("management").withRel("management"));
         index.add(linkTo(IngredientsController.class).withRel("ingredients"));
         index.add(linkTo(RecipesController.class).withRel("recipes"));
         index.add(linkTo(MenusController.class).withRel("menus"));

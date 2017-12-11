@@ -22,3 +22,8 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Angular ###
+src/main/angular/node_modules
+src/main/angular/build
+src/main/angular/package-lock.json

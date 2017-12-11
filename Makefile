@@ -16,6 +16,9 @@ build: ## Build the application as a docker image
 test: ## Run acceptance testing with mvn verify
 	$(maven) clean verify -Pfunctional-acceptance -Dtest.acceptance.dockerEnv.cena.port=$(PORT)
 
+run-angular: ## Run the angular application as a standalone
+	cd src/main/angular && npm install && npm start
+
 run: ## Run the application
 	java -jar target/menu-generation.jar --server.port=$(PORT)
 

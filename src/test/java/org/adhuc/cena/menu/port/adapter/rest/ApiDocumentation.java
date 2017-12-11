@@ -64,7 +64,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ErrorsSnippet
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = IndexController.class)
+@WebMvcTest(controllers = ApiIndexController.class)
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)
