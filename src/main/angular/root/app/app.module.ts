@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 
 import { AppRoutingModule } from "@app/app-routing.module";
 import { CoreModule } from "@core/core.module";
+import { SearchModule } from "@search/search.module";
 
 import { AppComponent } from "@app/app.component";
 
@@ -10,7 +11,8 @@ import { AppComponent } from "@app/app.component";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    SearchModule
   ],
   declarations: [
     AppComponent,
