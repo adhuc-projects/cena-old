@@ -1,4 +1,10 @@
 {
+    "menu": {
+        "search": "Recherche",
+        "recipes": "Recettes",
+        "menus": "Menus",
+        "github": "Github"
+    },
     "search": {
         "search-input": "Rechercher une recette",
         "search-button": "Rechercher"

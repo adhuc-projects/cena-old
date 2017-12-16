@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatFormFieldModule, MatInputModule, MatButtonModule } from "@angular/material";
+import { MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule } from "@angular/material";
 import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
@@ -9,6 +9,7 @@ import { TranslateModule } from "@ngx-translate/core";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatToolbarModule,
     TranslateModule
   ],
   declarations: [],
@@ -17,6 +18,7 @@ import { TranslateModule } from "@ngx-translate/core";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatToolbarModule,
     TranslateModule
   ]
 })

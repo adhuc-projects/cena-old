@@ -2,6 +2,11 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
 .container-fluid {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+a:hover{
+    color: inherit;
+    text-decoration-line: none;
 }

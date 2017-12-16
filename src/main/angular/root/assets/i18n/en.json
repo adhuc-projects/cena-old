@@ -1,4 +1,10 @@
 {
+    "menu": {
+        "search": "Search",
+        "recipes": "Recipes",
+        "menus": "Menus",
+        "github": "Github"
+    },
     "search": {
         "search-input": "Search for recipe",
         "search-button": "Search"
