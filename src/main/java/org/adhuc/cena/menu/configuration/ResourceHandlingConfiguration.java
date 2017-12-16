@@ -41,6 +41,8 @@ public class ResourceHandlingConfiguration extends WebMvcConfigurerAdapter {
                 .setCachePeriod(cachePeriod);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/")
                 .setCachePeriod(cachePeriod);
+        registry.addResourceHandler("*.chunk.js").addResourceLocations("classpath:/static/")
+                .setCachePeriod(cachePeriod);
     }
 
 }
