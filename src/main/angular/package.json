@@ -1,7 +1,12 @@
 {
   "name": "cena",
+  "description": "Web presentation for Cena project",
   "version": "0.1.0",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adhuc-projects/cena"
+  },
   "scripts": {
     "start": "ng serve -p 4200 --proxy-config proxy.conf.json",
     "build": "ng build",
