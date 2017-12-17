@@ -7,6 +7,7 @@ import { SharedModule } from "@shared/shared.module";
 
 import {HeaderComponent} from "@core/header/header.component";
 import {FooterComponent} from "@core/footer/footer.component";
+import { LicenseComponent } from "./license/license.component";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -28,7 +29,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   declarations: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    LicenseComponent
   ],
   exports: [
     HeaderComponent,

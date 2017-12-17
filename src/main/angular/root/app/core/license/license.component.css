@@ -1,0 +1,26 @@
+.title {
+    padding-top: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bolder;
+}
+
+.subtitle {
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+}
+
+p {
+    text-align: justify;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: bold;
+}

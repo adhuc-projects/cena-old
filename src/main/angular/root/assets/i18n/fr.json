@@ -8,5 +8,11 @@
     "search": {
         "search-input": "Rechercher une recette",
         "search-button": "Rechercher"
+    },
+    "footer": {
+        "license": {
+            "prefix": "Code sous ",
+            "name": "Licence GPL-3.0"
+        }
     }
 }
