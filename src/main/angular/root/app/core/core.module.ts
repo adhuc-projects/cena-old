@@ -8,6 +8,8 @@ import { SharedModule } from "@shared/shared.module";
 import {HeaderComponent} from "@core/header/header.component";
 import {FooterComponent} from "@core/footer/footer.component";
 import { LicenseComponent } from "./license/license.component";
+import { LanguageSelectionComponent } from "./language-selection/language-selection.component";
+import { LanguageService } from "@app/core/language.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -30,11 +32,15 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     HeaderComponent,
     FooterComponent,
-    LicenseComponent
+    LicenseComponent,
+    LanguageSelectionComponent
   ],
   exports: [
     HeaderComponent,
     FooterComponent
+  ],
+  providers: [
+    LanguageService
   ]
 })
 export class CoreModule { }

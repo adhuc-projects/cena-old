@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule } from "@angular/material";
 import { TranslateModule } from "@ngx-translate/core";
@@ -7,6 +8,7 @@ import { TranslateModule } from "@ngx-translate/core";
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     MatFormFieldModule,
     MatInputModule,
@@ -17,6 +19,7 @@ import { TranslateModule } from "@ngx-translate/core";
   declarations: [],
   exports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     MatFormFieldModule,
     MatInputModule,

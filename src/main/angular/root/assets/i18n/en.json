@@ -5,6 +5,10 @@
         "menus": "Menus",
         "github": "Github"
     },
+    "languages": {
+        "fr": "Français (FR)",
+        "en": "English (EN)"
+    },
     "search": {
         "search-input": "Search for recipe",
         "search-button": "Search"

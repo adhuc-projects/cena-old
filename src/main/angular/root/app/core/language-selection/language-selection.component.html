@@ -1,0 +1,3 @@
+<select class="custom-select languages-select" (value)="currentLanguage" (change)="changeCurrentLanguage($event.target.value)">
+    <option *ngFor="let language of languages" [value]="language">{{ 'languages.' + language|translate }}</option>
+</select>
