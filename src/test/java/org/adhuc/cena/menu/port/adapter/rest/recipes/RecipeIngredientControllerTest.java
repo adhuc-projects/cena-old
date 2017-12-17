@@ -60,6 +60,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientController;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
+import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
 import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
@@ -73,7 +74,7 @@ import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 @Tag("integration")
 @Tag("restController")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = RecipeIngredientController.class, includeFilters = {
+@WebMvcTest(controllers = { RecipeIngredientController.class, WebIndexController.class }, includeFilters = {
         @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeIngredientResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)

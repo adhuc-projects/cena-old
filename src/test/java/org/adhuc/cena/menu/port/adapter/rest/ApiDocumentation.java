@@ -52,6 +52,7 @@ import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedException;
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ErrorsSnippet;
+import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
 
 /**
  * The general API documentation.
@@ -64,7 +65,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ErrorsSnippet
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ApiIndexController.class)
+@WebMvcTest(controllers = { ApiIndexController.class, WebIndexController.class })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)

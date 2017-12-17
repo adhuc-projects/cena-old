@@ -45,6 +45,7 @@ import org.adhuc.cena.menu.application.IngredientAppService;
 import org.adhuc.cena.menu.configuration.MenuGenerationProperties;
 import org.adhuc.cena.menu.configuration.WebSecurityConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
+import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
 
 /**
  * The {@link IngredientController} test class.
@@ -57,7 +58,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 @Tag("integration")
 @Tag("restController")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = IngredientController.class,
+@WebMvcTest(controllers = { IngredientController.class, WebIndexController.class },
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = IngredientResourceAssembler.class) })
 @EnableConfigurationProperties(MenuGenerationProperties.class)
 @Import(WebSecurityConfiguration.class)

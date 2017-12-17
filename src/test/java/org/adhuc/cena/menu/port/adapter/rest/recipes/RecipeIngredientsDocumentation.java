@@ -62,6 +62,7 @@ import org.adhuc.cena.menu.port.adapter.rest.ControllerTestSupport;
 import org.adhuc.cena.menu.port.adapter.rest.ResultHandlerConfiguration;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
+import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
 
 /**
  * The recipe ingredients related rest-services documentation.
@@ -74,7 +75,7 @@ import org.adhuc.cena.menu.port.adapter.rest.recipe.RecipeIngredientsController;
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = RecipeIngredientsController.class, includeFilters = {
+@WebMvcTest(controllers = { RecipeIngredientsController.class, WebIndexController.class }, includeFilters = {
         @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecipeIngredientResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)

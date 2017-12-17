@@ -69,6 +69,7 @@ import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ConstrainedFi
 import org.adhuc.cena.menu.port.adapter.rest.menu.GenerateMenusRequest;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenuResourceAssembler;
 import org.adhuc.cena.menu.port.adapter.rest.menu.MenusController;
+import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
 import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
@@ -82,7 +83,7 @@ import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 @Tag("integration")
 @Tag("documentation")
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = MenusController.class,
+@WebMvcTest(controllers = { MenusController.class, WebIndexController.class },
         includeFilters = { @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = MenuResourceAssembler.class) })
 @ContextConfiguration(classes = ResultHandlerConfiguration.class)
 @EnableConfigurationProperties(MenuGenerationProperties.class)
