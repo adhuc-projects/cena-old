@@ -45,6 +45,7 @@ cena:
       - '/api/ingredients/**'
       - '/api/recipes/**'
       - '/api/menus/**'
+      - '/authentication'
     - method: put
       paths:
       - '/api/ingredients/**'
