@@ -9,14 +9,12 @@ import { LanguageService } from "@core/language.service";
 export class LanguageSelectionComponent implements OnInit {
 
   readonly languages: Array<string> = this.languageService.getAppLanguages();
+  currentLanguage: string;
 
   constructor(private languageService: LanguageService) { }
 
   ngOnInit() {
-  }
-
-  get currentLanguage() {
-    return this.languageService.getCurrentLanguage();
+    this.currentLanguage = this.languageService.getCurrentLanguage();
   }
 
   changeCurrentLanguage(language) {

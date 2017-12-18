@@ -3,6 +3,8 @@ import { CommonModule } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { CookieService } from "ngx-cookie-service";
+
 import { SharedModule } from "@shared/shared.module";
 
 import {HeaderComponent} from "@core/header/header.component";
@@ -40,7 +42,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent
   ],
   providers: [
-    LanguageService
+    LanguageService,
+    CookieService
   ]
 })
 export class CoreModule { }
