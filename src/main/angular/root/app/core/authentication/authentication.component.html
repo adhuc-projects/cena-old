@@ -1,0 +1,11 @@
+<div class="authentication">
+  <form>
+    <mat-form-field>
+      <input matInput placeholder="Nom d'utilisateur" [(ngModel)]="authentication.username" name="username">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Mot de passe" [(ngModel)]="authentication.password" name="password">
+    </mat-form-field>
+    <button mat-button [disabled]="!authenticationFormFilled()" (click)="authenticate()">Connexion</button>
+  </form>
+</div>

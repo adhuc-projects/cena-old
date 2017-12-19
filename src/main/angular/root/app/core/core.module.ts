@@ -7,11 +7,13 @@ import { CookieService } from "ngx-cookie-service";
 
 import { SharedModule } from "@shared/shared.module";
 
-import {HeaderComponent} from "@core/header/header.component";
+import { AuthenticationComponent } from "@core/authentication/authentication.component";
 import {FooterComponent} from "@core/footer/footer.component";
-import { LicenseComponent } from "./license/license.component";
-import { LanguageSelectionComponent } from "./language-selection/language-selection.component";
-import { LanguageService } from "@app/core/language.service";
+import {HeaderComponent} from "@core/header/header.component";
+import { LicenseComponent } from "@core/license/license.component";
+import { LanguageSelectionComponent } from "@core/language-selection/language-selection.component";
+import { LanguageService } from "@core/language.service";
+import { AuthenticationService } from "@core/authentication.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -35,15 +37,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     HeaderComponent,
     FooterComponent,
     LicenseComponent,
-    LanguageSelectionComponent
+    LanguageSelectionComponent,
+    AuthenticationComponent
   ],
   exports: [
     HeaderComponent,
     FooterComponent
   ],
   providers: [
+    CookieService,
     LanguageService,
-    CookieService
+    AuthenticationService
   ]
 })
 export class CoreModule { }

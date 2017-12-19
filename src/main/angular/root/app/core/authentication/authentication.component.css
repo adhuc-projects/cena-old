@@ -1,0 +1,14 @@
+.authentication {
+    margin-right: 30px;
+}
+
+.mat-form-field {
+    padding-top: 7px;
+    width: 120px;
+    font-size: 14px;
+}
+
+.mat-button {
+    margin-top: 12px;
+    font-size: 16px;
+}
