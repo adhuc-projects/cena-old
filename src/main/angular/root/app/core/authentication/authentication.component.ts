@@ -10,13 +10,13 @@ import { Authentication, AuthenticationService } from "@core/authentication.serv
 export class AuthenticationComponent implements OnInit {
 
   authentication: Authentication;
+  isAuthenticated: boolean;
+  authenticatedUser: string;
 
   constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.authentication = new Authentication();
-    this.authentication.username = "";
-    this.authentication.password = "";
+    this.initAuthenticationForm();
   }
 
   authenticationFormFilled(): boolean {
@@ -26,19 +26,37 @@ export class AuthenticationComponent implements OnInit {
   authenticate() {
     this.authenticationService.authenticate(this.authentication).subscribe(authenticated => {
       if (authenticated) {
-        this.saveAuthentication();
+        this.handleAuthenticationSuccess();
       } else {
         this.notifyAuthenticationFailure();
       }
     });
   }
 
-  private saveAuthentication() {
-    // TODO save authentication
+  logout() {
+    this.authenticationService.logout().subscribe(logout => {
+      if (logout) {
+        this.initAuthenticationForm();
+      }
+    });
+  }
+
+  private initAuthenticationForm() {
+    this.authentication = new Authentication();
+    this.authentication.username = "";
+    this.authentication.password = "";
+    this.isAuthenticated = false;
+    this.authenticatedUser = "";
+  }
+
+  private handleAuthenticationSuccess() {
+    this.isAuthenticated = true;
+    this.authenticatedUser = this.authenticationService.currentAuthentication.username;
   }
 
   private notifyAuthenticationFailure() {
     // TODO notify authentication failed
+    this.initAuthenticationForm();
   }
 
 }

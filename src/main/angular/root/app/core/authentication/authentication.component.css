@@ -2,6 +2,11 @@
     margin-right: 30px;
 }
 
+.authenticated {
+    margin-top: -12px;
+    margin-right: 30px;
+}
+
 .mat-form-field {
     padding-top: 7px;
     width: 120px;
@@ -10,5 +15,9 @@
 
 .mat-button {
     margin-top: 12px;
+    font-size: 16px;
+}
+
+.welcome {
     font-size: 16px;
 }

@@ -3,7 +3,14 @@
         "search": "Search",
         "recipes": "Recipes",
         "menus": "Menus",
-        "github": "Github"
+        "github": "Github",
+        "authentication": {
+            "username": "User name",
+            "password": "Password",
+            "signin": "Sign in",
+            "signout": "Sign out",
+            "welcome": "Welcome"
+        }
     },
     "languages": {
         "fr": "Français (FR)",
