@@ -16,7 +16,6 @@
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,7 +32,6 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.addMustardToT
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
 import static org.adhuc.cena.menu.port.adapter.rest.recipes.RecipeJsonAssertion.assertJsonContainsRecipeIngredient;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -89,11 +87,6 @@ public class RecipeIngredientControllerTest extends ControllerTestSupport {
 
     @MockBean
     private RecipeIngredientAppService recipeIngredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeIngredientAppServiceMock);
-    }
 
     @Test
     @DisplayName("getting ingredient linked to recipe returns ingredient")

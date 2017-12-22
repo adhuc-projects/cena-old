@@ -15,7 +15,6 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -30,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.TOMATO_ID;
 import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.tomato;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -85,11 +83,6 @@ public class IngredientDocumentation {
 
     @MockBean
     private IngredientAppService           ingredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(ingredientAppServiceMock);
-    }
 
     @Test
     @DisplayName("generates ingredient detail example")

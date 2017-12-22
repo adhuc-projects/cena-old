@@ -16,7 +16,6 @@
 package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,11 +76,6 @@ public class RecipeControllerTest extends ControllerTestSupport {
 
     @MockBean
     private RecipeAppService    recipeAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeAppServiceMock);
-    }
 
     @Test
     @DisplayName("getting recipe detail from invalid id returns not found status")

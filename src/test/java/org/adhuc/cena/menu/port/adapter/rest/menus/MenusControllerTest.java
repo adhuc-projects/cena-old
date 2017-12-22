@@ -18,7 +18,6 @@ package org.adhuc.cena.menu.port.adapter.rest.menus;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -115,15 +114,10 @@ public class MenusControllerTest extends ControllerTestSupport {
     @MockBean
     private MenuAppService      menuAppServiceMock;
 
-    @BeforeEach
-    public void setUp() {
-        reset(menuAppServiceMock);
-    }
-
     @Test
     @DisplayName("getting list as community user returns unauthorized status")
     @WithCommunityUser
-    public void getMenusHasSelfLink() throws Exception {
+    public void getMenusAsCommunityUserIsUnauthorized() throws Exception {
         mvc.perform(get(MENUS_API_URL).param("days", Integer.toString(MENU_2017_01_02_DAYS)).param("startDate",
                 MENU_2017_01_02_START_DATE.toString())).andExpect(status().isUnauthorized());
     }

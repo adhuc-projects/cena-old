@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -34,7 +33,6 @@ import static org.adhuc.cena.menu.domain.model.ingredient.IngredientMother.cucum
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.TOMATO_CUCUMBER_MOZZA_SALAD_ID;
 import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.cucumberInTomatoCucumberMozzaSalad;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -96,11 +94,6 @@ public class RecipeIngredientDocumentation extends ControllerTestSupport {
 
     @MockBean
     private RecipeIngredientAppService     recipeIngredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeIngredientAppServiceMock);
-    }
 
     @Test
     @DisplayName("generates recipe ingredient detail example")

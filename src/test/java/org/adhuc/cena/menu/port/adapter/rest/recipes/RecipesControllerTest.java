@@ -20,7 +20,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -98,11 +97,6 @@ public class RecipesControllerTest extends ControllerTestSupport {
 
     @MockBean
     private RecipeAppService    recipeAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeAppServiceMock);
-    }
 
     @Nested
     @DisplayName("with empty list")

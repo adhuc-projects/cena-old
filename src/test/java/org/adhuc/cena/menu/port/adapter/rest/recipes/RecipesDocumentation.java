@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -36,7 +35,6 @@ import static org.adhuc.cena.menu.domain.model.recipe.RecipeMother.tomatoCucumbe
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -96,11 +94,6 @@ public class RecipesDocumentation extends ControllerTestSupport {
 
     @MockBean
     private RecipeAppService               recipeAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeAppServiceMock);
-    }
 
     @Test
     @DisplayName("generates recipes list example")

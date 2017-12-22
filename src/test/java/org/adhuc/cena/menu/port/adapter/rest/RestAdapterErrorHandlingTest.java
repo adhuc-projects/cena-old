@@ -17,14 +17,12 @@ package org.adhuc.cena.menu.port.adapter.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.reset;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.servlet.RequestDispatcher;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -69,11 +67,6 @@ public class RestAdapterErrorHandlingTest {
     private IngredientAppService ingredientAppServiceMock;
     @MockBean
     private RecipeAppService     recipeAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(ingredientAppServiceMock, recipeAppServiceMock);
-    }
 
     @Test
     @DisplayName("returns error information without code with no exception information")

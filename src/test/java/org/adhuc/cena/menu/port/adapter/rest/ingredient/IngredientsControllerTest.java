@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -93,11 +92,6 @@ public class IngredientsControllerTest extends ControllerTestSupport {
 
     @MockBean
     private IngredientAppService ingredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(ingredientAppServiceMock);
-    }
 
     @Nested
     @DisplayName("with empty list")

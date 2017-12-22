@@ -17,7 +17,6 @@ package org.adhuc.cena.menu.port.adapter.rest.recipes;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -86,11 +85,6 @@ public class RecipeIngredientsControllerTest extends ControllerTestSupport {
 
     @MockBean
     private RecipeIngredientAppService recipeIngredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(recipeIngredientAppServiceMock);
-    }
 
     @Nested
     @DisplayName("with empty ingredients list")

@@ -15,7 +15,6 @@
  */
 package org.adhuc.cena.menu.port.adapter.rest.ingredient;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,11 +72,6 @@ public class IngredientControllerTest extends ControllerTestSupport {
 
     @MockBean
     private IngredientAppService ingredientAppServiceMock;
-
-    @BeforeEach
-    public void setUp() {
-        reset(ingredientAppServiceMock);
-    }
 
     @Test
     @DisplayName("getting ingredient detail from invalid id returns not found status")
