@@ -54,11 +54,11 @@ public class ActuatorServiceClientSteps extends AbstractServiceClientSteps {
     }
 
     private String getManagementResourceUrl() {
-        return getApiClientResource().getManagement().getHref();
+        return getApiClientResource().getManagement();
     }
 
     private String getHealthResourceUrl() {
-        return getManagementClientResource().getHealth().getHref();
+        return getManagementClientResource().getHealth();
     }
 
     private ManagementClientResource getManagementClientResource() {

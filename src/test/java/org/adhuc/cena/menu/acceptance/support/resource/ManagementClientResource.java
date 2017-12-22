@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.acceptance.support.resource;
 
-import org.springframework.hateoas.Link;
-
 /**
  * A REST resource encapsulating management information on the client side.
  *
@@ -27,8 +25,8 @@ import org.springframework.hateoas.Link;
  */
 public class ManagementClientResource extends HateoasJsonClientResourceSupport {
 
-    public Link getHealth() {
-        return getLink("health");
+    public String getHealth() {
+        return getLink("health").get();
     }
 
 }

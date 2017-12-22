@@ -13,27 +13,27 @@
  * You should have received a copy of the GNU General Public License along with Cena Project. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.adhuc.cena.menu.acceptance.steps.serenity.ingredients;
+package org.adhuc.cena.menu.security;
 
-import io.restassured.specification.RequestSpecification;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
- * An abstract ingredient rest-service client steps definition.
+ * The roles definition.
  *
  * @author Alexandre Carbenay
  *
  * @version 0.1.0
  * @since 0.1.0
  */
-@SuppressWarnings("serial")
-public abstract class AbstractIngredientServiceClientSteps extends AbstractIngredientStorageSteps {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class RoleDefinition {
 
-    protected String getIngredientsResourceUrl() {
-        return getIngredientsResourceUrl(rest());
-    }
+    public static final String ROLE_PREFIX                           = "ROLE_";
 
-    protected String getIngredientsResourceUrl(RequestSpecification rest) {
-        return getApiClientResource(rest).getIngredients();
-    }
+    public static final String DEFAULT_ROLE                          = "USER";
+    public static final String INGREDIENT_MANAGER_ROLE               = "INGREDIENT_MANAGER";
+
+    public static final String HAS_INGREDIENT_MANAGER_ROLE_PREDICATE = "hasRole('" + INGREDIENT_MANAGER_ROLE + "')";
 
 }

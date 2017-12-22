@@ -51,7 +51,7 @@ public abstract class AbstractRecipeServiceClientSteps extends AbstractRecipeSto
     }
 
     protected final String getRecipesResourceUrl(RequestSpecification rest) {
-        return getApiClientResource(rest).getRecipes().getHref();
+        return getApiClientResource(rest).getRecipes();
     }
 
 }

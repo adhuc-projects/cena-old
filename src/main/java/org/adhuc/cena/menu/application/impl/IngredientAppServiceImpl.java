@@ -15,6 +15,8 @@
  */
 package org.adhuc.cena.menu.application.impl;
 
+import static org.adhuc.cena.menu.security.RoleDefinition.HAS_INGREDIENT_MANAGER_ROLE_PREDICATE;
+
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +61,7 @@ public class IngredientAppServiceImpl implements IngredientAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('INGREDIENT_MANAGER')")
+    @PreAuthorize(HAS_INGREDIENT_MANAGER_ROLE_PREDICATE)
     public void createIngredient(@NonNull CreateIngredient command) {
         log.info("Create ingredient from command {}", command);
         ensureIngredientNameNotUsed(command.ingredientName());

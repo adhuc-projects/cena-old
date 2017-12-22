@@ -15,8 +15,6 @@
  */
 package org.adhuc.cena.menu.acceptance.support.resource;
 
-import org.springframework.hateoas.Link;
-
 /**
  * A REST resource encapsulating API information on the client side.
  *
@@ -27,24 +25,27 @@ import org.springframework.hateoas.Link;
  */
 public class ApiClientResource extends HateoasHalClientResourceSupport {
 
-    public Link getManagement() {
-        return getLink("management");
+    private static final String DEFAULT_BASE_URL  = "http://localhost:8080/api";
+    private static final String DEFAULT_MENUS_URL = DEFAULT_BASE_URL + "/menus";
+
+    public String getManagement() {
+        return getLink("management").get();
     }
 
-    public Link getDocumentation() {
-        return getLink("documentation");
+    public String getDocumentation() {
+        return getLink("documentation").get();
     }
 
-    public Link getIngredients() {
-        return getLink("ingredients");
+    public String getIngredients() {
+        return getLink("ingredients").get();
     }
 
-    public Link getRecipes() {
-        return getLink("recipes");
+    public String getRecipes() {
+        return getLink("recipes").get();
     }
 
-    public Link getMenus() {
-        return getLink("menus");
+    public String getMenus() {
+        return getLinkOrDefault("menus", DEFAULT_MENUS_URL);
     }
 
 }

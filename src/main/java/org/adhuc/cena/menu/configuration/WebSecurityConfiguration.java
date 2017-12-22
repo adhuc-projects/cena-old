@@ -15,6 +15,9 @@
  */
 package org.adhuc.cena.menu.configuration;
 
+import static org.adhuc.cena.menu.security.RoleDefinition.DEFAULT_ROLE;
+import static org.adhuc.cena.menu.security.RoleDefinition.INGREDIENT_MANAGER_ROLE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,13 +123,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private List<UserDetails> users() {
         return authentication.getUsers().stream()
-                .map(u -> User.withUsername(u.getUsername()).password(u.getPassword()).roles("USER").build())
+                .map(u -> User.withUsername(u.getUsername()).password(u.getPassword()).roles(DEFAULT_ROLE).build())
                 .collect(Collectors.toList());
     }
 
     private UserDetails ingredientManager() {
         return User.withUsername(authentication.getIngredientManager().getUsername())
-                .password(authentication.getIngredientManager().getPassword()).roles("INGREDIENT_MANAGER").build();
+                .password(authentication.getIngredientManager().getPassword()).roles(INGREDIENT_MANAGER_ROLE).build();
     }
 
     private UserDetails actuatorManager() {

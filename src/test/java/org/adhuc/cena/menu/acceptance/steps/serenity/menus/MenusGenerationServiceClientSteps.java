@@ -197,7 +197,7 @@ public class MenusGenerationServiceClientSteps extends AbstractServiceClientStep
     }
 
     private String getMenusResourceUrl(RequestSpecification rest) {
-        return getApiClientResource(rest).getMenus().getHref();
+        return getApiClientResource(rest).getMenus();
     }
 
     private String buildMenuListUrlFromSpecifications(RequestSpecification rest) {

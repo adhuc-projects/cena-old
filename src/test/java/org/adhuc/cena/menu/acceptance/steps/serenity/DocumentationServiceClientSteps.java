@@ -39,7 +39,7 @@ public class DocumentationServiceClientSteps extends AbstractServiceClientSteps 
     }
 
     private String getDocumentationResourceUrl() {
-        return getApiClientResource().getDocumentation().getHref();
+        return getApiClientResource().getDocumentation();
     }
 
 }

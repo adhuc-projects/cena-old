@@ -53,6 +53,7 @@ import org.adhuc.cena.menu.domain.model.ingredient.IngredientNameAlreadyUsedExce
 import org.adhuc.cena.menu.exception.ExceptionCode;
 import org.adhuc.cena.menu.port.adapter.rest.documentation.support.ErrorsSnippet;
 import org.adhuc.cena.menu.port.adapter.web.WebIndexController;
+import org.adhuc.cena.menu.support.security.WithAuthenticatedUser;
 
 /**
  * The general API documentation.
@@ -90,6 +91,7 @@ public class ApiDocumentation extends ControllerTestSupport {
     }
 
     @Test
+    @WithAuthenticatedUser
     @DisplayName("generates index example")
     public void indexExample() throws Exception {
         mvc.perform(get(API_URL)).andExpect(status().isOk()).andDo(documentationHandler.document(links(

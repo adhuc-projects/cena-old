@@ -16,6 +16,7 @@
 package org.adhuc.cena.menu.acceptance.support.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.hateoas.Link;
 
@@ -35,17 +36,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public abstract class HateoasClientResourceSupport {
 
     @JsonIgnore
-    public Link getId() {
-        return getLink(Link.REL_SELF);
+    public String getId() {
+        return getLink(Link.REL_SELF).get();
     }
 
-    public Link getLink(final String rel) {
-        for (final Link link : links()) {
+    public Optional<String> getLink(String rel) {
+        for (Link link : links()) {
             if (link.getRel().equals(rel)) {
-                return link;
+                return Optional.of(link.getHref());
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    public String getLinkOrDefault(String rel, String defaultValue) {
+        return getLink(rel).orElse(defaultValue);
     }
 
     protected abstract List<Link> links();
