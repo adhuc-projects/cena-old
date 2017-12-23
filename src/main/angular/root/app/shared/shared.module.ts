@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule } from "@angular/material";
 import { TranslateModule } from "@ngx-translate/core";
+import { ApiService } from "@app/shared/api.service";
 
 @NgModule({
   imports: [
@@ -16,7 +17,6 @@ import { TranslateModule } from "@ngx-translate/core";
     MatToolbarModule,
     TranslateModule
   ],
-  declarations: [],
   exports: [
     CommonModule,
     FormsModule,
@@ -26,6 +26,9 @@ import { TranslateModule } from "@ngx-translate/core";
     MatButtonModule,
     MatToolbarModule,
     TranslateModule
+  ],
+  providers: [
+    ApiService
   ]
 })
 export class SharedModule { }

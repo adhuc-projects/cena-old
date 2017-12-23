@@ -1,8 +1,9 @@
 <header class="mat-elevation-z6 mat-primary mat-toolbar">
   <mat-toolbar class="navbar navbar-expand-lg" color="primary">
-    <a mat-button routerLink="/search">{{'menu.search'|translate}}</a>
-    <a mat-button routerLink="/recipes">{{'menu.recipes'|translate}}</a>
-    <a mat-button routerLink="/menus">{{'menu.menus'|translate}}</a>
+    <a mat-button [hidden]="searchMenuHidden" routerLink="/search">{{'menu.search'|translate}}</a>
+    <a mat-button [hidden]="recipesMenuHidden" routerLink="/recipes">{{'menu.recipes'|translate}}</a>
+    <a mat-button [hidden]="menusMenuHidden" routerLink="/menus">{{'menu.menus'|translate}}</a>
+    <a mat-button [hidden]="ingredientsMenuHidden" routerLink="/ingredients">{{'menu.ingredients'|translate}}</a>
     <div class="flex-spacer"></div>
     <cena-authentication></cena-authentication>
     <cena-language-selection></cena-language-selection>
