@@ -19,10 +19,10 @@ export class HeaderComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-    this.hasApiLink('recipes').subscribe(exists => this.searchMenuHidden = !exists);
-    this.hasApiLink('recipes').subscribe(exists => this.recipesMenuHidden = !exists);
-    this.hasApiLink('menus').subscribe(exists => this.menusMenuHidden = !exists);
-    this.hasApiLink('ingredientsManagement').subscribe(exists => this.ingredientsMenuHidden = !exists);
+    this.hasApiLink("recipes").subscribe(exists => this.searchMenuHidden = !exists);
+    this.hasApiLink("recipes").subscribe(exists => this.recipesMenuHidden = !exists);
+    this.hasApiLink("menus").subscribe(exists => this.menusMenuHidden = !exists);
+    this.hasApiLink("ingredientsManagement").subscribe(exists => this.ingredientsMenuHidden = !exists);
   }
 
   hasApiLink(rel: string): Observable<boolean> {
