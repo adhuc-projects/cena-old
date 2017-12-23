@@ -5,33 +5,16 @@ import { Observable } from "rxjs/Observable";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 class Resource {
-  _links: Link;
+  _links: any;
 
-  constructor(links: any) {
-    this._links = Object.assign(new Link(), links._links);
+  constructor(resource: any) {
+    this._links = resource._links;
   }
 
   getLink(rel: string): string {
-    return this._links.getLink(rel);
+    const ref = this._links[rel];
+    return ref != null ? ref.href : null;
   }
-}
-
-class Link {
-  documentation: LinkRef;
-  management: LinkRef;
-  ingredients: LinkRef;
-  recipes: LinkRef;
-  menus: LinkRef;
-  ingredientsManagement: LinkRef;
-
-  getLink(rel: string): string {
-    const ref = Object.getOwnPropertyDescriptor(this, rel);
-    return ref != null ? ref.value.href : null;
-  }
-}
-
-class LinkRef {
-  href: string;
 }
 
 @Injectable()
