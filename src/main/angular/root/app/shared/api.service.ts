@@ -4,8 +4,8 @@ import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-class Resource {
-  _links: any;
+export class Resource {
+  private _links: any;
 
   constructor(resource: any) {
     this._links = resource._links;
@@ -24,6 +24,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     this.resetApiResource();
+  }
+
+  getApiIndex(): Observable<Resource> {
+    return this.apiResourceObservable;
   }
 
   getLink(rel: string): Observable<string> {
