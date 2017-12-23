@@ -30,10 +30,6 @@ export class ApiService {
     return this.apiResourceObservable;
   }
 
-  getLink(rel: string): Observable<string> {
-    return this.apiResourceObservable.map(resource => resource.getLink(rel));
-  }
-
   resetApiResource() {
     this.apiResourceObservable = this.getApiResource();
     this.apiResourceObservable.subscribe(resource => {
@@ -45,7 +41,7 @@ export class ApiService {
   private getApiResource(): Observable<Resource> {
     return this.http.get(environment.apiUrl, {observe : "response"})
       .map(response => this.extractApiResource(response))
-      .catch(error => Observable.of(new Resource(new Object())));
+      .catch(error => Observable.of(new Resource({"_links": {}})));
   }
 
   private extractApiResource(response): Resource {

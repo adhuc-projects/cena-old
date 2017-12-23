@@ -3,6 +3,7 @@
         "search": "Search",
         "recipes": "Recipes",
         "menus": "Menus",
+        "ingredients": "Ingredients",
         "github": "Github",
         "authentication": {
             "username": "User name",

@@ -1,6 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormControl, NgForm } from "@angular/forms";
-import { Authentication, AuthenticationService } from "@core/authentication.service";
+
+import { Authentication, AuthenticationHolder } from "@core/authentication/authentication.holder";
+import { AuthenticationService } from "@core/authentication/authentication.service";
+import { ApiService } from "@shared/api.service";
 
 @Component({
   selector: "cena-authentication",
@@ -9,11 +12,16 @@ import { Authentication, AuthenticationService } from "@core/authentication.serv
 })
 export class AuthenticationComponent implements OnInit {
 
+  @Output() authenticationChange = new EventEmitter<boolean>();
+
   authentication: Authentication;
   isAuthenticated: boolean;
   authenticatedUser: string;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(
+    private authenticationHolder: AuthenticationHolder,
+    private authenticationService: AuthenticationService,
+    private apiService: ApiService) { }
 
   ngOnInit() {
     this.initAuthenticationForm();
@@ -37,6 +45,8 @@ export class AuthenticationComponent implements OnInit {
     this.authenticationService.logout().subscribe(logout => {
       if (logout) {
         this.initAuthenticationForm();
+        this.apiService.resetApiResource();
+        this.authenticationChange.emit(false);
       }
     });
   }
@@ -51,7 +61,9 @@ export class AuthenticationComponent implements OnInit {
 
   private handleAuthenticationSuccess() {
     this.isAuthenticated = true;
-    this.authenticatedUser = this.authenticationService.currentAuthentication.username;
+    this.authenticatedUser = this.authenticationHolder.currentAuthentication.username;
+    this.apiService.resetApiResource();
+    this.authenticationChange.emit(true);
   }
 
   private notifyAuthenticationFailure() {

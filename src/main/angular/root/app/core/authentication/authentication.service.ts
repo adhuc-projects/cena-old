@@ -4,39 +4,29 @@ import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-export class Authentication {
-  username: string;
-  password: string;
-}
+import { Authentication, AuthenticationHolder } from "@core/authentication/authentication.holder";
 
 @Injectable()
 export class AuthenticationService {
 
-  private _currentAuthentication: Authentication = null;
-
-  constructor(private http: HttpClient) { }
-
-  get currentAuthentication(): Authentication {
-    return this._currentAuthentication;
-  }
+  constructor(private http: HttpClient, private authenticationHolder: AuthenticationHolder) { }
 
   authenticate(authentication: Authentication): Observable<boolean> {
-    const basicAuth = "Basic " + btoa(authentication.username + ":" + authentication.password);
-    const headers: HttpHeaders = new HttpHeaders({"Authorization": basicAuth});
+    const headers: HttpHeaders = new HttpHeaders({"Authorization": authentication.authorizationHeaderValue()});
     return this.http.post(environment.authenticationUrl, null, {headers: headers, observe : "response"})
       .map(response => this.handleAuthenticationSuccess(authentication, response))
       .catch(error => Observable.of(false));
   }
 
   logout(): Observable<boolean> {
-    this._currentAuthentication = null;
+    this.authenticationHolder.currentAuthentication = null;
     return Observable.of(true);
   }
 
   private handleAuthenticationSuccess(authentication: Authentication, response): boolean {
     const isSuccessfulAuthentication: boolean = response.status === 204;
     if (isSuccessfulAuthentication) {
-      this._currentAuthentication = authentication;
+      this.authenticationHolder.currentAuthentication = authentication;
     }
     return isSuccessfulAuthentication;
   }

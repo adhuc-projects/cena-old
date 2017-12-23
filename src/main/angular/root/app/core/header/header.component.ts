@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { Observable } from "rxjs/Observable";
 
-import { ApiService } from "@app/shared/api.service";
+import { ApiService } from "@shared/api.service";
 
 @Component({
   selector: "cena-header",
@@ -23,10 +23,10 @@ export class HeaderComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-    this.initMenuVisibility();
+    this.updateMenuVisibility();
   }
 
-  initMenuVisibility() {
+  updateMenuVisibility() {
     this.apiService.getApiIndex().subscribe(resource => {
       this.searchMenuHidden = resource.getLink(HeaderComponent.RECIPES_LINK_NAME) == null;
       this.recipesMenuHidden = resource.getLink(HeaderComponent.RECIPES_LINK_NAME) == null;

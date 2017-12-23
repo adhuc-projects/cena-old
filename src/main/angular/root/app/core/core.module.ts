@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ngx-cookie-service";
@@ -13,7 +13,9 @@ import {HeaderComponent} from "@core/header/header.component";
 import { LicenseComponent } from "@core/license/license.component";
 import { LanguageSelectionComponent } from "@core/language-selection/language-selection.component";
 import { LanguageService } from "@core/language.service";
-import { AuthenticationService } from "@core/authentication.service";
+import { AuthenticationHolder } from "@core/authentication/authentication.holder";
+import { AuthenticationService } from "@core/authentication/authentication.service";
+import { AuthenticationInterceptor } from "@core/authentication/authentication.interceptor";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -47,7 +49,13 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     CookieService,
     LanguageService,
-    AuthenticationService
+    AuthenticationHolder,
+    AuthenticationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    }
   ]
 })
 export class CoreModule { }
