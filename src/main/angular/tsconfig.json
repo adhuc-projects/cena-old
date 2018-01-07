@@ -21,6 +21,7 @@
       "@core/*": ["app/core/*"],
       "@shared/*": ["app/shared/*"],
       "@search/*": ["app/search/*"],
+      "@ingredients/*": ["app/ingredients/*"],
       "@env/*": ["environments/*"]
     }
   }
