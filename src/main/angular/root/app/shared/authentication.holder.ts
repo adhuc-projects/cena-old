@@ -14,12 +14,16 @@ export class AuthenticationHolder {
 
   private _currentAuthentication: Authentication = null;
 
+  isAuthenticated(): boolean {
+    return this._currentAuthentication != null;
+  }
+
   get currentAuthentication(): Authentication {
     return this._currentAuthentication;
   }
 
   set currentAuthentication(authentication: Authentication) {
-      this._currentAuthentication = authentication;
+    this._currentAuthentication = authentication;
   }
 
 }

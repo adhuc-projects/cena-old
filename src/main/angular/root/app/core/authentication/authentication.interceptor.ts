@@ -3,7 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpHeaders } fro
 import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 
-import { Authentication, AuthenticationHolder } from "@core/authentication/authentication.holder";
+import { Authentication, AuthenticationHolder } from "@shared/authentication.holder";
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {

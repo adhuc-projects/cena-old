@@ -4,7 +4,7 @@ import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-import { Authentication, AuthenticationHolder } from "@core/authentication/authentication.holder";
+import { Authentication, AuthenticationHolder } from "@shared/authentication.holder";
 
 @Injectable()
 export class AuthenticationService {

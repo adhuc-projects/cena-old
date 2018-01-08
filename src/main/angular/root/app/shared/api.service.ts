@@ -19,6 +19,11 @@ export class Resource {
 
 @Injectable()
 export class ApiService {
+
+  public static readonly RECIPES_LINK_NAME = "recipes";
+  public static readonly MENUS_LINK_NAME = "menus";
+  public static readonly INGREDIENTS_MANAGEMENT_LINK_NAME = "ingredientsManagement";
+
   apiResource: Resource;
   apiResourceObservable: Observable<Resource>;
 

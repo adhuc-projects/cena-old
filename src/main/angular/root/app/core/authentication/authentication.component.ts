@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormControl, NgForm } from "@angular/forms";
 
-import { Authentication, AuthenticationHolder } from "@core/authentication/authentication.holder";
 import { AuthenticationService } from "@core/authentication/authentication.service";
+import { Authentication, AuthenticationHolder } from "@shared/authentication.holder";
 import { ApiService } from "@shared/api.service";
 
 @Component({
