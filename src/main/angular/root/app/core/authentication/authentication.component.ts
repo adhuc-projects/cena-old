@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormControl, NgForm } from "@angular/forms";
+import { Router } from "@angular/router";
 
 import { AuthenticationService } from "@core/authentication/authentication.service";
 import { Authentication, AuthenticationHolder } from "@shared/authentication.holder";
@@ -21,7 +22,8 @@ export class AuthenticationComponent implements OnInit {
   constructor(
     private authenticationHolder: AuthenticationHolder,
     private authenticationService: AuthenticationService,
-    private apiService: ApiService) { }
+    private apiService: ApiService,
+    private router: Router) { }
 
   ngOnInit() {
     this.initAuthenticationForm();
@@ -47,6 +49,7 @@ export class AuthenticationComponent implements OnInit {
         this.initAuthenticationForm();
         this.apiService.resetApiResource();
         this.authenticationChange.emit(false);
+        this.router.navigateByUrl("/");
       }
     });
   }
