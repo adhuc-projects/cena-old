@@ -49,7 +49,7 @@ export class Resource {
 @Injectable()
 export class ApiService {
 
-  private readonly apiBaseUrl = "/api";
+  private static readonly API_BASE_URL = "/api";
 
   public static readonly RECIPES_LINK_NAME = "recipes";
   public static readonly MENUS_LINK_NAME = "menus";
@@ -75,7 +75,7 @@ export class ApiService {
   }
 
   private getApiResource(): Observable<Resource> {
-    return this.http.get(this.apiBaseUrl, {observe : "response"})
+    return this.http.get(ApiService.API_BASE_URL, {observe : "response"})
       .map(response => this.extractApiResource(response))
       .catch(error => Observable.of(new Resource({"_links": {}})));
   }
