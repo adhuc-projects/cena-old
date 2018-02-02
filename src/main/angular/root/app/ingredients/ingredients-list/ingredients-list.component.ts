@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
+import { IngredientsService, Ingredient } from "@ingredients/ingredients.service";
+
 @Component({
   selector: "cena-ingredients-list",
   templateUrl: "./ingredients-list.component.html",
@@ -7,9 +9,12 @@ import { Component, OnInit } from "@angular/core";
 })
 export class IngredientsListComponent implements OnInit {
 
-  constructor() { }
+  ingredients: Array<Ingredient>;
+
+  constructor(private ingredientService: IngredientsService) { }
 
   ngOnInit() {
+    this.ingredientService.getIngredients().subscribe(ingredientsList => this.ingredients = ingredientsList);
   }
 
 }

@@ -5,6 +5,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:4200/api",
-  authenticationUrl: "http://localhost:4200/authentication"
+  linkTransformer: {
+    disabled: false,
+    original: "http://localhost:8080",
+    transformed: "http://localhost:4200"
+  }
 };
