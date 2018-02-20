@@ -8,7 +8,7 @@ import { Authentication, AuthenticationHolder } from "@shared/authentication.hol
 @Injectable()
 export class AuthenticationService {
 
-  private static readonly AUTHENTICATION_URL: "/authentication";
+  private static readonly AUTHENTICATION_URL = "/authentication";
 
   constructor(private http: HttpClient, private authenticationHolder: AuthenticationHolder) { }
 
@@ -16,7 +16,10 @@ export class AuthenticationService {
     const headers: HttpHeaders = new HttpHeaders({"Authorization": authentication.authorizationHeaderValue()});
     return this.http.post(AuthenticationService.AUTHENTICATION_URL, null, {headers: headers, observe : "response"})
       .map(response => this.handleAuthenticationSuccess(authentication, response))
-      .catch(error => Observable.of(false));
+      .catch(error => {
+        console.log("Authentication failed " +  error);
+        return Observable.of(false);
+      });
   }
 
   logout(): Observable<boolean> {
