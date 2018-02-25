@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule, MatListModule } from "@angular/material";
+import { MatFormFieldModule, MatInputModule, MatButtonModule, MatToolbarModule, MatListModule, MatDialogModule } from "@angular/material";
 import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
@@ -18,6 +18,7 @@ import { TranslateModule } from "@ngx-translate/core";
     MatButtonModule,
     MatToolbarModule,
     MatListModule,
+    MatDialogModule,
     TranslateModule
   ]
 })

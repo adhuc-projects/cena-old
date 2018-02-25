@@ -21,6 +21,17 @@
         "search-input": "Rechercher une recette",
         "search-button": "Rechercher"
     },
+    "ingredients": {
+        "list": {
+            "creationButton": "Nouvel ingrédient"
+        },
+        "creation": {
+            "title": "Création d'ingrédient",
+            "name": "Nom",
+            "cancel": "Annuler",
+            "create": "Créer"
+        }
+    },
     "footer": {
         "license": {
             "prefix": "Code sous ",

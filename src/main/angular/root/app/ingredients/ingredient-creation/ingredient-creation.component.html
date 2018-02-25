@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{'ingredients.creation.title'|translate}}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+      <input matInput placeholder="{{'ingredients.creation.name'|translate}}" [(ngModel)]="ingredient.name">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">{{'ingredients.creation.cancel'|translate}}</button>
+  <button mat-button (click)="createIngredient()">{{'ingredients.creation.create'|translate}}</button>
+</div>
